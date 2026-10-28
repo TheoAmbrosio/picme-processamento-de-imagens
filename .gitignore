@@ -1,0 +1,6 @@
+**/dataset/
+**/fatores_svd/
+*.zip
+*.npz
+.ipynb_checkpoints/
+__pycache__/
