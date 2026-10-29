@@ -15,3 +15,7 @@ As imagens do dataset e os fatores SVD gerados localmente não são versionados.
 5. Ajuste `k_modelo`, `escala_cinza`, `usar_todos_dados` e `N` na célula de configuração. A preparação cria o cache SVD localmente em `datasets_processados/`; ele é reutilizado em execuções posteriores.
 
 O download depende da disponibilidade e da estrutura do dataset no Kaggle. As imagens, os vetores SVD e as credenciais não são enviados ao GitHub.
+
+## Execução por script
+
+No diretório `Cats and Dogs I e II`, instale as dependências com `python -m pip install -r requirements.txt`. Edite os valores no início de `treinar_modelo.py` e execute `python treinar_modelo.py`. Esse comando baixa o dataset quando necessário, prepara ou reutiliza os vetores SVD, treina e mostra o gráfico de MSE. O módulo `preparar_dados.py` contém o download, o pré-processamento e o cache; `modelo.ipynb` continua disponível para uso interativo.
