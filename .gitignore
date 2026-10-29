@@ -4,3 +4,4 @@
 *.npz
 .ipynb_checkpoints/
 __pycache__/
+**/datasets_processados/
