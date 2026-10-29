@@ -1,0 +1,22 @@
+{
+  "id": "k_20__cinza__lr_1em04__a_3em04__a2_3em04__f_0p500000__h_3",
+  "k": 20,
+  "escala_cinza": true,
+  "entrada_dim": 12000,
+  "parametros": 94512001,
+  "batch": 256,
+  "lr": 0.0001,
+  "alpha": 0.0003,
+  "alpha2": 0.0003,
+  "fator": 0.5,
+  "camadas": 3,
+  "epoca": 30,
+  "status": "early_stopping",
+  "melhor_mse_validacao": 0.255297966003418,
+  "melhor_epoca": 5,
+  "melhor_mse_arredondado": 0.55,
+  "segundos": 44.6589369919966,
+  "convergiu": false,
+  "norma_gradiente": null,
+  "motivo_parada": "Validação sem melhora"
+}

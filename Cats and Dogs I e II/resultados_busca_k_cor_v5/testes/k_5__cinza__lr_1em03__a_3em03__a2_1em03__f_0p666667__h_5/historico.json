@@ -1,0 +1,200 @@
+[
+  {
+    "epoca": 1,
+    "mse_treino": 0.36544093661838106,
+    "mse_validacao": 0.5199985504150391,
+    "mse_validacao_arredondado": 0.52,
+    "penalizacao_alpha": 0.2326839594480892,
+    "penalizacao_alpha2": 0.00011984521079259341,
+    "media_previsoes": 0.2180668721265263,
+    "centro_anterior": 0.5,
+    "hist_validacao": [
+      100,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "convergencia": null,
+    "norma_gradiente": null
+  },
+  {
+    "epoca": 2,
+    "mse_treino": 0.49777720239427353,
+    "mse_validacao": 0.52,
+    "mse_validacao_arredondado": 0.52,
+    "penalizacao_alpha": 0.013694487338264782,
+    "penalizacao_alpha2": 0.0002499993909926464,
+    "media_previsoes": 6.199934691814165e-07,
+    "centro_anterior": 0.2180668721265263,
+    "hist_validacao": [
+      100,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "convergencia": null,
+    "norma_gradiente": null
+  },
+  {
+    "epoca": 3,
+    "mse_treino": 0.49777777910232546,
+    "mse_validacao": 0.52,
+    "mse_validacao_arredondado": 0.52,
+    "penalizacao_alpha": 2.998141050338745,
+    "penalizacao_alpha2": 0.0002500000118743628,
+    "media_previsoes": 6.503687384500384e-19,
+    "centro_anterior": 6.199934691814165e-07,
+    "hist_validacao": [
+      100,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "convergencia": null,
+    "norma_gradiente": null
+  },
+  {
+    "epoca": 4,
+    "mse_treino": 0.49777778016196356,
+    "mse_validacao": 0.52,
+    "mse_validacao_arredondado": 0.52,
+    "penalizacao_alpha": 2.999999761581421,
+    "penalizacao_alpha2": 0.0002500000118743628,
+    "media_previsoes": 1.208443711043375e-30,
+    "centro_anterior": 6.503687384500384e-19,
+    "hist_validacao": [
+      100,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "convergencia": null,
+    "norma_gradiente": null
+  },
+  {
+    "epoca": 5,
+    "mse_treino": 0.4977777775128682,
+    "mse_validacao": 0.52,
+    "mse_validacao_arredondado": 0.52,
+    "penalizacao_alpha": 2.999999761581421,
+    "penalizacao_alpha2": 0.0002500000118743628,
+    "media_previsoes": 0.0,
+    "centro_anterior": 1.208443711043375e-30,
+    "hist_validacao": [
+      100,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "convergencia": null,
+    "norma_gradiente": null
+  },
+  {
+    "epoca": 6,
+    "mse_treino": 0.4977777812216017,
+    "mse_validacao": 0.52,
+    "mse_validacao_arredondado": 0.52,
+    "penalizacao_alpha": 2.999999761581421,
+    "penalizacao_alpha2": 0.0002500000118743628,
+    "media_previsoes": 0.0,
+    "centro_anterior": 0.0,
+    "hist_validacao": [
+      100,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "convergencia": {
+      "mse_treino": {
+        "media": 0.49777766407860646,
+        "amplitude": 5.788273281792655e-07,
+        "variacao_borda": 0.13233626577589247,
+        "limite": 0.004488888320393032,
+        "estavel": false
+      },
+      "mse_validacao": {
+        "media": 0.52,
+        "amplitude": 0.0,
+        "variacao_borda": 1.4495849609552636e-06,
+        "limite": 0.0046,
+        "estavel": true
+      }
+    },
+    "norma_gradiente": null
+  },
+  {
+    "epoca": 7,
+    "mse_treino": 0.4977777836057875,
+    "mse_validacao": 0.52,
+    "mse_validacao_arredondado": 0.52,
+    "penalizacao_alpha": 2.999999761581421,
+    "penalizacao_alpha2": 0.0002500000118743628,
+    "media_previsoes": 0.0,
+    "centro_anterior": 0.0,
+    "hist_validacao": [
+      100,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "convergencia": {
+      "mse_treino": {
+        "media": 0.49777778032090925,
+        "amplitude": 6.092919280220599e-09,
+        "variacao_borda": 5.767080519247791e-07,
+        "limite": 0.004488888901604546,
+        "estavel": true
+      },
+      "mse_validacao": {
+        "media": 0.52,
+        "amplitude": 0.0,
+        "variacao_borda": 0.0,
+        "limite": 0.0046,
+        "estavel": true
+      }
+    },
+    "norma_gradiente": null
+  }
+]

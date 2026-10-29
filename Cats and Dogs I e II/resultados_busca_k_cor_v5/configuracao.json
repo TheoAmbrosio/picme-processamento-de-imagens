@@ -1,0 +1,67 @@
+{
+  "assinatura": "3e3e8eaa21e8ea49433c066342984f789be8a8b1ef235c2ace0ace835558fdac",
+  "configuracao": {
+    "valores_k": [
+      5,
+      10,
+      15,
+      20
+    ],
+    "modos_cor": [
+      true
+    ],
+    "lrs": [
+      0.0001,
+      0.0003,
+      0.001,
+      0.003,
+      0.01
+    ],
+    "alphas": [
+      0.0,
+      0.0001,
+      0.0003,
+      0.001,
+      0.003,
+      0.01
+    ],
+    "alphas2": [
+      0.0,
+      0.0001,
+      0.0003,
+      0.001,
+      0.003,
+      0.01
+    ],
+    "fatores": [
+      0.3333333333333333,
+      0.5,
+      0.6666666666666666
+    ],
+    "camadas": [
+      3,
+      5,
+      8
+    ],
+    "epocas": 100,
+    "paciencia": 25,
+    "batch_inicial": 16,
+    "batch_maximo": 256,
+    "usar_todos_dados": false,
+    "N": 1000,
+    "fracao_treino": 0.9,
+    "semente": 42,
+    "epsilon": 0.001,
+    "versao": 5,
+    "convergencia": {
+      "ativar": true,
+      "epoca_minima": 5,
+      "janela": 5,
+      "tolerancia_relativa": 0.005,
+      "tolerancia_absoluta": 0.002,
+      "exigir_treino_estavel": true,
+      "exigir_gradiente": false,
+      "tolerancia_gradiente": 0.001
+    }
+  }
+}
