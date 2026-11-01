@@ -1,0 +1,200 @@
+[
+  {
+    "epoca": 1,
+    "mse_treino": 0.25308092494805656,
+    "mse_validacao": 0.25626506805419924,
+    "mse_validacao_arredondado": 0.52,
+    "penalizacao_alpha": 0.1696858553091685,
+    "penalizacao_alpha2": 1.007842368178697e-06,
+    "media_previsoes": 0.44204851786295574,
+    "centro_anterior": 0.5,
+    "hist_validacao": [
+      0,
+      0,
+      0,
+      0,
+      100,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "convergencia": null,
+    "norma_gradiente": null
+  },
+  {
+    "epoca": 2,
+    "mse_treino": 0.2535586843225691,
+    "mse_validacao": 0.25696319580078125,
+    "mse_validacao_arredondado": 0.52,
+    "penalizacao_alpha": 1.9417507775624594,
+    "penalizacao_alpha2": 1.1632286875990555e-06,
+    "media_previsoes": 0.4377373758951823,
+    "centro_anterior": 0.44204851786295574,
+    "hist_validacao": [
+      0,
+      0,
+      0,
+      0,
+      100,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "convergencia": null,
+    "norma_gradiente": null
+  },
+  {
+    "epoca": 3,
+    "mse_treino": 0.25443292644288806,
+    "mse_validacao": 0.2587436103820801,
+    "mse_validacao_arredondado": 0.52,
+    "penalizacao_alpha": 1.6061027121543885,
+    "penalizacao_alpha2": 1.3962369742633503e-06,
+    "media_previsoes": 0.4318116675482856,
+    "centro_anterior": 0.4377373758951823,
+    "hist_validacao": [
+      0,
+      0,
+      0,
+      0,
+      100,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "convergencia": null,
+    "norma_gradiente": null
+  },
+  {
+    "epoca": 4,
+    "mse_treino": 0.25613925841119556,
+    "mse_validacao": 0.2602945137023926,
+    "mse_validacao_arredondado": 0.52,
+    "penalizacao_alpha": 0.8472337004873488,
+    "penalizacao_alpha2": 1.920606071305681e-06,
+    "media_previsoes": 0.42004503038194446,
+    "centro_anterior": 0.4318116675482856,
+    "hist_validacao": [
+      0,
+      0,
+      0,
+      0,
+      100,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "convergencia": null,
+    "norma_gradiente": null
+  },
+  {
+    "epoca": 5,
+    "mse_treino": 0.25659116235044266,
+    "mse_validacao": 0.2603112983703613,
+    "mse_validacao_arredondado": 0.52,
+    "penalizacao_alpha": 2.2303159544203015,
+    "penalizacao_alpha2": 2.088607028175223e-06,
+    "media_previsoes": 0.41656126234266494,
+    "centro_anterior": 0.42004503038194446,
+    "hist_validacao": [
+      0,
+      0,
+      0,
+      0,
+      100,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "convergencia": null,
+    "norma_gradiente": null
+  },
+  {
+    "epoca": 6,
+    "mse_treino": 0.25660498711797924,
+    "mse_validacao": 0.2603276062011719,
+    "mse_validacao_arredondado": 0.52,
+    "penalizacao_alpha": 9.270815315246582,
+    "penalizacao_alpha2": 2.0925624752029157e-06,
+    "media_previsoes": 0.41648228963216144,
+    "centro_anterior": 0.41656126234266494,
+    "hist_validacao": [
+      0,
+      0,
+      0,
+      0,
+      100,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "convergencia": {
+      "mse_treino": {
+        "media": 0.25546540372901494,
+        "amplitude": 0.0030463027954101274,
+        "variacao_borda": 0.0004777593745125541,
+        "limite": 0.003277327018645075,
+        "estavel": true
+      },
+      "mse_validacao": {
+        "media": 0.2593280448913574,
+        "amplitude": 0.0033644104003906494,
+        "variacao_borda": 0.0006981277465820113,
+        "limite": 0.0032966402244567873,
+        "estavel": false
+      }
+    },
+    "norma_gradiente": null
+  },
+  {
+    "epoca": 7,
+    "mse_treino": 0.25662064764234754,
+    "mse_validacao": 0.26034940719604494,
+    "mse_validacao_arredondado": 0.52,
+    "penalizacao_alpha": 9.18495283762614,
+    "penalizacao_alpha2": 2.0970435424614053e-06,
+    "media_previsoes": 0.4163929155137804,
+    "centro_anterior": 0.41648228963216144,
+    "hist_validacao": [
+      0,
+      0,
+      0,
+      0,
+      100,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "convergencia": {
+      "mse_treino": {
+        "media": 0.2560777963929706,
+        "amplitude": 0.0021877211994594803,
+        "variacao_borda": 0.0008742421203189465,
+        "limite": 0.003280388981964853,
+        "estavel": true
+      },
+      "mse_validacao": {
+        "media": 0.26000528717041016,
+        "amplitude": 0.0016057968139648326,
+        "variacao_borda": 0.0017804145812988503,
+        "limite": 0.003300026435852051,
+        "estavel": true
+      }
+    },
+    "norma_gradiente": null
+  }
+]

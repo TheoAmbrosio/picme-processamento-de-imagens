@@ -30,8 +30,119 @@ Este arquivo acompanha as tentativas e os avanços do projeto. Os resultados aba
 - **Mudanças:** o notebook ganhou uma célula de download pelo Kaggle; depois foram criados `preparar_dados.py`, `treinar_modelo.py`, `requirements.txt` e um README com instruções de execução.
 - **Resultado observado:** os scripts e o guia foram publicados no commit `4e7a2ee`. A estrutura e o diff foram verificados, mas o download e o treino não foram executados no outro PC pelo assistente.
 
+## 29/10/2026 — Configuração e primeira execução neste Linux
+
+- **Objetivo e motivo expresso:** o usuário pediu clonar `theo-codex`, aplicar suas instruções e skills e executar `treinar_modelo.py` da branch `cats-and-dogs` neste computador.
+- **Passos:** o clone inicial encontrou bloqueio de rede e ausência de credenciais. Como `gh` não estava instalado e `sudo` não estava disponível, foi usado GitHub CLI portátil oficial; o usuário autorizou o login no navegador. Foram clonados os dois repositórios. O instalador original `Apply.ps1` foi executado com PowerShell portátil oficial, após diagnóstico e prévia sem conflitos.
+- **Resultado da configuração:** instruções globais, quatro skills pessoais e conhecimento geral foram aplicados. O diagnóstico confirmou os arquivos instalados. As skills ECC não estavam disponíveis nesta sessão.
+- **Dependências:** criado ambiente `.venv` com Python 3.13; instalado `requirements.txt`; `pip check` passou. PyTorch instalado: `2.15.0+cu132`.
+- **Execução autorizada inicialmente:** baixado o dataset do Kaggle, sem login adicional. Foram encontradas 24.998 imagens válidas, divididas em 22.498 de treino e 2.500 de avaliação. Duas imagens ilegíveis foram ignoradas pelo código. Preparados os vetores SVD para `k=20`, escala de cinza, usando todas as imagens, semente de amostragem 42, fração de treino 0,90, Adam com taxa 0,1, batch 50 e 1.000 épocas configuradas.
+- **Correção do diagnóstico da GPU:** o teste dentro do sandbox não enxergava os dispositivos NVIDIA e levou inicialmente à conclusão incorreta de indisponibilidade da GPU. Fora do sandbox, CUDA foi confirmado na NVIDIA RTX A4500; o próprio treinamento imprimiu `Treinando em cuda | entrada=12000`. A SVD foi calculada em CPU.
+- **Resultado observado:** o log `treinamento.log` registra seis épocas completas; na sexta, MSE treino 0,499556 e avaliação 0,504000. Esses números não demonstram boa classificação e não representam treinamento concluído.
+
+## 29/10/2026 — Interrupção e normalização dos vetores
+
+- **Mudança de direção e motivo expresso:** após perguntar sobre normalização, o usuário pediu parar o treinamento, adicionar a normalização e ensinar a execução manual, sem executar novamente. Também pediu manter este registro com a skill `registro-de-trabalho`.
+- **Interrupção:** enviada interrupção ao processo em execução; a sessão terminou com código 130. Nenhum novo treinamento foi iniciado.
+- **Mudanças:** criado `normalizacao.py`, com cálculo incremental em lotes de média e desvio padrão populacional por entrada, acumulando em float64. `treinar_modelo.py` ajusta as estatísticas somente no treino e usa os mesmos valores na avaliação. O desvio tem piso `1e-6`; os rótulos e o cache SVD original são preservados. A escolha técnica foi do assistente para evitar vazamento e diferenças de escala, não uma hipótese atribuída ao usuário.
+- **Validação:** teste sintético confirmou estatísticas em lotes contra cálculo direto, média zero e desvio unitário em entradas não constantes, tratamento de coluna constante, manutenção dos rótulos, aplicação das estatísticas de treino na avaliação e rejeição de treino vazio. A sintaxe dos dois arquivos foi verificada sem executar o script de treinamento.
+- **Documentação:** README atualizado com comando Linux, interrupção por `Ctrl + C`, uso automático de CUDA e descrição da padronização. O modelo e as estatísticas ainda não são persistidos pelo script; essa limitação está documentada. Nenhum commit ou push foi feito.
+
 ## Próximos passos
 
-- Executar `treinar_modelo.py` no outro computador seguindo o `README.md`.
-- Confirmar que o download produz `dataset/PetImages/Cat` e `Dog`, que o cache SVD é reutilizado e que o gráfico aparece ao fim do treino.
+- Avaliar manualmente a penalização configurável abaixo; nenhum treinamento com esse termo foi feito pelo assistente.
+
+- O usuário executará manualmente `treinar_modelo.py` seguindo o comando Linux do `README.md`; o assistente não deve iniciar outro treinamento sem nova solicitação explícita.
+- Medir o efeito da padronização em uma nova execução; ainda não há resultados do modelo com os dados normalizados.
+- Confirmar que o gráfico aparece ao fim do treino; o primeiro treinamento foi interrompido antes dessa etapa.
 - Registrar as configurações usadas e as métricas observadas antes de comparar experimentos.
+
+## 29/10/2026 — Relato de estagnação e penalização perto de 0,5
+
+- **Contexto e motivo expresso:** o usuário relatou que o MSE de treino não diminuiu em 50 épocas e pediu adicionar `alpha / |0.5 - valor|`, com `alpha` configurável, para penalizar o travamento em 0,5. O relato não veio acompanhado das previsões nem de um log dessas 50 épocas; a causa da estagnação não foi confirmada.
+- **Discussão anterior:** foram levantadas hipóteses de saturação das sigmoides e taxa de aprendizado elevada; sugeridos experimentos separados com taxa 0,001 e batch maior para comparar tempo por época. Essas hipóteses não foram tratadas como diagnóstico comprovado.
+- **Configurações encontradas antes da edição:** `k_modelo=10`, RGB, `usar_todos_dados=False`, `N=1000`, taxa 0,001, batch 256 e 1.000 épocas. Essas edições já estavam no arquivo e foram preservadas.
+- **Implementação:** interpretado `valor` como previsão individual da rede. Adicionado `alpha=0.001` configurável e `epsilon_penalizacao=1e-6`; perda de otimização `MSE + mean(alpha / (abs(previsao - 0.5) + epsilon_penalizacao))`. O epsilon é uma adaptação numérica explícita da fórmula singular solicitada. `alpha=0` desativa o termo. Validação impede alpha negativo ou não finito e epsilon não positivo ou não finito.
+- **Métricas:** MSE de treino e avaliação continuam sem penalização para permitir comparação; o terminal mostra também a penalização média e a perda total de treino. O gráfico permanece de MSE.
+- **Validação observada:** teste isolado da função, extraída por AST sem executar ou importar o programa de treinamento, confirmou fórmula e média, direção dos gradientes em ambos os lados de 0,5, finitude em 0,5 e desativação com alpha zero. Sintaxe verificada. Nenhum treinamento foi iniciado.
+- **Limitações:** o termo favorece confiança mesmo em previsões erradas; exatamente em 0,5, o gradiente de `abs` usado pelo PyTorch é zero. Perto desse valor, o gradiente pode ser grande. O valor inicial de alpha e qualquer melhora no aprendizado não foram validados em experimento. A instrução de não iniciar treinamento continua vigente.
+- **Próximo passo:** o usuário configura alpha e executa manualmente, comparando MSE e previsões com a execução sem penalização. Sem commit ou push.
+
+## 29/10/2026 — Intervalos das previsões no terminal
+
+- **Objetivo e motivo expresso:** o usuário pediu identificar os dois intervalos de largura 0,1 em que as respostas se concentram. Esclareceu que queria essa informação no log do terminal, não em um gráfico.
+- **Mudanças:** a avaliação de cada época acumula as previsões em dez intervalos fixos entre 0 e 1, reutilizando a mesma passagem que calcula o MSE. O log mostra os dois intervalos ocupados mais frequentes, com quantidade e porcentagem sobre toda a avaliação. A escolha de usar a avaliação foi explicitada pelo assistente. Empates priorizam o menor limite inferior; um único intervalo ocupado produz uma única entrada. 1,0 pertence ao último intervalo.
+- **Validação:** teste sintético isolado, sem importar nem executar o programa de treinamento, verificou limites, inclusão de 1,0, ordenação, porcentagens, empates, faixa única e preservação do MSE. Nenhum gráfico novo foi adicionado e nenhum treinamento foi iniciado.
+- **Resultado e limite:** o código produzirá o resumo nas próximas execuções iniciadas pelo usuário; ainda não foram medidas as concentrações do modelo real após essa alteração. Esses intervalos descrevem previsões e não acurácia. Uma execução já em andamento não incorpora a edição.
+- **Próximo passo:** o usuário executa manualmente e observa o campo `intervalos avaliação` por época. Sem commit ou push.
+
+## 29/10/2026 — MSE de avaliação com saídas arredondadas
+
+- **Motivo expresso:** após relatar concentração das respostas perto de zero ou do meio, o usuário esclareceu que deseja observar o MSE de validação com as previsões arredondadas. Não pediu arredondar a saída usada para retropropagação.
+- **Mudanças:** adicionado ao log por época `MSE avaliação arredondado`, calculado com classe 0 quando previsão < 0,5 e classe 1 quando previsão >= 0,5. Mantidos o MSE contínuo, os intervalos e a perda diferenciável de treinamento. A nova métrica também é guardada no histórico em memória; o gráfico existente permanece inalterado.
+- **Validação:** avaliação isolada em cinco exemplos artificiais, com lotes desiguais, confirmou dois erros e MSE arredondado de 0,4; também foram conferidos o limiar exato 0,5 e a preservação do MSE contínuo. Nenhum treinamento foi executado.
+- **Interpretação:** para os rótulos 0 e 1 deste projeto, MSE arredondado é a taxa de erro, igual a 1 menos a acurácia. Ainda não há medição dessa métrica no modelo real após a alteração.
+- **Próximo passo:** o usuário reinicia manualmente o script para incorporar a mudança e compara as duas métricas. Sem commit ou push.
+
+## 29/10/2026 — Histograma final das previsões
+
+- **Motivo expresso:** o usuário pediu também plotar a frequência dos resultados ao final.
+- **Mudanças:** adicionada `plotar_frequencias`, que avalia o modelo ao término do treino e conta as previsões contínuas em dez intervalos de largura 0,1, incluindo 1 no último. O gráfico mostra quantidades por barra e é aberto junto com o gráfico de MSE. Uma cópia é salva em `frequencia_resultados.png`, sobrescrita a cada execução concluída. Os dados usados são os de avaliação, coerentes com os intervalos do log.
+- **Validação:** função testada isoladamente com modelo identidade e cinco previsões artificiais, sem treinamento. Confirmadas contagens, limites 0/0,1/0,5/1, processamento em lotes e geração de PNG em `/tmp`. A sintaxe foi verificada.
+- **Limites e próximo passo:** ainda não foi gerado histograma de um modelo real com essa versão. O usuário precisa iniciar uma nova execução e concluí-la. Configurações existentes foram preservadas; nenhum treinamento, commit ou push foi executado pelo assistente.
+
+## 29/10/2026 — Penalização centrada na média da época anterior
+
+- **Motivo expresso:** o usuário observa concentração das respostas em uma média e quer substituir o centro fixo 0,5 da penalização pela média do resultado anterior, buscando concentração nos dois extremos.
+- **Interpretação aplicada:** resultado anterior significa a época anterior. O centro é 0,5 na primeira época e depois recebe a média de todas as previsões observadas nos lotes de treino da época anterior, ponderada pelo número de imagens, não uma média simples das médias dos lotes. São previsões coletadas ao longo da atualização dos pesos; não uma nova passagem com o modelo final da época.
+- **Mudanças:** função `penalizacao_media_anterior(previsoes, centro)` calcula `mean(alpha / (abs(previsoes - centro) + epsilon_penalizacao))`. O centro permanece fixo durante a época, sem gradiente e sem uso de avaliação. A soma usa previsões destacadas do grafo e float64, sem armazenar todos os resultados. O log mostra o centro utilizado e a média atual. As configurações editadas pelo usuário foram preservadas.
+- **Validação:** testes sintéticos isolados verificaram fórmula com centros diferentes, gradientes nos dois lados, finitude no centro, alpha zero e média ponderada em lotes de tamanhos diferentes. A sintaxe e o diff foram verificados; nenhum treinamento foi executado.
+- **Limites:** afastar da média anterior não garante acertar as classes nem ocupar os dois extremos simultaneamente; pode causar oscilação entre extremos. O gradiente do valor absoluto segue zero exatamente no centro e pode ser grande perto dele. Não há resultado experimental dessa versão.
+- **Próximo passo:** o usuário reinicia manualmente, compara métricas e histograma. Sem commit ou push.
+
+## 29/10/2026 — Equilíbrio da média com alpha2 e configuração experimental
+
+- **Pedidos e mudança de direção:** o usuário pediu somar `alpha2 * (0.5 - media_anterior)^2`, escolher parâmetros e, depois, fazer alpha2 afetar o gradiente. A versão inicialmente adicionada com média anterior foi testada e mostrou gradiente inalterado, por ser constante. Essa versão foi substituída antes de qualquer treinamento pelo assistente.
+- **Implementação final:** `penalizacao_equilibrio(previsoes)` calcula `alpha2 * (0.5 - previsoes.mean())^2`, usando a média do lote atual com grafo de autograd preservado. A primeira penalização continua centrada na média da época anterior, calculada exclusivamente no treino. O log separa MSE, repulsão e penalização de equilíbrio; a perda total inclui os dois termos.
+- **Parâmetros escolhidos pelo assistente:** taxa de aprendizado 0,001, batch 64, alpha 0,00001, alpha2 0,001 e epsilon 0,001. Mantidos k=20, cinza, N=1000, fração 0,90 e 100 épocas. São pontos de partida experimentais, não valores ideais medidos. Lote foi reduzido considerando o erro de memória relatado anteriormente; alpha foi reduzido e epsilon aumentado para moderar a singularidade.
+- **Validação observada:** teste sintético isolado confirmou gradientes de alpha2 contra a expressão analítica `2*alpha2*(media-0.5)/n`, com direção correta acima e abaixo de 0,5, perda e gradiente zero em média 0,5 e desativação com alpha2 zero. Sintaxe e diff verificados. Nenhum treinamento foi iniciado.
+- **Limitações:** média 0,5 não implica distribuição em dois extremos e também é atingida com todas as previsões em 0,5. O equilíbrio é imposto por lote e pode conflitar com lotes desbalanceados. Ainda não há métricas reais com a configuração final.
+- **Próximo passo:** execução manual pelo usuário, comparando MSE contínuo, MSE arredondado e histograma. Sem commit ou push.
+
+
+## 29/10/2026 — Aplicação do terceiro colocado da busca
+
+- **Pedido:** aplicar em `treinar_modelo.py` a configuração marcada como convergida no top 3 e fornecer comando de execução manual.
+- **Fonte:** terceiro registro de `resultados_busca_k_cor_v5/ranking.csv`; k=20, cinza, N=1000, fração de treino 0,90, semente 42, lr=0,0003, batch=256, alpha=0,001, alpha2=0,01, epsilon=0,001, oito camadas ocultas e fator 0,5. Mantido limite de 100 épocas da busca.
+- **Mudanças:** ajustados lr, batch, alpha, alpha2 e fator; demais valores já coincidiam. Preservadas as ativações ReLU internas e sigmoide final do arquivo atual.
+- **Evidência da busca:** melhor época 18, MSE de validação 0,2401744843; parada na época 23 por MSE estabilizado. O script manual não foi alterado para reproduzir essa parada automática.
+- **Validação:** sintaxe conferida e valores comparados ao ranking. Nenhum treinamento iniciado, commit ou push realizado. Configurar os mesmos hiperparâmetros não garante resultados idênticos.
+- **Próximo passo:** execução manual pelo usuário.
+
+
+## 29/10/2026 — Restauração do ponto de entrada
+
+- **Relato:** comando do treinamento retornava imediatamente ao terminal, sem saída.
+- **Diagnóstico:** arquivo local terminava em `previsoes = mod`, dentro da função do histograma, sem `main()` e sem chamada de entrada. O trecho restante era sintaticamente válido, mas apenas definia funções. A origem do truncamento não foi determinada.
+- **Correção:** restaurados histograma e salvamento PNG, preparação dos dados, divisão treino/avaliação, padronização, construção da rede e chamada de treinamento dentro de `main()`, com guarda `if __name__ == "__main__"`. Incluída mensagem imediata de início. Preservadas configurações atuais, incluindo todos os dados, k=20 e batch=128.
+- **Validação:** análise AST confirmou sintaxe, definição de main e chamada protegida no ponto de entrada; diff conferido. Nenhum treinamento executado.
+- **Limitação observada:** disco com apenas cerca de 122 MB livres no diagnóstico; não foi apagado nenhum arquivo. Isso pode impedir novas gravações de cache.
+- **Próximo passo:** usuário executa manualmente o comando. Sem commit ou push.
+
+
+## 29/10/2026 — Explicação matemática em Delta
+
+- **Pedido:** usar a skill theo-delta para uma página HTML comum com rolagem, sem slides, explicando matematicamente o projeto.
+- **Produção:** criada `docs/explicacao-matematica.dlt` como artigo em português, cobrindo SVD, dimensão dos fatores, padronização exclusiva do treino, arquitetura ReLU/sigmoide, MSE, ambas as penalizações e gradientes, interpretação das métricas, batches e limites experimentais. A configuração descrita foi lida do código atual.
+- **Ferramentas:** preparado Delta 0.4.0 e dependências em diretórios temporários; não foi feita instalação global. Compilado `docs/explicacao-matematica.html`, com matemática pré-renderizada e recursos incorporados.
+- **Validação:** lint e build do Delta; inspeção do HTML sem erros KaTeX e com oito seções de artigo; captura de tela local pelo Chrome confirmou formato com rolagem. Corrigidas numeração duplicada e uma advertência de acento em modo matemático. Nenhum treinamento foi executado.
+- **Limites:** documento explica implementação e hipóteses; não declara eficácia das penalizações nem verificação humana de prova. Sem publicação, commit ou push.
+
+
+## 29/10/2026 — Preparação para commit e envio solicitado
+
+- **Pedido:** usuário autorizou commit de todas as alterações e upload ao GitHub; confirmou que imagens e dados processados não precisam ser enviados.
+- **Escopo:** código, README, registro, fonte Delta e HTML, gráfico final, log e resultados legíveis da busca (rankings, configurações, históricos e gráficos). Dataset, fatores processados, ambiente virtual, checkpoints `.pt` e temporários da busca ficam fora do Git e são preservados localmente. Checkpoints somam aproximadamente 356 GiB.
+- **Espaço:** a partição do projeto estava cheia. Ferramentas temporárias criadas pelo assistente foram removidas de /tmp; como estavam em outra partição, foi necessário mover o cache de downloads do pip para `/tmp/theo-pip-cache-preservado`, preservando seu conteúdo e liberando aproximadamente 2,9 GiB em /home. Nenhum dataset ou modelo foi removido.
+- **Configuração atual preservada:** o usuário já havia alterado k para 5 e alpha/alpha2 para zero; esses valores serão versionados como estão. O artigo Delta registra a configuração histórica explicitada na sua elaboração.
+- **Validação:** sintaxe dos scripts Python e diff conferidos, busca por padrões comuns de credenciais sem correspondências. Sem execução de treinamento. Commit e envio serão confirmados após a operação.

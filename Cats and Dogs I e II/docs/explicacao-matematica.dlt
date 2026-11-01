@@ -1,0 +1,118 @@
+<document lang="pt-BR" type="article" theme-accent="blue">
+<title>De uma imagem a uma decisão: a matemática do seu classificador</title>
+
+<section id="objetivo">
+<title>Qual problema você está resolvendo?</title>
+<intro>Você transforma imagens de gatos e cachorros em vetores construídos por SVD e aprende uma função que associa cada vetor a um número entre zero e um. Esta página descreve o código local de 29/10/2026; as penalizações são hipóteses experimentais, não garantias de classificação correta.</intro>
+Para cada imagem $I_i$, o rótulo é $y_i=0$ para gato e $y_i=1$ para cachorro. O conjunto de exemplos é $\mathcal D=\{(I_i,y_i)\}_{i=1}^{n}$. A rede produz $p_i=f_\theta(x_i)\in(0,1)$, em que $x_i$ representa a imagem e $\theta$ reúne os pesos e vieses aprendidos.
+
+O número $p_i$ é uma pontuação para a classe cachorro. Ele só pode ser interpretado como uma probabilidade bem calibrada após avaliação apropriada; estar entre zero e um não basta para provar essa interpretação. A decisão final usa o limiar $0{,}5$.
+
+<code lang="text" numbered="false">
+Imagem → recorte central → 300 × 300 → fatores SVD
+       → vetor → padronização → rede neural → pontuação p
+       → limiar 0,5 → gato ou cachorro
+</code>
+</section>
+
+<section id="svd">
+<title>A SVD é a sua representação da imagem</title>
+A imagem é recortada em um quadrado central e redimensionada para $300\times300$. Isso preserva a proporção no redimensionamento, mas descarta partes fora do recorte. Em cinza há uma matriz $A\in\mathbb R^{300\times300}$; em RGB há três matrizes, fatoradas separadamente. Os pixels não são previamente divididos por 255 no código atual.
+
+<equation id="eq-svd">A=U\Sigma V^\top,\qquad A_k=U_k\Sigma_kV_k^\top.</equation>
+Os valores singulares são ordenados do maior para o menor. A aproximação de posto $k$ mantém os componentes dominantes. Em aritmética exata, a SVD truncada é uma melhor aproximação de posto no máximo $k$ na norma de Frobenius; isso preserva energia da matriz, não necessariamente as características que distinguem gatos de cachorros.
+
+Você não entrega $A_k$ reconstruída à rede. Entrega os fatores concatenados:
+<equation id="eq-vetor">x=\operatorname{concat}\left(\operatorname{vec}(U_k),\operatorname{vec}(\Sigma_kV_k^\top)\right)\in\mathbb R^{600k}.</equation>
+São $300k$ entradas de cada fator. Com $c$ canais, a dimensão é $d=600kc$. Para $k=20$ em cinza, $d=12\,000$; em RGB, $d=36\,000$. Aumentar $k$ preserva mais informação, mas amplia a rede e o custo de memória. Os fatores são calculados por métodos numéricos; o código usa uma alternativa densa quando o ARPACK falha.
+
+Há uma sutileza: o sinal de um par de vetores singulares pode ser trocado sem mudar a imagem reconstruída. Valores singulares repetidos também permitem mudanças de base no subespaço. Como você usa os fatores como atributos, essas ambiguidades podem afetar a consistência da representação entre imagens. Ordenar os valores singulares não resolve sozinho a ambiguidade de sinal.
+</section>
+
+<section id="normalizacao">
+<title>Divisão e padronização sem usar a avaliação para ajustar os atributos</title>
+O código divide os índices em 90% para treino e 10% para avaliação, usando semente 42 na divisão. A divisão é aleatória, sem estratificação explícita por classe. Em seguida calcula, exclusivamente no treino $T$, uma média e um desvio para cada posição $j$ do vetor:
+<equation id="eq-normalizacao">\mu_j=\frac{1}{|T|}\sum_{i\in T}x_{ij},\qquad s_j^2=\frac{1}{|T|}\sum_{i\in T}(x_{ij}-\mu_j)^2,\qquad z_{ij}=\frac{x_{ij}-\mu_j}{\max(s_j,10^{-6})}.</equation>
+Os mesmos $\mu_j$ e $s_j$ são usados na avaliação. Calcular essas estatísticas incluindo a avaliação faria essa parte do experimento depender dos dados reservados. A SVD é calculada individualmente por imagem; ela não ajusta uma base compartilhada usando todas as imagens.
+
+O cálculo das estatísticas é incremental, por lotes, com acumulação em float64. A transformação entregue à rede é float32. Colunas constantes ficam com numerador zero no treino e denominador protegido. A padronização aproxima as escalas dos atributos, mas não garante convergência nem remove redundância.
+
+Se a avaliação é consultada repetidamente para escolher hiperparâmetros, ela funciona como validação. Para uma estimativa final mais independente, será necessário um conjunto de teste que não participe dessas escolhas. Uma semente na divisão não torna todo o treinamento determinístico: a inicialização dos pesos e outras fontes de aleatoriedade também importam.
+</section>
+
+<section id="rede">
+<title>A função que a rede aprende</title>
+Na configuração atual, há oito camadas ocultas com redução de largura pela metade e ativação ReLU. A saída usa sigmoide:
+<equation id="eq-rede">h_0=z,\qquad h_\ell=\max(0,W_\ell h_{\ell-1}+b_\ell),\qquad p=\frac{1}{1+\exp[-(w^\top h_8+b)]}.</equation>
+A ReLU é aplicada coordenada a coordenada. A sequência de dimensões atual é:
+<code lang="text" numbered="false">
+12000 → 6000 → 3000 → 1500 → 750 → 375 → 187 → 93 → 46 → 1
+          oito camadas ocultas com ReLU                 sigmoide
+</code>
+Uma camada de entrada $a$ e saída $b$ possui $ab+b$ parâmetros. Somando todas as camadas dessa configuração, são 96.010.042 parâmetros. A primeira camada, sozinha, tem 72.006.000. Por isso a representação SVD pode ser menor que a imagem e ainda assim produzir uma rede grande.
+
+O Adam mantém estados adicionais para os parâmetros, além dos gradientes; durante o treino também são guardadas ativações para a retropropagação. O consumo de GPU depende tanto da arquitetura quanto do tamanho do lote. A preparação SVD usa CPU neste projeto; as camadas e a retropropagação usam CUDA quando disponível.
+</section>
+
+<section id="perda">
+<title>A sua função de perda atual</title>
+Seja $B_t$ um lote da época $t$, com $m$ imagens. Denote por $c_{t-1}$ a média das previsões observadas nos lotes de treino da época anterior. Na primeira época, o código usa $c_0=0{,}5$. Esse centro é um número fixo durante a época atual e não participa do gradiente.
+<equation id="eq-perda">\mathcal L_{B_t}(\theta)=\underbrace{\frac1m\sum_{i\in B_t}(p_i-y_i)^2}_{\text{MSE}}+\underbrace{\frac{\alpha}{m}\sum_{i\in B_t}\frac{1}{|p_i-c_{t-1}|+\varepsilon}}_{\text{repulsão da média anterior}}+\underbrace{\alpha_2(0{,}5-\bar p_{B_t})^2}_{\text{equilíbrio da média atual}},\qquad \bar p_{B_t}=\frac1m\sum_{i\in B_t}p_i.</equation>
+
+O MSE é o termo que associa previsão ao rótulo correto. A primeira penalização aumenta quando uma previsão se aproxima do centro anterior. A segunda aumenta quando a média do lote atual se afasta de $0{,}5$. No código atual, $\alpha=0{,}001$, $\alpha_2=0{,}01$ e $\varepsilon=0{,}001$.
+
+O centro da próxima época é calculado assim:
+<equation id="eq-centro">c_t=\frac{\sum_{\text{lotes de treino da época }t}\ \sum_{i\in B_t}p_i}{n_{\text{treino}}}.</equation>
+É uma média ponderada por imagem, não uma média simples das médias de lotes. As previsões são coletadas enquanto os pesos mudam ao longo da época, não por uma nova passagem com os pesos finais. Nenhuma previsão da avaliação entra nesse centro.
+
+Agora podemos examinar como os termos atuam no gradiente.
+Para uma previsão fora do centro, a derivada da repulsão em relação a $p_i$ é:
+<equation id="eq-grad-repulsao">\frac{\partial R}{\partial p_i}=-\frac{\alpha}{m}\frac{\operatorname{sgn}(p_i-c_{t-1})}{(|p_i-c_{t-1}|+\varepsilon)^2},\qquad p_i\ne c_{t-1}.</equation>
+O passo de descida afasta previsões para lados opostos do centro conforme o lado em que já estão. Exatamente no centro, o valor absoluto não é diferenciável; o PyTorch adota gradiente zero para esse ponto. Perto dele, a magnitude pode ser grande. Com os valores atuais, a repulsão por amostra antes da média chega a $\alpha/\varepsilon=1$ no centro.
+
+Já o termo de equilíbrio tem derivada:
+<equation id="eq-grad-equilibrio">\frac{\partial E}{\partial p_i}=\frac{2\alpha_2}{m}(\bar p_{B_t}-0{,}5).</equation>
+Se a média está abaixo de $0{,}5$, a descida tende a aumentar as previsões; se está acima, tende a reduzi-las. Todos os exemplos do lote recebem a mesma contribuição desse termo em relação à saída. Essas derivadas ainda passam pela sigmoide e pelas camadas até os pesos. Como $\sigma'(a)=p(1-p)$, saídas saturadas perto de zero ou um podem produzir gradientes pequenos nos pesos mesmo quando há erro.
+</section>
+
+<section id="limites">
+<title>Por que os dois extremos ainda não garantem uma boa solução?</title>
+A sua hipótese é combinar dispersão em relação à média anterior com uma média atual perto do meio. Isso pode incentivar separação, mas não especifica quais imagens devem ir para cada extremo. Só o termo supervisionado associa a saída à classe correta.
+
+Considere três comportamentos diferentes. Todas as saídas iguais a $0{,}5$ dão média $0{,}5$, então zeram o termo de equilíbrio. Metade das saídas em zero e metade em um também zera esse termo, mesmo que todas as classes estejam trocadas. Finalmente, uma concentração em um extremo pode ser seguida de concentração no outro na época seguinte: o centro anterior muda, mas isso não prova que as classes foram separadas.
+
+O termo de equilíbrio impõe uma preferência de média por lote, mesmo em lotes cuja proporção de cachorros não é 50%. Seu efeito depende da composição e do tamanho dos lotes. Ajustar os pesos das penalizações muda a competição com o MSE; os valores escolhidos não são uma garantia matemática de melhoria.
+
+Sem penalizações, prever uma constante $q$ para todo o conjunto minimiza o MSE quando $q$ é a média dos rótulos. Em dados equilibrados, isso dá $q=0{,}5$ e MSE $0{,}25$. Portanto, encontrar saídas perto do meio pode ser o comportamento de um modelo que ainda não aproveitou informação discriminativa, e não um defeito do cálculo do MSE.
+</section>
+
+<section id="metricas">
+<title>Como interpretar o terminal e os gráficos</title>
+O MSE de treino é calculado com as saídas contínuas observadas durante as atualizações dos pesos. O MSE de avaliação é calculado com o modelo ao fim da época, sem atualização. O log também separa a repulsão, o equilíbrio e a perda total: eles não devem ser confundidos com MSE puro.
+
+Para a métrica arredondada, a decisão é:
+<equation id="eq-decisao">\hat y_i=\mathbf 1[p_i\ge0{,}5],\qquad \operatorname{MSE}_{\text{arred}}=\frac1n\sum_i(\hat y_i-y_i)^2=\frac{\#\text{erros}}n=1-\mathrm{acuracia}.</equation>
+Isso vale porque os rótulos e decisões são binários. Por exemplo, MSE arredondado $0{,}20$ significa 20% de erros e 80% de acertos. O arredondamento entra apenas nessa métrica; a perda de treinamento continua diferenciável em relação às previsões, com as ressalvas do valor absoluto.
+
+Os dois intervalos mais ocupados no log e o histograma final usam as previsões contínuas da avaliação. Os intervalos são $[0,0{,}1)$, $[0{,}1,0{,}2)$ e assim por diante, incluindo 1 no último. Um histograma com dois picos mostra concentração das saídas, mas não mostra se cada pico corresponde à classe correta.
+
+O ranking da busca marcou como convergida uma configuração cujo MSE estabilizou; isso é um critério de parada numérico. O terceiro colocado teve melhor MSE de validação aproximadamente $0{,}240174$ e melhor taxa de erro arredondada $0{,}44$. As melhores métricas podem ocorrer em épocas diferentes. Esse resultado não comprova classificação satisfatória nem se transfere automaticamente para o treino com todas as imagens.
+</section>
+
+<section id="experimento">
+<title>O experimento que está configurado agora</title>
+<code lang="text" numbered="false">
+Fonte: treinar_modelo.py local em 29/10/2026
+k = 20; cinza; todas as imagens legíveis
+fração de treino = 0,90; semente da divisão = 42
+8 camadas ocultas; fator de redução = 0,5; ReLU interna
+Adam; taxa de aprendizado = 0,0003; 100 épocas
+batch = 128; alpha = 0,001; alpha2 = 0,01; epsilon = 0,001
+</code>
+Com 24.998 imagens válidas, são 22.498 para treino e 2.500 para avaliação. Batch 128 gera 176 atualizações por época, incluindo o último lote incompleto. Um lote de 16.384 geraria somente duas atualizações. Uma época percorre as imagens, mas o número de passos do otimizador depende do lote; comparar apenas épocas pode esconder essa diferença.
+
+O tamanho da rede, o custo da preparação e o tráfego de dados também afetam o tempo. Maior utilização da GPU não implica melhor classificação. Compare tempo total, MSE contínuo, taxa de erro e comportamento das previsões, preservando uma avaliação final independente das escolhas de configuração.
+
+Esta explicação foi produzida a partir de treinar_modelo.py, preparar_dados.py, normalizacao.py e dos resultados salvos da busca. Não foi iniciado nenhum treinamento para escrever ou compilar esta página. O documento descreve a implementação; não constitui verificação de desempenho nem revisão humana formal de uma prova.
+</section>
+</document>
