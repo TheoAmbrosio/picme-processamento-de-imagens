@@ -14,12 +14,12 @@ from preparar_dados import ConjuntoImagensSVD, TAMANHO, garantir_dataset
 # Configurações editáveis
 k_modelo = 20
 escala_cinza = True
-usar_todos_dados = True
+usar_todos_dados = False
 N = 1000  # total; usado somente quando usar_todos_dados=False
 semente_amostragem = 42
 fracao_treino = 0.90
 taxa_aprendizado = 0.1
-epocas = 1000
+epocas = 100
 tamanho_batch = 50
 
 
