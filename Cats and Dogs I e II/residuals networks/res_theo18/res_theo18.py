@@ -1,10 +1,10 @@
-"""res_theo: ResNet-34 oficial até layer3, com uma única saída binária."""
+"""res_theo18: ResNet-18 oficial até layer3, com uma única saída binária."""
 import torch
 from torch import nn
-from torchvision.models import ResNet34_Weights, resnet34
+from torchvision.models import ResNet18_Weights, resnet18
 from torchvision.models.resnet import ResNet
 
-PESOS = ResNet34_Weights.IMAGENET1K_V1
+PESOS = ResNet18_Weights.IMAGENET1K_V1
 ETAPAS_BACKBONE = ("conv1", "bn1", "relu", "maxpool", "layer1", "layer2", "layer3")
 
 
@@ -39,9 +39,9 @@ class ResTheo(nn.Module):
         x = self.conv1(x)                  # [B, 64, 112, 112]
         x = self.relu(self.bn1(x))
         x = self.maxpool(x)                # [B, 64, 56, 56]
-        x = self.layer1(x)                 # [B, 64, 56, 56]: 3 BasicBlocks
-        x = self.layer2(x)                 # [B, 128, 28, 28]: 4 BasicBlocks
-        x = self.layer3(x)                 # [B, 256, 14, 14]: 6 BasicBlocks
+        x = self.layer1(x)                 # [B, 64, 56, 56]: 2 BasicBlocks
+        x = self.layer2(x)                 # [B, 128, 28, 28]: 2 BasicBlocks
+        x = self.layer3(x)                 # [B, 256, 14, 14]: 2 BasicBlocks
         x = self.flatten(self.avgpool(x))  # [B, 256], inclusive B=1
         return self.fc(x)                  # [B, 1], logits sem sigmoid
 
@@ -80,12 +80,18 @@ def conferir_transferencia(modelo: ResTheo, origem: ResNet) -> dict:
     }
 
 
-def criar_res_theo(congelar_backbone: bool = False):
-    origem = resnet34(weights=PESOS)
+def criar_res_theo18(congelar_backbone: bool = False, config=None):
+    from .config_res_theo18 import CONFIG, validar_dropout
+    config = CONFIG if config is None else config
+    validar_dropout(config)
+    origem = resnet18(weights=PESOS)
     modelo = ResTheo(origem, congelar_backbone)
     resumo = conferir_transferencia(modelo, origem)
     print(f"ImageNet: {resumo['tensores_reaproveitados']} tensores reaproveitados "
           f"({resumo['buffers_reaproveitados']} buffers de BatchNorm incluídos).")
     print(f"Descartados: layer4.* e fc.* originais ({len(resumo['descartados'])} tensores).")
     print("Inicializados com Normal(0, 1): fc.weight [1, 256] e fc.bias [1].")
+    from .dropout_comum import instalar_dropout
+    from .config_res_theo18 import CONFIG
+    instalar_dropout(modelo, CONFIG if config is None else config)
     return modelo, resumo

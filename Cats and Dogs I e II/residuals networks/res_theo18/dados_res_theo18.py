@@ -7,7 +7,7 @@ from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
 
-from .res_theo import PESOS
+from .res_theo18 import PESOS
 
 ROTULOS = {"Cat": 0, "Dog": 1}
 SPLITS = ("treino", "validacao", "teste")
@@ -23,7 +23,7 @@ def normalizar_imagem(imagem: Image.Image) -> torch.Tensor:
     return NORMALIZAR(imagem)
 
 
-def carregar_divisao(manifesto: Path) -> dict:
+def carregar_divisao(manifesto: Path, splits_obrigatorios=SPLITS, aceitar_rotulos_duplicados=False) -> dict:
     conjuntos = {split: [] for split in SPLITS}
     hashes = {}
     originais = {}
@@ -43,7 +43,7 @@ def carregar_divisao(manifesto: Path) -> dict:
                 raise ValueError("Rótulos incompatíveis: esperado Cat=0 e Dog=1.")
             if sha in hashes and hashes[sha][0] != split:
                 raise ValueError(f"Vazamento: mesmo conteúdo em {hashes[sha][0]} e {split}.")
-            if sha in hashes and hashes[sha][1] != classe:
+            if sha in hashes and hashes[sha][1] != classe and not aceitar_rotulos_duplicados:
                 raise ValueError("Rótulos conflitantes para arquivos de conteúdo idêntico.")
             hashes[sha] = (split, classe)
             caminho = (raiz / linha["caminho"]).resolve()
@@ -68,7 +68,7 @@ def carregar_divisao(manifesto: Path) -> dict:
                 raise ValueError(f"Treino sem as 16 variantes completas: {chave}")
         elif grupo["contagem"] != 1 or grupo["combinacoes"] != {("avaliacao", "normal", 0)}:
             raise ValueError(f"Avaliação deve ter uma versão determinística: {chave}")
-    if any(not linhas for linhas in conjuntos.values()):
+    if any(not conjuntos[split] for split in splits_obrigatorios):
         raise ValueError("Um split está vazio; confira as frações e o manifesto.")
     return conjuntos
 

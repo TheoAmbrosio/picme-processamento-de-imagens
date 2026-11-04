@@ -3,20 +3,26 @@ import argparse
 from pathlib import Path
 
 import torch
-from torchvision.models import resnet34
+from torchvision.models import resnet18
 
 from criar_dataset_ampliado import abrir_rgb, aplicar_avaliacao
-from .dados_res_theo import ROTULOS, normalizar_imagem
-from .res_theo import ResTheo
+from .dados_res_theo18 import ROTULOS, normalizar_imagem
+from .res_theo18 import ResTheo
 
 
 def carregar_checkpoint(caminho: Path, dispositivo: torch.device):
     estado = torch.load(caminho, map_location="cpu", weights_only=True)
-    if (estado["nome_modelo"] != "res_theo" or estado["rotulos"] != ROTULOS
+    if (estado["nome_modelo"] != "res_theo18" or estado["rotulos"] != ROTULOS
             or estado["dataset"]["lado"] != 224):
         raise ValueError("Checkpoint incompatível com RGB 224x224 e Cat=0/Dog=1.")
     # Reconstitui sem download de ImageNet, pois o checkpoint já contém todos os pesos.
-    modelo = ResTheo(resnet34(weights=None))
+    modelo = ResTheo(resnet18(weights=None))
+    from .config_res_theo18 import ConfigTreino
+    from .dropout_comum import instalar_dropout
+    config = ConfigTreino(**estado["config"])
+    config.validar()
+    instalar_dropout(modelo, config)
+    modelo.dropout_comum.carregar_estado(estado["dropout"])
     modelo.load_state_dict(estado["modelo"], strict=True)
     return modelo.to(dispositivo).eval(), estado
 

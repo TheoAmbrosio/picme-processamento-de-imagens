@@ -53,7 +53,8 @@ from datetime import datetime
 from pathlib import Path
 
 from PIL import Image, ImageFile, ImageOps
-from res_theo.config_res_theo import CONFIG
+sys.path.insert(0, str(Path(__file__).resolve().parent / "residuals networks"))
+from res_theo34.config_res_theo34 import CONFIG
 
 RAIZ = Path(__file__).resolve().parent
 ORIGEM = RAIZ / "dataset" / "PetImages"
@@ -241,7 +242,8 @@ def descrever_erro(exc: Exception) -> str:
 def processar(tarefa) -> dict:
     """Executado nos processos auxiliares; uma imagem por vez fica na memória."""
     (classe, caminho, arquivo, tamanho, mtime_ns, pasta, sobrescrever,
-     frac_validacao, frac_teste, semente) = tarefa
+     frac_validacao, frac_teste, semente) = tarefa[:10]
+    split_planejado = tarefa[10] if len(tarefa) > 10 else None
     linha = dict.fromkeys(COLUNAS, "")
     linha.update(classe=classe, arquivo=arquivo, tamanho=tamanho, mtime_ns=mtime_ns,
                  rotulo=0 if classe == "Cat" else 1)
@@ -250,7 +252,7 @@ def processar(tarefa) -> dict:
         with open(caminho, "rb") as origem:
             dados = origem.read()
         linha["sha256"] = hashlib.sha256(dados).hexdigest()
-        linha["split"] = split_de(linha["sha256"], semente, frac_teste, frac_validacao)
+        linha["split"] = split_planejado or split_de(linha["sha256"], semente, frac_teste, frac_validacao)
         rgb = abrir_rgb(dados)
         del dados
         linha["largura"], linha["altura"] = rgb.size
@@ -402,7 +404,7 @@ def atual(linha, assinatura) -> bool:
 # ---------------------------------------------------------------- execução
 
 
-def montar_tarefas(origens, manifesto, existentes, frac_validacao, frac_teste, semente):
+def montar_tarefas(origens, manifesto, existentes, frac_validacao, frac_teste, semente, plano=None):
     """Gera apenas o trabalho que falta, sem abrir imagens já concluídas."""
     for classe in CLASSES:
         pasta = str(SAIDA / classe)
@@ -416,7 +418,61 @@ def montar_tarefas(origens, manifesto, existentes, frac_validacao, frac_teste, s
             yield (
                 classe, os.path.join(pasta_origem(classe), arquivo), arquivo,
                 assinatura[0], assinatura[1], pasta, mudou, frac_validacao, frac_teste, semente,
+                plano.get((classe, arquivo)) if plano is not None else None,
             )
+
+
+def sortear_grupos_balanceados(grupos, semente, frac_validacao):
+    """Sorteia grupos inteiros; cotas iguais de originais por classe na validação."""
+    import random
+    contagens = collections.Counter(classe for grupo in grupos for classe, _ in grupo)
+    if contagens["Cat"] != contagens["Dog"]:
+        raise ValueError(f"Contagens válidas diferentes; requer decisão do participante: {contagens}")
+    alvo = round(contagens["Cat"] * frac_validacao)
+    cotas = {classe: alvo for classe in CLASSES}
+    grupos = list(grupos)
+    random.Random(semente).shuffle(grupos)
+    plano = {}
+    for grupo in grupos:
+        quantidade = collections.Counter(classe for classe, _ in grupo)
+        validar = all(quantidade[c] <= cotas[c] for c in CLASSES)
+        split = "validacao" if validar else "treino"
+        if validar:
+            for c in CLASSES:
+                cotas[c] -= quantidade[c]
+        for chave in grupo:
+            plano[chave] = split
+    if any(cotas.values()):
+        raise ValueError(f"Grupos duplicados impediram as cotas exatas: {cotas}")
+    return plano
+
+
+def planejar_divisao_balanceada(origens, semente, frac_validacao, frac_teste):
+    if frac_teste != 0:
+        raise ValueError("Esta divisão foi definida pelo participante sem conjunto de teste.")
+    grupos = collections.defaultdict(list)
+    inventario = []
+    for classe in CLASSES:
+        for arquivo in sorted(origens[classe]):
+            dados = (ORIGEM / classe / arquivo).read_bytes()
+            sha = hashlib.sha256(dados).hexdigest()
+            try:
+                abrir_rgb(dados)
+            except Exception as exc:
+                inventario.append(dict(classe=classe, arquivo=arquivo, status="ilegivel", erro=descrever_erro(exc)))
+                continue
+            grupos[sha].append((classe, arquivo))
+            inventario.append(dict(classe=classe, arquivo=arquivo, status="ok", sha256=sha))
+    plano = sortear_grupos_balanceados(list(grupos.values()), semente, frac_validacao)
+    registro = SAIDA_BASE / "divisao_originais.json"
+    conteudo = dict(semente=semente, inventario=inventario,
+                    splits=[dict(classe=c, arquivo=a, split=s) for (c,a),s in sorted(plano.items())],
+                    duplicados={h: g for h,g in grupos.items() if len(g)>1})
+    temporario = registro.with_suffix(".json.tmp")
+    temporario.write_text(json.dumps(conteudo, ensure_ascii=False, indent=2), encoding="utf-8")
+    os.replace(temporario, registro)
+    print("Divisão balanceada por originais:", collections.Counter((c,s) for (c,a),s in plano.items()), flush=True)
+    return plano
 
 
 def pasta_origem(classe: str) -> str:
@@ -598,6 +654,7 @@ def gravar_manifesto_variantes(origens, manifesto) -> None:
 
 def ler_argumentos():
     parser = argparse.ArgumentParser(description="Gera dataset_ampliado com 16 variantes por imagem.")
+    parser.add_argument("--divisao", choices=("hash", "aleatoria_balanceada"), default=CONFIG.divisao)
     parser.add_argument("--workers", type=int, default=max(1, min((os.cpu_count() or 2) - 1, 8)),
                         help="processos paralelos (padrão: núcleos - 1, no máximo 8)")
     parser.add_argument("--frac-teste", type=float, default=CONFIG.frac_teste,
@@ -606,16 +663,16 @@ def ler_argumentos():
                         help="fração de validação definida pelo participante")
     parser.add_argument("--semente", type=int, default=CONFIG.semente,
                         help="semente da divisão por conteúdo")
-    parser.add_argument("--saida", type=Path, default=SAIDA_BASE,
+    parser.add_argument("--saida", type=Path, default=Path(CONFIG.manifesto).parent,
                         help="outra pasta de saída, se já houver um dataset antigo")
     parser.add_argument("--apenas-verificar", action="store_true",
                         help="não gera imagens; apenas confere e imprime as contagens")
     args = parser.parse_args()
     if args.frac_validacao is None or args.frac_teste is None:
-        parser.error("Defina frac_validacao e frac_teste em res_theo/config_res_theo.py ou nas opções.")
-    if not (0 < args.frac_teste < 1 and 0 < args.frac_validacao < 1
+        parser.error("Defina frac_validacao e frac_teste em residuals networks/res_theo34/config_res_theo34.py ou nas opções.")
+    if not (0 <= args.frac_teste < 1 and 0 < args.frac_validacao < 1
             and args.frac_teste + args.frac_validacao < 1):
-        parser.error("Frações de treino, validação e teste devem ser positivas e somar 1.")
+        parser.error("Treino e validação devem ser positivos; teste pode ser zero; as frações devem somar 1.")
     if args.workers < 1:
         parser.error("--workers deve ser pelo menos 1")
     return args
@@ -636,6 +693,8 @@ def configurar_dataset(args) -> None:
         "semente": args.semente, "normalizacao_salva": False,
         "avaliacao": "Resize(256, bilinear) + CenterCrop(224)",
     }
+    if getattr(args, "divisao", "hash") != "hash":
+        configuracao.update(divisao=args.divisao, aceitar_rotulos_duplicados=CONFIG.aceitar_rotulos_duplicados)
     arquivo = SAIDA_BASE / "config_dataset.json"
     if arquivo.exists():
         if json.loads(arquivo.read_text(encoding="utf-8")) != configuracao:
@@ -682,8 +741,11 @@ def main() -> int:
         remover_temporarios()
         gravar_manifesto_estado(manifesto)  # elimina uma possível linha cortada
         existentes = {c: listar_saidas(c) for c in CLASSES}
+        plano = None
+        if getattr(args, "divisao", "hash") == "aleatoria_balanceada":
+            plano = planejar_divisao_balanceada(origens, args.semente, args.frac_validacao, args.frac_teste)
         tarefas = list(montar_tarefas(origens, manifesto, existentes,
-                                     args.frac_validacao, args.frac_teste, args.semente))
+                                     args.frac_validacao, args.frac_teste, args.semente, plano))
         total = len(tarefas)
         ja_prontas = sum(len(origens[c]) for c in CLASSES) - total
         print(f"Originais: Cat={len(origens['Cat']):,} | Dog={len(origens['Dog']):,}")
