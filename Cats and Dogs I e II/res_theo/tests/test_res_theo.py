@@ -154,6 +154,56 @@ def test_perda_loop_cpu_com_batch_um():
     assert executar_epoca(modelo, loader, torch.device("cpu")) >= 0
 
 
+def test_backbone_preservado_por_n_passos_e_depois_liberado():
+    from torch.utils.data import DataLoader, TensorDataset
+    from res_theo.config_res_theo import ConfigTreino
+    from res_theo.treinar_res_theo import ControleBackbone, criar_otimizador, executar_epoca
+
+    modelo = ResTheo(resnet34(weights=None), congelar_backbone=True)
+    config = ConfigTreino(otimizador="SGD", learning_rate=0.001,
+                         argumentos_otimizador={"momentum": 0.9, "weight_decay": 0.01})
+    otimizador = criar_otimizador(modelo, config)
+    controle = ControleBackbone(modelo, passos_congelado=2)
+    hook = otimizador.register_step_post_hook(controle.passo_concluido)
+    loader = DataLoader(TensorDataset(torch.randn(2, 3, 224, 224),
+                                     torch.tensor([[0.], [1.]])), batch_size=2)
+    antes = {k: v.clone() for k, v in modelo.state_dict().items() if not k.startswith("fc.")}
+    fc_antes = modelo.fc.weight.detach().clone()
+    # Duas chamadas de época com um batch cada: a contagem não reinicia por época.
+    for passo in (1, 2):
+        executar_epoca(modelo, loader, torch.device("cpu"), otimizador=otimizador,
+                       controle_backbone=controle)
+        assert controle.passos_concluidos == passo
+        assert modelo.backbone_congelado
+        assert all(torch.equal(v, modelo.state_dict()[k]) for k, v in antes.items())
+    assert not torch.equal(fc_antes, modelo.fc.weight)
+    executar_epoca(modelo, loader, torch.device("cpu"), controle_backbone=controle)
+    assert controle.passos_concluidos == 2  # Validação não conta como passo.
+    executar_epoca(modelo, loader, torch.device("cpu"), otimizador=otimizador,
+                   controle_backbone=controle)
+    assert controle.passos_concluidos == 3
+    assert not modelo.backbone_congelado and modelo.bn1.training
+    assert modelo.conv1.weight.grad is not None
+    assert not torch.equal(antes["conv1.weight"], modelo.conv1.weight)
+    assert not torch.equal(antes["bn1.running_mean"], modelo.bn1.running_mean)
+    hook.remove()
+
+
+@pytest.mark.parametrize("passos,permanente", [(0, False), (50, False), (50, True)])
+def test_limite_50_zero_e_congelamento_permanente(passos, permanente):
+    from res_theo.treinar_res_theo import ControleBackbone
+    modelo = ResTheo(resnet34(weights=None))
+    controle = ControleBackbone(modelo, passos, permanente)
+    controle.preparar_batch()
+    assert modelo.backbone_congelado == (permanente or passos > 0)
+    controle.passos_concluidos = 49
+    controle.preparar_batch()
+    assert modelo.backbone_congelado == (permanente or passos == 50)
+    controle.passo_concluido(None, (), {})
+    controle.preparar_batch()
+    assert modelo.backbone_congelado == permanente
+
+
 @pytest.mark.parametrize("split_alvo,quantidade", [("treino", 16), ("validacao", 1), ("teste", 1)])
 def test_gerador_separa_antes_e_salva_rgb(tmp_path, split_alvo, quantidade):
     import hashlib

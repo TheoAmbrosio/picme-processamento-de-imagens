@@ -1,5 +1,12 @@
 # Registro de trabalho — Cats and Dogs I e II
 
+## 04/11/2026 — Treino inicial apenas da cabeça por N passos
+
+- **Pedido:** manter os parâmetros pré-treinados inalterados nos primeiros N passos, com padrão 50, e depois permitir sua alteração. Interpretado passo como atualização efetiva do otimizador; a camada nova é `fc`, pois a `layer4` original permanece removida.
+- **Implementação:** `passos_backbone_congelado=50` em `res_theo/config_res_theo.py`. Atualizações 1–50 treinam só fc; antes do forward da atualização 51, parâmetros e BatchNorm do backbone são liberados. Zero desativa essa fase; `congelar_backbone=True` preserva o congelamento permanente já existente.
+- **Continuidade:** mesmo otimizador com todos os parâmetros desde o início, sem reinicialização na transição. Hook pós-step mantém o contador global entre épocas e não conta validação nem steps pulados pelo GradScaler. Contador e fase são registrados no checkpoint.
+- **Verificação:** 18 testes artificiais aprovados em CPU, conferindo preservação de todos os parâmetros/buffers do backbone, mudança de fc, transição entre épocas, atualização do backbone após o limite e modos zero/permanente. Sem treinamento ou ampliação de dados reais; CUDA permanece sem verificação neste PC.
+
 ## 04/11/2026 — Organização em pastas e publicação solicitada
 
 - **Pedido:** publicar as alterações em `cats-and-dogs`; durante a preparação, o usuário pediu separar o modelo novo em `res_theo` e chamar a pasta do antigo de `modelo_svd errado`.

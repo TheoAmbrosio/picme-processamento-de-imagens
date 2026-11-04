@@ -21,6 +21,7 @@ class ConfigTreino:
     checkpoint: str = str(RAIZ / "res_theo/resultados/ultima_epoca.pt")
     semente: int = 42  # Mantém a semente já utilizada no projeto.
     congelar_backbone: bool = False
+    passos_backbone_congelado: int = 50  # Só fc aprende nos primeiros N optimizer.step().
     num_workers: int = min(4, max(0, (os.cpu_count() or 1) - 1))  # Ajustável; 0 desativa workers.
     precisao_mista: bool = True  # Habilitada somente em CUDA compatível.
     cudnn_benchmark: bool = False
@@ -37,6 +38,10 @@ class ConfigTreino:
             raise ValueError("learning_rate, batch_size e epocas devem ser positivos.")
         if self.num_workers < 0:
             raise ValueError("num_workers não pode ser negativo.")
+        if (isinstance(self.passos_backbone_congelado, bool)
+                or not isinstance(self.passos_backbone_congelado, int)
+                or self.passos_backbone_congelado < 0):
+            raise ValueError("passos_backbone_congelado deve ser um inteiro não negativo.")
         if not (0 < self.frac_validacao < 1 and 0 < self.frac_teste < 1
                 and self.frac_validacao + self.frac_teste < 1):
             raise ValueError("As três frações devem ser positivas e somar 1.")

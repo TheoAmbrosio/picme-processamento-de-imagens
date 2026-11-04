@@ -31,9 +31,22 @@ ficam obrigatórias, sem valores metodológicos escolhidos pelo assistente.
 `argumentos_otimizador` contém opções adicionais; as opções efetivas, incluindo os
 defaults da biblioteca para a classe escolhida pelo participante, são impressas.
 
-Na mesma configuração ficam `num_workers`, `congelar_backbone`, `precisao_mista`,
+Na mesma configuração ficam `num_workers`, `congelar_backbone`, `passos_backbone_congelado`, `precisao_mista`,
 `cudnn_benchmark`, `channels_last`, `compilar_modelo`, caminhos e semente. Por padrão,
-o backbone é treinável; congelá-lo congela também as estatísticas de BatchNorm.
+o treinamento mantém o backbone congelado nas primeiras **50 atualizações do
+otimizador**, treinando somente a nova `fc`. A partir da atualização **51**, todas
+as camadas mantidas podem aprender. `passos_backbone_congelado` altera esse limite;
+zero libera o backbone desde o início. A contagem é global e não reinicia a cada
+época. Uma atualização pulada pelo GradScaler não conta como passo concluído.
+
+Enquanto o backbone está congelado, seus parâmetros e estatísticas de BatchNorm
+permanecem fixos. `congelar_backbone=True` tem prioridade e o mantém congelado
+durante todo o treinamento. O mesmo otimizador inclui todas as camadas desde o
+início; descongelar não reinicializa pesos nem o estado do otimizador. O checkpoint
+registra o número de passos concluídos e a fase de congelamento.
+
+A `layer4`/Conv_5 original continua removida: a camada treinada primeiro é a nova
+`fc = Linear(256, 1)`. A opção `torch.compile` pode recompilar na transição de fase.
 `num_workers` usa até quatro subprocessos conforme a CPU, deixando um núcleo livre;
 é alterável no PC de destino e pode ser zero para desativar os subprocessos.
 
