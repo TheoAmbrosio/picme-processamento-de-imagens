@@ -4,6 +4,9 @@ O modelo atual é **res_theo**. Código, configurações, testes e instruções 
 [res_theo/README.md](res_theo/README.md). A abordagem anterior está arquivada em
 [modelo_svd errado/](<modelo_svd errado/>).
 
+As [instruções da competição](INSTRUCOES_COMPETICAO.md) são gerais e se aplicam
+aos dois modelos. O arquivo fica nesta raiz, compartilhado por ambos.
+
 ## Usar em outro PC
 
 Com Git e Python 3.10 ou mais recente:
@@ -45,3 +48,4 @@ avaliação do teste final e as opções de CUDA.
 - `modelo_svd errado/`: código e resultados legíveis do modelo antigo.
 - `criar_dataset_ampliado.py`: preparação dos dados compartilhados.
 - `REGISTRO.md`: histórico das alterações e verificações.
+- `INSTRUCOES_COMPETICAO.md`: regras gerais dos dois modelos.

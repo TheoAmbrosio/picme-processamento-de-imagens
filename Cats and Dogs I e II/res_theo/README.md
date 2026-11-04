@@ -1,5 +1,8 @@
 # res_theo
 
+Este modelo segue as [instruções gerais da competição](../INSTRUCOES_COMPETICAO.md),
+compartilhadas com o modelo SVD antigo.
+
 Implementação da arquitetura definida pelo participante: ResNet-34 sem `layer4`
 (Conv_5), com os BasicBlocks oficiais `[3, 4, 6]`, média global e `Linear(256, 1)`.
 `res_theo/res_theo.py` define a classe `ResTheo` e `criar_res_theo()` carrega os pesos

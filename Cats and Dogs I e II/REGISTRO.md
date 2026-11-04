@@ -3,6 +3,7 @@
 ## 04/11/2026 — Organização em pastas e publicação solicitada
 
 - **Pedido:** publicar as alterações em `cats-and-dogs`; durante a preparação, o usuário pediu separar o modelo novo em `res_theo` e chamar a pasta do antigo de `modelo_svd errado`.
+- **Escopo das regras confirmado pelo usuário:** `INSTRUCOES_COMPETICAO.md` é geral para os dois modelos e permanece na raiz de `Cats and Dogs I e II`, com links nos dois guias.
 - **Organização:** código, configuração, testes, dependências e guia atuais em `res_theo/`; modelo anterior e seus resultados legíveis em `modelo_svd errado/`. Originais e dataset ampliado continuam compartilhados na raiz do projeto, fora do Git. O gerador continua na raiz e sua importação de configuração não exige torch.
 - **Comandos:** execução dos módulos por `python -m res_theo.treinar_res_theo` e `python -m res_theo.inferir_res_theo`; checkpoints em `res_theo/resultados/`, ignorados no Git. README principal direciona ao guia atualizado e preserva a documentação antiga na pasta histórica.
 - **Verificação:** testes artificiais, conferência de imports e diff, sem treino ou ampliação do dataset real. O envio incluirá a reorganização, o pipeline e as instruções; não incluirá dados, ambiente virtual nem checkpoints.

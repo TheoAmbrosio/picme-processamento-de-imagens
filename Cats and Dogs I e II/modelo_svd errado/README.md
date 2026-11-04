@@ -1,6 +1,7 @@
 ﻿# Modelo SVD antigo
 
 Documentação histórica preservada. Os dados compartilhados ficam na pasta pai; o modelo atual está em `../res_theo/`.
+As [instruções gerais da competição](../INSTRUCOES_COMPETICAO.md) se aplicam aos dois modelos.
 
 # Cats and Dogs I e II
 
