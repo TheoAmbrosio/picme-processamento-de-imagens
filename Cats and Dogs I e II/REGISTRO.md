@@ -1,5 +1,39 @@
 # Registro de trabalho — Cats and Dogs I e II
 
+## 04/11/2026 — Organização em pastas e publicação solicitada
+
+- **Pedido:** publicar as alterações em `cats-and-dogs`; durante a preparação, o usuário pediu separar o modelo novo em `res_theo` e chamar a pasta do antigo de `modelo_svd errado`.
+- **Organização:** código, configuração, testes, dependências e guia atuais em `res_theo/`; modelo anterior e seus resultados legíveis em `modelo_svd errado/`. Originais e dataset ampliado continuam compartilhados na raiz do projeto, fora do Git. O gerador continua na raiz e sua importação de configuração não exige torch.
+- **Comandos:** execução dos módulos por `python -m res_theo.treinar_res_theo` e `python -m res_theo.inferir_res_theo`; checkpoints em `res_theo/resultados/`, ignorados no Git. README principal direciona ao guia atualizado e preserva a documentação antiga na pasta histórica.
+- **Verificação:** testes artificiais, conferência de imports e diff, sem treino ou ampliação do dataset real. O envio incluirá a reorganização, o pipeline e as instruções; não incluirá dados, ambiente virtual nem checkpoints.
+
+## 04/11/2026 — Implementação de res_theo e pipeline binário
+
+- **Decisões do participante:** ResNet-34 oficial sem Conv_5/layer4, grupos [3, 4, 6], RGB 224×224, média global e Linear(256, 1); logits com BCEWithLogitsLoss, sigmoid apenas para probabilidades, Cat=0 e Dog=1. Uso de pesos ImageNet permitido pelo grupo, confirmado nesta sessão. Solicitou nome `res_theo` e todas as 16 variantes por original de treino.
+- **Arquitetura e pesos:** classe `ResTheo` em `res_theo.py`, reutilização dos módulos oficiais até layer3 e verificação explícita de parâmetros/buffers. Somente fc.weight/fc.bias recebem Normal(0, 1). Congelamento opcional também mantém BatchNorm do backbone em avaliação. Nenhuma camada extra ou alteração da perda.
+- **Treinamento e inferência:** arquivos separados, checkpoint identificado como res_theo, probabilidade em [B,1], seleção automática de CUDA, AMP/GradScaler condicional, workers/pinning/transferências assíncronas aplicáveis e acumulação da perda sem leitura escalar por batch. cuDNN benchmark, channels_last e compile são opções; as duas últimas permanecem desativadas por falta de medição no hardware de destino. Teste final usa comando separado.
+- **Escolhas ainda não fornecidas:** otimizador, learning rate, batch size, épocas e proporções de treino/validação/teste. São campos obrigatórios em `config_res_theo.py`; não foram escolhidos pelo assistente. Defaults efetivos da classe de otimizador escolhida pelo participante são impressos pelo programa.
+- **Dados:** gerador continua nos caminhos existentes, usa o hash do original para dividir treino/validação/teste antes de ampliar, preserva todas as 16 versões no treino e produz uma única versão determinística em validação/teste. CSVs explicitam rótulo, split, origem e hash. JPEGs sem normalização; normalização ImageNet aplicada uma vez no carregamento. A geometria de avaliação/inferência corresponde ao preset oficial.
+- **Contrato e retomada:** configuração de dataset com esquema 2 impede misturar splits/configurações incompatíveis e bloqueia saídas antigas sem esse contrato, preservando-as. O leitor rejeita hashes em splits distintos, rótulos conflitantes, caminhos inválidos e variantes incompletas. Evidência: testes artificiais de vazamento e retomada. Essa exigência decorre da nova separação dos dados, não da remoção de Conv_5.
+- **Validação local:** 14 testes com tensores/imagens artificiais aprovados em CPU, incluindo batches 1/2, shapes intermediários, probabilidades, perda/backward, igualdade dos pesos oficiais e buffers antes do treino, inicialização restrita à cabeça, congelamento de BN, normalização/geometria, checkpoint/inferência, geração mínima e retomada. Conferência de sintaxe e diff. Pesos oficiais foram baixados/cacheados para essa verificação.
+- **Limites:** nenhum treino real, geração do dataset real ou download do dataset foi executado nesta implementação. CUDA/AMP, channels_last e compile não foram exercitados em GPU; não há medição de desempenho nem resultado de classificação. Arquivos e dependências novos documentados em `RES_THEO.md`. Sem commit ou push.
+
+## 04/11/2026 — Download automático e variantes de 224×224
+
+- **Pedido:** permitir executar `criar_dataset_ampliado.py` em outro PC, baixando os originais do Kaggle antes da transformação; trocar 300×300 por 224×224. O usuário proibiu executar o trabalho pesado neste PC.
+- **Implementação:** download/cache via `kagglehub` quando faltam JPGs originais, cópia apenas dos arquivos ausentes para `dataset/PetImages`, filtragem de arquivos de imagem e dimensões finais de 224×224. Mantidas as 16 variantes por imagem legível.
+- **Retomada:** saída e manifestos em `dataset_ampliado/224x224`, evitando reutilizar variantes antigas de 300×300. `--apenas-verificar` não baixa originais.
+- **Dependências e uso:** acrescentado `requirements-dataset.txt` e comandos no README. A referência de contagem agora indica os 12.500 arquivos JPG por classe do download, distinguindo-os das imagens legíveis.
+- **Verificação e limites:** revisão do código e do diff; nenhum download, processamento ou treinamento executado nesta alteração. A integração completa deverá ser executada no outro PC. Sem commit ou push.
+
+## 03/11/2026 — Localização dos dados e proposta de ampliação
+
+- **Pedido:** mover o dataset original para a raiz de `Cats and Dogs I e II` e preparar um prompt para outra IA implementar um script de criação de dataset ampliado. O script será colocado nessa mesma pasta; sua implementação ainda não foi solicitada aqui.
+- **Mudança realizada:** `Primeiro modelo que deu errado/dataset` foi movido para `dataset`, mantendo `PetImages/Cat` e `PetImages/Dog`. Esse é o caminho esperado por `treinar_modelo.py`. Os dados continuam fora do Git por `.gitignore`.
+- **Ideia proposta:** para cada imagem válida, gerar duas geometrias (maior recorte quadrado central redimensionado para 300×300 e imagem inteira deformada para 300×300), com versão original e espelhada horizontalmente, cada uma nas rotações de 0°, 90°, 180° e 270°. São 16 saídas por entrada, preservando o rótulo. A efetividade para robustez dependerá de avaliação experimental, com separação treino/teste antes da ampliação para impedir vazamento de variantes da mesma imagem.
+- **Contagem observada:** 12.499 arquivos em `Cat` e 10.224 em `Dog` após a mudança. Se todos forem legíveis, isso produzirá 199.984 imagens de gato e 163.584 de cachorro. A meta de 199.984 por classe exige 12.499 originais válidas em cada classe; não foi inferida nem fabricada a diferença em `Dog`.
+- **Próximo passo:** outra IA receberá o prompt e implementará o script. Nenhuma ampliação foi executada, nem houve commit ou push.
+
 Este arquivo acompanha as tentativas e os avanços do projeto. Os resultados abaixo descrevem o que foi implementado ou verificado; não equivalem a uma avaliação final do classificador.
 
 ## 28/10/2026 — Reconstrução do projeto

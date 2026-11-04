@@ -5,6 +5,10 @@
 .ipynb_checkpoints/
 __pycache__/
 **/datasets_processados/
+**/dataset_ampliado/
+**/resultados_res_theo/
+**/res_theo/resultados/
+.pytest_cache/
 
 **/.venv/
 **/resultados_busca*/**/*.pt
