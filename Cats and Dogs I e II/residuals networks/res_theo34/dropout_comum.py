@@ -7,6 +7,7 @@ class DropoutComum(nn.Module):
         super().__init__()
         self.posicoes = tuple(posicoes)
         self.probabilidade = probabilidade
+        self.probabilidade_maxima = probabilidade
         self.camadas = nn.ModuleList(nn.Dropout(probabilidade) for _ in self.posicoes)
         self.handles = []
 
@@ -17,11 +18,22 @@ class DropoutComum(nn.Module):
 
     def estado(self):
         return {"tipo": "comum", "posicoes": self.posicoes,
-                "probabilidade": self.probabilidade}
+                "probabilidade": self.probabilidade,
+                "probabilidade_maxima": self.probabilidade_maxima}
+
+    def definir_probabilidade(self, probabilidade):
+        if not 0 <= probabilidade < 1:
+            raise ValueError("A probabilidade efetiva do dropout deve estar em [0, 1).")
+        self.probabilidade = float(probabilidade)
+        for camada in self.camadas:
+            camada.p = self.probabilidade
 
     def carregar_estado(self, estado):
-        if estado != self.estado():
+        maxima = estado.get("probabilidade_maxima", estado.get("probabilidade"))
+        if (estado.get("tipo") != "comum" or tuple(estado.get("posicoes", ())) != self.posicoes
+                or maxima != self.probabilidade_maxima):
             raise ValueError("Configuração de dropout diverge do checkpoint.")
+        self.definir_probabilidade(estado["probabilidade"])
 
 
 def instalar_dropout(modelo, config):

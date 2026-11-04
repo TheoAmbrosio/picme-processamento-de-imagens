@@ -8,9 +8,16 @@ As [regras da competição](INSTRUCOES_COMPETICAO.md) se aplicam a todos os mode
 residuals networks/
   res_theo18/               # ResNet-18 até layer3
   res_theo34/               # ResNet-34 até layer3
+  res_theo_especial/        # modelo principal histórico: 32/32/64/128, sem layer4
+  theo_ajuste/              # fine-tuning da execução histórica 155432
+  theo_curto/               # variante sem layer3
+  theo_48_88/               # canais 32/32/48/88
+  theo_28_42_64/            # canais 28/28/42/64
+  arquivados/               # outras especiais e AlexTheo
 resultados_residuals_networks/
   res_theo18/<execução>/
   res_theo34/<execução>/
+  res_theo_especial/<execução>/
 dataset/                    # Originais compartilhados e preservados
 dataset_ampliado/           # Manifesto e JPEGs compartilhados
 ```
@@ -27,6 +34,12 @@ Na raiz `Cats and Dogs I e II`, no Ubuntu:
 ```bash
 bash iniciar_res_theo18.sh
 bash iniciar_res_theo34.sh
+bash iniciar_res_theo_especial.sh
+bash iniciar_theo_ajuste.sh
+bash iniciar_theo_curto.sh
+bash iniciar_theo_48_88.sh
+bash iniciar_theo_28_42_64.sh
+bash iniciar_todos_res_theo_sequencial.sh  # 18, depois 34, depois especial
 ```
 
 Cada comando inicia somente seu próprio modelo, verifica CUDA, cria uma pasta
@@ -40,11 +53,11 @@ a 30%. As posições fixas selecionadas pelo participante ficam em `dropout_posi
 
 | Modelo | Batch | Épocas | Épocas iniciais congeladas | Dropout |
 |---|---:|---:|---:|---:|
-| res_theo18 | 128 | 25 | 10 | 0.3 |
-| res_theo34 | 64 | 25 | 10 | 0.3 |
+| res_theo18 | 128 | 25 | 4 | 0.1 |
+| res_theo34 | 64 | 25 | 4 | 0.1 |
 
 Ambos usam Adam, learning rate 0.001, semente 42 e o manifesto balanceado existente.
-Somente fc aprende nas épocas 1–10; o backbone é liberado no início da época 11.
+Somente fc aprende nas épocas 1–4; o backbone é liberado no início da época 5.
 As configurações novas não são atribuídas aos resultados de execuções anteriores.
 
 ## Identificação e reutilização dos resultados
@@ -90,3 +103,6 @@ atual usa 80%/20%, sem conjunto separado de teste.
 
 Datasets, ambientes, resultados e checkpoints são ignorados pelo Git. O histórico
 de alterações está em [REGISTRO.md](REGISTRO.md).
+
+Dropout atual: 10% nos dois modelos, excluindo `conv1` (primeira convolução) e
+`fc` (camada final). Os demais pontos selecionados são preservados.

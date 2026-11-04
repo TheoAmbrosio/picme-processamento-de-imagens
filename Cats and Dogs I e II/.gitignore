@@ -1,2 +1,8 @@
 
 resultados_residuals_networks/
+
+# Pranchas locais derivadas do dataset (geradores ficam versionados).
+docs/amostras_theo_ajuste.png
+docs/exemplo_ampliacao_res_theo_especial.png
+*.pt
+*.pth

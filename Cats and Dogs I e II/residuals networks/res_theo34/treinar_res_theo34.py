@@ -51,7 +51,8 @@ def validar_config_dataset(config: ConfigTreino, manifesto: Path) -> dict:
 
 def criar_loader(amostras, config: ConfigTreino, dispositivo: torch.device, treino: bool):
     return DataLoader(
-        DatasetManifesto(amostras), batch_size=config.batch_size, shuffle=treino,
+        DatasetManifesto(amostras, usar_dados_ampliados=config.usar_dados_ampliados),
+        batch_size=config.batch_size, shuffle=treino,
         num_workers=config.num_workers, pin_memory=dispositivo.type == "cuda",
         persistent_workers=config.num_workers > 0,
         generator=torch.Generator().manual_seed(config.semente),
@@ -73,6 +74,18 @@ def criar_otimizador(modelo: nn.Module, config: ConfigTreino):
     print(f"Otimizador definido pelo participante: {config.otimizador}; "
           f"opções efetivas (incluindo defaults da biblioteca): {otimizador.defaults}")
     return otimizador
+
+
+def probabilidade_dropout_epoca(config: ConfigTreino, epoca: int) -> float:
+    if not config.dropout_crescente:
+        return config.dropout_probabilidade
+    if epoca <= config.dropout_epoca_inicio:
+        return 0.0
+    if epoca >= config.dropout_epoca_maximo:
+        return config.dropout_probabilidade
+    progresso = ((epoca - config.dropout_epoca_inicio)
+                 / (config.dropout_epoca_maximo - config.dropout_epoca_inicio))
+    return config.dropout_probabilidade * progresso
 
 
 class ControleBackbone:
@@ -258,10 +271,18 @@ def treinar(config: ConfigTreino) -> None:
     config.validar()  # Falha antes de ler imagens ou baixar pesos se faltam escolhas.
     manifesto = Path(config.manifesto)
     metadados = validar_config_dataset(config, manifesto)
-    conjuntos = carregar_divisao(manifesto, ("treino", "validacao") if config.frac_teste == 0 else ("treino", "validacao", "teste"), aceitar_rotulos_duplicados=config.aceitar_rotulos_duplicados)
+    conjuntos = carregar_divisao(
+        manifesto,
+        ("treino", "validacao") if config.frac_teste == 0 else ("treino", "validacao", "teste"),
+        aceitar_rotulos_duplicados=config.aceitar_rotulos_duplicados,
+        usar_dados_ampliados=config.usar_dados_ampliados,
+    )
     dispositivo = selecionar_dispositivo()
     preparar_execucao(config, dispositivo)
-    print(f"Rótulos: {ROTULOS}; variantes por conjunto: "
+    modo_dados = ("ampliados: 16 variantes por original de treino" if config.usar_dados_ampliados
+                  else "originais: uma imagem por original, esticada para RGB 224x224")
+    print(f"Dados: {modo_dados}.", flush=True)
+    print(f"Rótulos: {ROTULOS}; amostras por conjunto: "
           + str({k: len(v) for k, v in conjuntos.items()}))
     loaders = {split: criar_loader(conjuntos[split], config, dispositivo, split == "treino")
                for split in ("treino", "validacao")}
@@ -302,6 +323,9 @@ def treinar(config: ConfigTreino) -> None:
     progresso = ProgressoTreino(config.epocas * sum(len(loader) for loader in loaders.values()))
     print("ETA aproximada: recalculada a cada 5s e nas transições; pode variar ao liberar o backbone.", flush=True)
     for epoca in range(1, config.epocas + 1):
+        dropout_efetivo = probabilidade_dropout_epoca(config, epoca)
+        modelo.dropout_comum.definir_probabilidade(dropout_efetivo)
+        print(f"Dropout efetivo na época {epoca}: p={dropout_efetivo:.6f}", flush=True)
         inicio = time.perf_counter()
         metricas_treino, metricas_validacao = {}, {}
         treino = executar_epoca(executor, loaders["treino"], dispositivo,
@@ -317,6 +341,7 @@ def treinar(config: ConfigTreino) -> None:
                           "acuracia_treino": metricas_treino["acuracia"],
                           "acuracia_validacao": metricas_validacao["acuracia"],
                           "tempo_segundos": time.perf_counter() - inicio_treino,
+                          "dropout_probabilidade_efetiva": dropout_efetivo,
                           "passos_otimizador": controle.passos_concluidos})
         print(f"Época {epoca}/{config.epocas}: BCE treino={treino:.6f}; "
               f"validação={validacao:.6f}; acerto treino={metricas_treino['acuracia']:.2%}; "
@@ -340,7 +365,12 @@ def avaliar_teste(checkpoint: Path, manifesto: Path) -> None:
     validar_config_dataset(config, manifesto)
     if hashlib.sha256(manifesto.read_bytes()).hexdigest() != estado["manifesto_sha256"]:
         raise ValueError("Manifesto diferente daquele usado no treinamento.")
-    conjuntos = carregar_divisao(manifesto, ("treino", "validacao") if config.frac_teste == 0 else ("treino", "validacao", "teste"), aceitar_rotulos_duplicados=config.aceitar_rotulos_duplicados)
+    conjuntos = carregar_divisao(
+        manifesto,
+        ("treino", "validacao") if config.frac_teste == 0 else ("treino", "validacao", "teste"),
+        aceitar_rotulos_duplicados=config.aceitar_rotulos_duplicados,
+        usar_dados_ampliados=config.usar_dados_ampliados,
+    )
     loader = criar_loader(conjuntos["teste"], config, dispositivo, False)
     print(f"BCE do teste final: {executar_epoca(modelo, loader, dispositivo):.6f}")
 

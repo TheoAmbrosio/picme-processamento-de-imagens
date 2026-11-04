@@ -17,7 +17,15 @@ class ConfigTreino:
     frac_teste: float | None = None  # treino = 1 - validação - teste
     divisao: str = "hash"
     aceitar_rotulos_duplicados: bool = False
-    dropout_probabilidade: float = 0.3
+    # True: 16 variantes de treino do manifesto. False: cada original uma vez,
+    # redimensionado diretamente (esticado) para RGB 224x224 durante a leitura.
+    usar_dados_ampliados: bool = True
+    usar_pesos_pre_treinados: bool = True
+    inicializacao_do_zero: str = "he_normal_fan_out"
+    dropout_probabilidade: float = 0.1
+    dropout_crescente: bool = False
+    dropout_epoca_inicio: int = 20
+    dropout_epoca_maximo: int = 40
     # Posições fixas: nomes dos módulos após os quais aplicar dropout.
     dropout_posicoes: tuple[str, ...] | None = None
     argumentos_otimizador: dict = field(default_factory=dict)
@@ -49,6 +57,12 @@ class ConfigTreino:
             raise ValueError("epocas_backbone_congelado deve ser um inteiro não negativo ou None.")
         if self.num_workers < 0:
             raise ValueError("num_workers não pode ser negativo.")
+        if not isinstance(self.usar_dados_ampliados, bool):
+            raise ValueError("usar_dados_ampliados deve ser True ou False.")
+        if not isinstance(self.usar_pesos_pre_treinados, bool):
+            raise ValueError("usar_pesos_pre_treinados deve ser True ou False.")
+        if self.inicializacao_do_zero != "he_normal_fan_out":
+            raise ValueError("inicializacao_do_zero deve ser 'he_normal_fan_out'.")
         if (isinstance(self.passos_backbone_congelado, bool)
                 or not isinstance(self.passos_backbone_congelado, int)
                 or self.passos_backbone_congelado < 0):
@@ -66,6 +80,15 @@ def validar_dropout(config):
         raise ValueError("dropout_probabilidade deve estar em [0, 1).")
     if config.dropout_probabilidade == 0:
         return
+    if not isinstance(config.dropout_crescente, bool):
+        raise ValueError("dropout_crescente deve ser True ou False.")
+    if (isinstance(config.dropout_epoca_inicio, bool)
+            or not isinstance(config.dropout_epoca_inicio, int)
+            or isinstance(config.dropout_epoca_maximo, bool)
+            or not isinstance(config.dropout_epoca_maximo, int)
+            or config.dropout_epoca_inicio < 1
+            or config.dropout_epoca_maximo <= config.dropout_epoca_inicio):
+        raise ValueError("Épocas do dropout devem satisfazer 1 <= início < máximo.")
     if config.dropout_posicoes is None:
         raise ValueError("Variante ainda não liberada para treino: falta definir dropout_posicoes.")
     nomes = config.dropout_posicoes
@@ -74,12 +97,14 @@ def validar_dropout(config):
 
 
 CONFIG = ConfigTreino(
-    otimizador="Adam", learning_rate=0.001, batch_size=128, epocas=25,
-    frac_validacao=0.2, frac_teste=0.0, epocas_backbone_congelado=10,
+    otimizador="Adam", learning_rate=0.001, batch_size=16, epocas=50,
+    frac_validacao=0.2, frac_teste=0.0, epocas_backbone_congelado=0,
     divisao="aleatoria_balanceada", aceitar_rotulos_duplicados=True,
-    dropout_probabilidade=0.3,
+    usar_dados_ampliados=False,
+    usar_pesos_pre_treinados=False, inicializacao_do_zero="he_normal_fan_out",
+    dropout_probabilidade=0.1,
+    dropout_crescente=False, dropout_epoca_inicio=20, dropout_epoca_maximo=40,
     dropout_posicoes=(
-        'conv1',
         'bn1',
         'relu',
         'maxpool',
@@ -119,7 +144,6 @@ CONFIG = ConfigTreino(
         'layer3.1.bn2',
         'avgpool',
         'flatten',
-        'fc',
     ),
     manifesto=str(RAIZ / "dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv"),
 )

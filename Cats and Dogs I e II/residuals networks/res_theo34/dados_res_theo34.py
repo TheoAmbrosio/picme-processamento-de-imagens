@@ -3,7 +3,7 @@ import csv
 from pathlib import Path
 
 import torch
-from PIL import Image
+from PIL import Image, ImageOps
 from torch.utils.data import Dataset
 from torchvision import transforms
 
@@ -16,6 +16,12 @@ NORMALIZAR = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize(mean=PRESET.mean, std=PRESET.std),
 ])
+PREPARAR_ORIGINAL = transforms.Compose([
+    transforms.Resize((224, 224), interpolation=transforms.InterpolationMode.BILINEAR,
+                      antialias=True),
+    NORMALIZAR,
+])
+RAIZ_PROJETO = Path(__file__).resolve().parents[2]
 
 
 def normalizar_imagem(imagem: Image.Image) -> torch.Tensor:
@@ -23,7 +29,9 @@ def normalizar_imagem(imagem: Image.Image) -> torch.Tensor:
     return NORMALIZAR(imagem)
 
 
-def carregar_divisao(manifesto: Path, splits_obrigatorios=SPLITS, aceitar_rotulos_duplicados=False) -> dict:
+def carregar_divisao(manifesto: Path, splits_obrigatorios=SPLITS,
+                     aceitar_rotulos_duplicados=False, usar_dados_ampliados=True,
+                     raiz_originais=None) -> dict:
     conjuntos = {split: [] for split in SPLITS}
     hashes = {}
     originais = {}
@@ -50,12 +58,13 @@ def carregar_divisao(manifesto: Path, splits_obrigatorios=SPLITS, aceitar_rotulo
             if not caminho.is_relative_to(raiz) or caminho in caminhos:
                 raise ValueError(f"Caminho duplicado ou fora do dataset: {caminho}")
             caminhos.add(caminho)
-            if not caminho.is_file():
+            if usar_dados_ampliados and not caminho.is_file():
                 raise ValueError(f"Imagem ausente: {caminho}")
             conjuntos[split].append((caminho, ROTULOS[classe]))
             chave = (classe, linha["arquivo_origem"])
             grupo = originais.setdefault(chave, {"split": split, "sha": sha, "contagem": 0,
-                                                 "combinacoes": set()})
+                                                 "combinacoes": set(), "classe": classe,
+                                                 "arquivo_origem": linha["arquivo_origem"]})
             if grupo["split"] != split or grupo["sha"] != sha:
                 raise ValueError(f"Vazamento ou origem inconsistente: {chave}")
             grupo["contagem"] += 1
@@ -68,14 +77,24 @@ def carregar_divisao(manifesto: Path, splits_obrigatorios=SPLITS, aceitar_rotulo
                 raise ValueError(f"Treino sem as 16 variantes completas: {chave}")
         elif grupo["contagem"] != 1 or grupo["combinacoes"] != {("avaliacao", "normal", 0)}:
             raise ValueError(f"Avaliação deve ter uma versão determinística: {chave}")
+    if not usar_dados_ampliados:
+        base = (Path(raiz_originais).resolve() if raiz_originais is not None
+                else (RAIZ_PROJETO / "dataset/PetImages").resolve())
+        conjuntos = {split: [] for split in SPLITS}
+        for grupo in originais.values():
+            caminho = (base / grupo["classe"] / grupo["arquivo_origem"]).resolve()
+            if not caminho.is_relative_to(base) or not caminho.is_file():
+                raise ValueError(f"Imagem original ausente ou fora do dataset: {caminho}")
+            conjuntos[grupo["split"]].append((caminho, ROTULOS[grupo["classe"]]))
     if any(not conjuntos[split] for split in splits_obrigatorios):
         raise ValueError("Um split está vazio; confira as frações e o manifesto.")
     return conjuntos
 
 
 class DatasetManifesto(Dataset):
-    def __init__(self, amostras):
+    def __init__(self, amostras, usar_dados_ampliados=True):
         self.amostras = amostras
+        self.usar_dados_ampliados = usar_dados_ampliados
         self.class_to_idx = ROTULOS.copy()
 
     def __len__(self):
@@ -84,7 +103,11 @@ class DatasetManifesto(Dataset):
     def __getitem__(self, indice):
         caminho, rotulo = self.amostras[indice]
         with Image.open(caminho) as imagem:
-            if imagem.mode != "RGB" or imagem.size != (224, 224):
-                raise ValueError(f"Imagem fora do contrato RGB 224x224: {caminho}")
-            x = normalizar_imagem(imagem)
+            imagem = ImageOps.exif_transpose(imagem)
+            if self.usar_dados_ampliados:
+                if imagem.mode != "RGB" or imagem.size != (224, 224):
+                    raise ValueError(f"Imagem fora do contrato RGB 224x224: {caminho}")
+                x = normalizar_imagem(imagem)
+            else:
+                x = PREPARAR_ORIGINAL(imagem.convert("RGB"))
         return x, torch.tensor([rotulo], dtype=torch.float32)  # rótulo [1] -> batch [B,1]

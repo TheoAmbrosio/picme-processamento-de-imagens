@@ -1,5 +1,23 @@
 # Registro de trabalho — Cats and Dogs I e II
 
+## 04/11/2026 — Execução sequencial 18 → 34
+
+- **Pedido:** fornecer comando que inicie o 34 depois do 18.
+- **Implementação:** `iniciar_res_theo18_depois34.sh` inicia o 18 pelo iniciador existente, identifica a pasta pelo PID, aguarda seu encerramento e só inicia o 34 se parametros.json indicar conclusão e houver checkpoint. Interrupção/falha do 18 não dispara o 34. Ambos usam as configurações atuais de seus pacotes e resultados separados.
+- **Verificação:** sintaxe shell conferida; nenhum treinamento real iniciado para testar a sequência.
+
+## 04/11/2026 — Dropout de 10% sem a primeira e última camadas
+
+- **Pedido:** reduzir dropout para 10% e excluir a primeira e última camadas nos dois modelos.
+- **Implementação:** dropout_probabilidade=0.1; removidas as posições conv1 (primeira convolução) e fc (classificador final). Demais pontos preservados: 39 no res_theo18 e 74 no res_theo34. Batch 128/64, 25 épocas e liberação do backbone no início da época 5 preservados.
+- **Históricos:** parâmetros/resultados/checkpoints anteriores permanecem intactos. Nenhum processo foi encerrado ou reiniciado; mudanças valem para novas execuções.
+
+## 04/11/2026 — Liberação no início da época 5
+
+- **Pedido:** desbloquear a cauda “a partir do 5”; aplicado ao backbone no início da época 5 nos dois modelos ativos.
+- **Configuração:** epocas_backbone_congelado=4 em res_theo18 e res_theo34: épocas 1–4 treinam somente fc; da época 5 em diante o backbone também aprende. Mantidos batches 128/64, 25 épocas e dropout 0.3.
+- **Verificação:** ambas as configurações importadas e validadas. Nenhum processo interrompido ou reiniciado; alterações valem para novas execuções. Resultados e parâmetros históricos preservados.
+
 ## 04/11/2026 — Organização final dos modelos e resultados identificados
 
 - **Pedidos:** reunir os modelos em `residuals networks`, manter resultados fora dos pacotes, identificar parâmetros para reutilização, manter somente res_theo18 e res_theo34 com dropout configurável, retirar o res_theo sem índice, usar batch 128 no 18 e atualizar GitHub na branch sem resultados.
@@ -245,3 +263,366 @@ Este arquivo acompanha as tentativas e os avanços do projeto. Os resultados aba
 - **Espaço:** a partição do projeto estava cheia. Ferramentas temporárias criadas pelo assistente foram removidas de /tmp; como estavam em outra partição, foi necessário mover o cache de downloads do pip para `/tmp/theo-pip-cache-preservado`, preservando seu conteúdo e liberando aproximadamente 2,9 GiB em /home. Nenhum dataset ou modelo foi removido.
 - **Configuração atual preservada:** o usuário já havia alterado k para 5 e alpha/alpha2 para zero; esses valores serão versionados como estão. O artigo Delta registra a configuração histórica explicitada na sua elaboração.
 - **Validação:** sintaxe dos scripts Python e diff conferidos, busca por padrões comuns de credenciais sem correspondências. Sem execução de treinamento. Commit e envio serão confirmados após a operação.
+# 2026-11-04 — opção entre dados ampliados e originais
+
+- Pedido: permitir treinar os dois ResTheo com os dados originais, de forma ativável,
+  usando preparação determinística que estica cada imagem para RGB 224×224.
+- Implementado: `usar_dados_ampliados` em ambas as configurações. `True` mantém as
+  16 variantes por original de treino; `False` usa uma vez cada original pertencente
+  ao mesmo split do manifesto e aplica `Resize((224, 224), bilinear)` sem corte.
+- Configuração efetiva atual: `usar_dados_ampliados=False` em ResTheo18 e ResTheo34.
+- Identificação: novas pastas de execução recebem `dadosorig` ou `dadosamp`, e o modo
+  também é preservado em `parametros.json`, `IDENTIFICACAO.md` e no checkpoint.
+- Verificação: as duas configurações passaram em `CONFIG.validar()` e a suíte passou
+  com `37 passed`, incluindo teste artificial do modo original e do esticamento 224×224.
+
+# 2026-11-04 — treinamento do zero e ResTheo especial
+
+- Pedido: configurar ResTheo18 e ResTheo34 sem pesos pré-treinados, usando
+  Normal(0,1), e criar ResTheo especial semelhante ao 18 com metade dos canais.
+- Implementado nos modelos 18 e 34: `usar_pesos_pre_treinados=False`,
+  `inicializacao_do_zero="normal_0_1"` e `epocas_backbone_congelado=0`; todas as
+  convoluções e lineares recebem pesos Normal(0,1), seus vieses são zerados e
+  BatchNorm começa com escala 1/deslocamento 0. Dropout permanece em 10%.
+- Implementado no modelo especial: conv7x7 com 32 canais e estágios residuais
+  3x3 com 32, 64 e 128 canais (dois blocos por estágio), sem layer4, fc 128→1,
+  treinamento integral desde o primeiro batch e a mesma inicialização do zero.
+- Registro: escolha de pré-treinamento, inicialização e arquitetura ficam em cada
+  `parametros.json`, checkpoint, identificação, snapshot do código e nome da pasta.
+- Verificação: as três configurações passaram em `CONFIG.validar()`; arquitetura,
+  canais, inicialização, dropout, forward e registros passaram na suíte (`40 passed`).
+
+# 2026-11-04 — iniciador sequencial dos três modelos
+
+- Pedido: fornecer um único comando para executar todos os modelos seguintes.
+- Implementado: `iniciar_todos_res_theo_sequencial.sh` executa ResTheo18,
+  ResTheo34 e ResTheo especial, nessa ordem. Cada etapa aguarda o PID terminar e
+  exige estado `concluido` e checkpoint antes de iniciar a próxima.
+
+# 2026-11-04 — inicialização variável de He
+
+- Pedido: substituir Normal(0,1) fixa pela fórmula variável descrita no livro.
+- Implementado nos três modelos: `torch.nn.init.kaiming_normal_` com `mode="fan_in"`
+  e `nonlinearity="relu"`, equivalente a pesos normais com variância `2/fan_in`.
+  Vieses continuam em zero e BatchNorm em escala 1/deslocamento 0.
+- Configuração registrada como `inicializacao_do_zero="he_normal_fan_in"`.
+- Verificação: as três configurações passaram em `CONFIG.validar()` e a suíte
+  completa passou (`40 passed`), incluindo a checagem do desvio `sqrt(2/fan_in)`.
+
+# 2026-11-04 — inicialização He em fan_out
+
+- Pedido: mudar a inicialização das próximas execuções para `fan_out` sem afetar
+  o treinamento já em andamento.
+- Implementado nos três modelos: `kaiming_normal_` agora usa `mode="fan_out"`,
+  equivalente à variância `2/fan_out`, e a configuração registra
+  `inicializacao_do_zero="he_normal_fan_out"`.
+- O processo ResTheo34 já iniciado mantém seus pesos e código carregados; nenhuma
+  interrupção ou reinicialização foi realizada.
+- Verificação: as três configurações passaram em `CONFIG.validar()`, a suíte
+  passou (`40 passed`) e o ResTheo34 continuou ativo no mesmo PID 73673.
+
+# 2026-11-04 — opção de dropout crescente
+
+- Pedido: criar opção de dropout linear crescente, mantendo-a desativada.
+- Implementado nos três modelos: `dropout_crescente=False`, início na época 20
+  com `p=0`, crescimento linear até `p=0.10` na época 40 e manutenção do máximo
+  nas épocas seguintes. Com a opção desativada, permanece `p=0.10` fixo.
+- A probabilidade efetiva é registrada por época no histórico e no checkpoint;
+  configurações e intervalo também ficam nos metadados da execução.
+- O treinamento já em execução não foi interrompido nem alterado.
+- Verificação: as três configurações passaram em `CONFIG.validar()` e a suíte
+  passou (`43 passed`), cobrindo 0%/5%/10% nas épocas 20/30/40 e o modo fixo.
+
+# 2026-11-04 — ResTheo especiais 34 e 50
+
+- Pedido: criar variantes especiais baseadas em ResNet-34 e ResNet-50, reduzindo
+  pela metade os canais residuais, mas mantendo a conv1 7x7 com 64 canais.
+- ResTheo especial34: BasicBlock `[3,4,6]`, canais `64→32→64→128`, sem layer4,
+  classificador `128→1`.
+- ResTheo especial50: Bottleneck `[3,4,6]`, larguras internas `32→64→128`,
+  saídas `128→256→512`, sem layer4, classificador `512→1`.
+- Nas duas, somente conv1 recebe pesos oficiais ImageNet V1; fica congelada nas
+  cinco primeiras épocas e é liberada no início da época 6. O restante usa He
+  normal `fan_out` e aprende desde o primeiro batch.
+- As três especiais usam dropout crescente ativado: 0% até a época 20, linear
+  até 10% na época 40. O iniciador sequencial preserva resultados individualizados.
+- Verificação: configurações e scripts validados; suíte passou (`47 passed`). Os
+  forwards 34/50, dimensões, dropout, congelamento/liberação e cópia da conv1 foram
+  testados. Pesos oficiais ImageNet V1 foram carregados e comparados exatamente.
+
+# 2026-11-04 — conv1 preservada na ResTheo especial18
+
+- Pedido: manter também a primeira convolução 7x7 da especial18 com 64 canais.
+- Implementado: canais `64→32→64→128`; conv1 recebe pesos ResNet-18 ImageNet V1,
+  fica congelada nas épocas 1–5 e é liberada na época 6. As demais camadas mantêm
+  He normal `fan_out`, e o dropout incremental permanece ativo.
+- A execução especial18 que já estava rodando não foi alterada; a mudança vale
+  somente para execuções iniciadas depois desta edição.
+- Verificação: configuração validada e suíte completa aprovada (`47 passed`),
+  incluindo canais, pontos de dropout e congelamento/liberação da conv1.
+
+# 2026-11-04 — 60 épocas nas ResTheo especiais
+
+- Pedido: configurar todas as ResTheo especiais com 60 épocas.
+- Implementado em especial18, especial34 e especial50. O treinamento já iniciado
+  mantém as 50 épocas registradas; a mudança vale somente para novas execuções.
+
+# 2026-11-04 — layer4 mantida e Especial50 com 1/4 dos canais
+
+- Pedido: interromper a Especial34 porque as camadas finais deveriam ser mantidas;
+  reduzir a Especial50 para 1/4 dos canais em vez de 1/2.
+- Implementado para novas execuções: as três especiais agora mantêm `layer4` e
+  usam blocos completos `[2,2,2,2]` ou `[3,4,6,3]`.
+- Especial18/34: canais `64→32→64→128→256`, classificadores `256→1`.
+- Especial50: larguras Bottleneck `16→32→64→128`, saídas `64→128→256→512`,
+  classificador `512→1`; conv1 permanece com 64 canais.
+- O PID seguro identificado para a execução Especial34 antiga foi `81012`; a
+  interrupção foi deixada para o participante executar explicitamente.
+- Verificação: suíte completa aprovada (`47 passed`), cobrindo os quatro estágios,
+  canais, projeções residuais, classificadores, dropout e forwards. A Especial34
+  antiga foi confirmada como encerrada após o comando fornecido.
+
+# 2026-11-04 — AlexTheo para comparação
+
+- Pedido: criar AlexNet para comparação, preservando a estrutura e usando uma
+  única saída; parâmetros iguais aos da ResTheoEspecial50.
+- Implementado: AlexNet ImageNet V1 completa; somente a última camada muda de
+  `Linear(4096,1000)` para `Linear(4096,1)`. Adam 0.001, batch 16, 60 épocas,
+  dados originais 80/20 e dropout incremental 0→10% entre épocas 20–40.
+- A conv1 original 11x11 fica congelada nas épocas 1–5 e é liberada na época 6.
+- Verificação: suíte completa aprovada (`49 passed`). O arquivo oficial ImageNet
+  V1 foi baixado e todas as camadas anteriores à saída foram comparadas exatamente;
+  somente `classifier.6` possui shape novo `[1,4096]`.
+
+# 2026-11-04 — restauração do código Especial34
+
+- Foi detectado durante a suíte que, junto do resultado antigo, a pasta de código
+  `res_theo_especial34` também havia sido removida. O pacote foi reconstruído com
+  a arquitetura vigente (layer4 mantida, canais 64/32/64/128/256) e voltou a
+  participar da suíte aprovada.
+
+# 2026-11-04 — restauração da Especial18 histórica 155432
+
+- Pedido: restaurar e diagramar a Especial18 antiga apontada como a execução com
+  trajetória final de validação mais ascendente.
+- Implementado em pacote separado `res_theo_especial18_antigo`: conv1=32 sem
+  ImageNet, BasicBlocks `[2,2,2]`, canais 32/64/128, layer4 removida e saída 128→1.
+- A configuração foi copiada do snapshot da execução: Adam 0.001, batch 16,
+  50 épocas, dados originais 80/20 e dropout incremental 0→10% nas épocas 20–40.
+- Diagrama vertical gerado em PNG, SVG e PDF em `docs/diagramas/`.
+- Verificação: configuração validada, forward artificial aprovado e suíte completa
+  passou (`50 passed`). O PNG foi inspecionado visualmente após corrigir quebra de
+  texto e enquadramento; PDF e SVG foram gerados pela mesma fonte.
+
+# 2026-11-04 — Especial18 histórica promovida a principal
+
+- Pedido: arquivar as demais especiais e tratar a restauração `155432` como a
+  Especial principal.
+- Implementado: o pacote ativo voltou a se chamar `res_theo_especial`; seu
+  iniciador oficial é `iniciar_res_theo_especial.sh`.
+- As versões Especial18 com layer4, Especial34 e Especial50 foram movidas para
+  `residuals networks/arquivados/`, junto de seus iniciadores históricos.
+- Os resultados da Especial18 com layer4 e da Especial50 foram movidos para
+  `resultados_residuals_networks/arquivados/`; a Especial34 já não possuía uma
+  pasta de resultados no momento da organização. Nenhum checkpoint foi apagado.
+- A execução histórica `155432` permanece na pasta ativa
+  `resultados_residuals_networks/res_theo_especial/` como referência principal.
+- Verificação: configuração reorganizada e suíte completa aprovada
+  (`49 passed`); iniciador principal validado com `bash -n`.
+
+# 2026-11-04 — AlexTheo arquivada
+
+- Pedido: arquivar também a AlexTheo, incluindo código e resultados.
+- A execução ativa PID `84496` foi encerrada antes da movimentação.
+- Código, iniciador, logs, histórico, parâmetros e checkpoint foram preservados
+  nas pastas `residuals networks/arquivados/alex_theo/` e
+  `resultados_residuals_networks/arquivados/alex_theo/`.
+- Nenhum arquivo de resultado ou checkpoint foi apagado.
+- Verificação: processo confirmado como encerrado e suíte completa aprovada
+  (`49 passed`).
+
+# 2026-11-04 — Especial principal com 100 épocas e dropout até 20%
+
+- Pedido: configurar a `res_theo_especial` principal para 100 épocas e elevar
+  gradualmente o dropout até 20% na época 50.
+- Implementado: o crescimento permanece em 0% até a época 20, aumenta
+  linearmente entre as épocas 20 e 50 e permanece em 20% da época 50 à 100.
+- Os demais parâmetros, posições de dropout, arquitetura e dados foram preservados.
+- A alteração vale somente para novas execuções e não inicia treinamento.
+- Verificação: `CONFIG.validar()` aprovado; probabilidades confirmadas em 0% na
+  época 20, 10% na 35 e 20% nas épocas 50 e 100.
+
+# 2026-11-04 — redução final do dropout da Especial principal
+
+- Pedido: entre as épocas 80 e 100, reduzir linearmente o dropout até 5%.
+- Implementado: 20% permanece até a época 80; depois diminui linearmente e chega
+  a 5% na época 100. Arquitetura, posições e demais parâmetros foram preservados.
+- A alteração vale somente para novas execuções e não inicia treinamento.
+- Verificação: `CONFIG.validar()` aprovado e suíte completa aprovada
+  (`49 passed`), confirmando 20% na época 80, 12,5% na 90 e 5% na 100.
+
+# 2026-11-04 — ampliação exclusiva da ResTheo Especial
+
+- Pedido: separar os originais em 80% treino e 20% validação antes de ampliar;
+  criar cinco versões por original somente no treino e manter a validação usual.
+- Implementado no carregamento virtual, sem duplicar JPEGs: original esticada;
+  uma rotação fixa sorteada entre 90°/180°/270°; cinza; ruído gaussiano com
+  variância 0,15 mais exatamente 2% das posições convertidas em branco; cutout
+  com quatro retângulos pretos, com altura e largura sorteadas entre 20–40 px.
+- Cinza, ruído e cutout escolhem de forma fixa e aleatória entre a imagem original
+  e a rotacionada. Todos os sorteios derivam da semente e do caminho da original.
+- A divisão ocorre por original: os derivados de treino nunca entram na validação.
+  A validação contém somente uma original esticada para RGB 224×224 por origem.
+- A mudança afeta apenas `res_theo_especial`; nenhum treino foi iniciado.
+- Verificação: configuração e manifesto aprovados; foram obtidas 99.990 amostras
+  virtuais balanceadas no treino (49.995 por classe), 5.000 originais balanceadas
+  na validação (2.500 por classe) e zero origens compartilhadas entre os splits.
+  A suíte completa passou (`50 passed`).
+
+# 2026-11-04 — ajuste de ruído e cutout da Especial
+
+- Pedido: reduzir a variância gaussiana para 0,1 e substituir os quatro
+  retângulos do cutout por oito quadrados.
+- Implementado: ruído com variância 0,1; oito quadrados pretos, cada um com lado
+  sorteado entre 20 e 40 px. Os demais parâmetros da ampliação foram preservados.
+- A alteração vale somente para novas execuções e não inicia treinamento.
+- Verificação: `CONFIG.validar()` aprovado, suíte completa aprovada
+  (`50 passed`) e prancha das transformações regenerada e inspecionada.
+
+# 2026-11-04 — AdamW e aquecimento com dados originais
+
+- Pedido: usar AdamW com os parâmetros do Adam existente e weight decay 0,01;
+  treinar dez épocas normais antes de usar os dados ampliados, totalizando 110.
+- Implementado: AdamW, learning rate 0,001, defaults restantes da biblioteca e
+  `weight_decay=0.01`; épocas 1–10 com uma original esticada por origem e épocas
+  11–110 com as cinco variantes. A validação continua somente com originais.
+- O dropout mantém as épocas absolutas anteriores: chega a 20% na 50, começa a
+  cair na 80, chega a 5% na 100 e permanece em 5% até a época 110.
+- Nenhum treinamento foi iniciado.
+- Verificação: `CONFIG.validar()` aprovado; AdamW confirmou `lr=0.001` e
+  `weight_decay=0.01`; troca de dados confirmada entre as épocas 10 e 11;
+  cronograma de dropout confirmado até a época 110; suíte completa aprovada
+  (`50 passed`).
+
+# 2026-11-04 — 20 épocas originais e warmup linear
+
+- Pedido: manter dados normais até a época 20 e combinar AdamW com warmup linear,
+  começando com taxa mil vezes menor e atingindo a taxa definida na época 30.
+- Implementado: épocas 1–20 somente com originais; ampliação a partir da 21.
+  Learning rate `0.000001` na época 1, crescimento linear até `0.001` na época
+  30 e manutenção em `0.001` nas épocas 31–110.
+- A taxa efetiva passa a ser registrada por época no log, histórico e checkpoint.
+- Nenhum treinamento foi iniciado.
+- Verificação: `CONFIG.validar()` aprovado; AdamW iniciou com `lr=0.000001`;
+  taxas intermediárias e chegada a `0.001` na época 30 foram confirmadas; troca
+  dos dados entre as épocas 20 e 21 confirmada; suíte completa aprovada
+  (`50 passed`).
+
+# 2026-11-04 — diagrama residual da Especial no padrão dos demais
+
+- Pedido: deixar o diagrama da `res_theo_especial` no mesmo formato dos diagramas
+  ResTheo 18/34, exibindo setas e resíduos explicitamente.
+- Implementado: os seis BasicBlocks agora mostram caminho principal, atalho de
+  identidade ou projeção 1×1, seta de entrada na soma e nó `+`; as projeções que
+  alteram dimensão aparecem tracejadas em azul.
+- PNG, SVG e PDF foram gerados como `arquitetura_res_theo_especial.*`; os nomes
+  históricos também foram atualizados para evitar manter uma versão divergente.
+- A mudança é somente documental e não interfere no treino em andamento.
+- Verificação: gerador executado e PNG completo inspecionado visualmente.
+
+# 2026-11-04 — continuação Theo Ajuste e novas arquiteturas
+
+- Pedido: preservar o processo ativo; continuar o modelo das 15:54:32 por 40
+  épocas com novas ampliações, AdamW/warmup, dropout triangular e F1 por época.
+- Implementado no pacote separado `theo_ajuste`: todos os pesos do checkpoint
+  histórico da época 50, AdamW novo com decay 0.01, LR 1e-6 na época 1 até 0.001
+  na 25; dropout 0 na época 1, 15% na 15, 5% na 25 e mantido até 40.
+- Cinco versões de treino, sem rotações: normal, cinza, ruído variância 0.08
+  mais 2% branco, oito quadrados RGB aleatórios e oito quadrados pretos. Novos
+  sorteios independentes dos quadrados a cada leitura. Validação original.
+- F1 binário para Dog=1 calculado globalmente por época; gráficos de BCE,
+  acurácia e F1 somente por época. Parâmetros e origem constam do checkpoint.
+- O comando foi enviado antes de implementar as arquiteturas `theo_curto`
+  (sem layer3, saída 64→1) e `theo_48_88` (32/32/48/88, saída 88→1), ambas
+  com layer4 removida. Esses dois pacotes fornecem as novas arquiteturas;
+  o fine-tuning histórico pertence somente a `theo_ajuste`.
+- Verificação: quatro testes novos passaram, cobrindo F1, gráfico, manifesto,
+  agendas, quadrados variáveis e forwards das duas arquiteturas. Todos os pesos
+  históricos carregaram com correspondência estrita. Nenhum treino foi iniciado
+  ou interrompido; o log original continuou avançando durante o trabalho.
+- Verificação final integrada: suíte completa com `54 passed`; iniciador passou
+  em `bash -n` e `git diff --check` não apontou problemas.
+
+# 2026-11-04 — treino em duas fases da Theo Curto e Theo 48/88
+
+- Pedido confirmado: 50 épocas originais com AdamW sem warmup, seguidas de
+  30 ampliadas com warmup; dropout 0→20% até 25, 20→10% até 50 e 10→5% até
+  75, mantido até 80.
+- Implementado para ambos: batch 16, AdamW com LR 0.001 e decay 0.01;
+  épocas 51–75 fazem warmup linear de 1e-6 a 0.001. Mantém-se o mesmo AdamW
+  e seus momentos entre fases. Pesos inicializados do zero com He fan_out.
+- Ampliação igual à Theo Ajuste: normal, cinza, ruído variância 0.08 + 2%
+  branco, oito quadrados RGB e oito pretos; sorteios novos dos quadrados a cada
+  leitura. Validação original permanece separada dos derivados do treino.
+- Criados iniciadores individuais; registros, snapshots, F1, gráficos por época,
+  logs e checkpoints em pastas próprias de cada modelo. Fontes das dependências
+  compartilhadas também são preservados em cada execução.
+- Verificação: `CONFIG.validar()` para ambos, agenda, AdamW e transições cobertos
+  pela suíte com `56 passed`; nenhuma execução real iniciada ou interrompida.
+
+# 2026-11-04 — preservação do melhor checkpoint por validação
+
+- Escopo confirmado: theo_ajuste, theo_curto, theo_48_88 e res_theo_especial.
+- Implementado: além de ultima_epoca.pt, as novas execuções preservam
+  melhor_modelo.pt quando a acurácia de validação supera estritamente o melhor
+  valor anterior. Empates preservam o primeiro; melhor_modelo.json identifica
+  época, critério e acurácia. O checkpoint inclui pesos e estados daquela época.
+- Verificado em teste artificial: melhora substitui, piora/empate preservam o
+  melhor e o checkpoint da última época permanece intacto (`1 passed`).
+- Parada antecipada ainda não ativada: falta o participante definir a paciência
+  em épocas sem melhora. Nenhum treino iniciado, interrompido ou reiniciado.
+
+# 2026-11-04 — diagrama Theo 48/88
+
+- Pedido: diagramar o modelo theo_48_88 no padrão vertical dos anteriores.
+- Gerados PNG, SVG e PDF em docs/diagramas/arquitetura_theo_48_88.* com canais
+  32/32/48/88, seis BasicBlocks, atalhos de identidade/projeção, somas explícitas,
+  saída 88→1 e agenda atual de treinamento.
+- Verificação: dimensões conferidas no código do modelo; gerador executado,
+  PNG completo inspecionado visualmente e git diff --check aprovado.
+- Alteração documental; nenhum treinamento foi alterado.
+
+# 2026-11-04 — Theo 28/42/64
+
+- Pedido: substituir canais 32→28, 48→42 e 88→64, com a mesma configuração
+  de treinamento da Theo 48/88.
+- Criado pacote independente theo_28_42_64: conv1 7×7 com 28 canais, estágios
+  28/42/64, dois BasicBlocks por estágio, projeções compatíveis, layer4 removida
+  e classificador 64→1. Inicialização do zero He normal fan_out.
+- Mantida a agenda de 80 épocas (50 originais + 30 ampliadas), batch 16,
+  AdamW 0.001/decay 0.01, warmup na segunda fase, dropout 0→20→10→5%,
+  validação original, F1/gráficos por época e preservação do melhor checkpoint.
+- Criado iniciar_theo_28_42_64.sh; resultados próprios e snapshots registrados.
+- Verificado: CONFIG.validar(), agendas, AdamW, dimensões, forward e gradientes
+  artificiais (`4 passed`), bash -n e git diff --check. Nenhum treino iniciado.
+
+# 2026-11-04 — SVGs Theo Curto e Theo 28/42/64
+
+- Gerados diagramas vetoriais em docs/diagramas/arquitetura_theo_curto.svg e
+  arquitetura_theo_28_42_64.svg, com PNGs para inspeção.
+- Mantido o padrão dos anteriores: atalhos residuais e somas explícitos,
+  projeções 1×1, canais, dimensões e configuração de treinamento.
+- Curto representa somente layer1/layer2; 28/42/64 inclui os três estágios
+  e a conv1 7×7 com 28 canais. Renderizações inspecionadas visualmente.
+- Nenhum treinamento ou parâmetro do modelo foi alterado.
+
+# 2026-11-04 — publicação do código na branch cats-and-dogs
+
+- Pedido: enviar o trabalho acumulado ao GitHub enquanto o treino continua.
+- Incluídos fontes, configurações, testes, iniciadores, código arquivado,
+  documentação e diagramas. Datasets, ambientes, resultados e checkpoints
+  permanecem locais; pranchas de amostras derivadas do dataset foram excluídas.
+- O processo de treinamento não foi interrompido nem reiniciado.
+- Verificação antes da publicação: suíte completa aprovada (`59 passed`),
+  lista de arquivos staged sem datasets/resultados/checkpoints/ambientes e
+  `git diff --cached --check` aprovado após formatação dos SVGs.

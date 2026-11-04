@@ -54,9 +54,23 @@ class ResTheo(nn.Module):
 
 
 def inicializar_nova_camada(camada: nn.Linear) -> None:
-    # Normal(0, 1): desvio padrão 1, portanto variância 1, inclusive no bias.
-    nn.init.normal_(camada.weight, mean=0.0, std=1.0)
-    nn.init.normal_(camada.bias, mean=0.0, std=1.0)
+    nn.init.kaiming_normal_(camada.weight, mode="fan_out", nonlinearity="relu")
+    nn.init.zeros_(camada.bias)
+
+
+def inicializar_modelo_do_zero(modelo: nn.Module) -> None:
+    """He normal para ReLU (variância 2/fan_out); vieses 0; BatchNorm 1/0."""
+    for modulo in modelo.modules():
+        if isinstance(modulo, (nn.Conv2d, nn.Linear)):
+            nn.init.kaiming_normal_(modulo.weight, mode="fan_out", nonlinearity="relu")
+            if modulo.bias is not None:
+                nn.init.zeros_(modulo.bias)
+        elif isinstance(modulo, (nn.BatchNorm1d, nn.BatchNorm2d)):
+            if modulo.weight is not None:
+                nn.init.ones_(modulo.weight)
+            if modulo.bias is not None:
+                nn.init.zeros_(modulo.bias)
+            modulo.reset_running_stats()
 
 
 def conferir_transferencia(modelo: ResTheo, origem: ResNet) -> dict:
@@ -84,14 +98,20 @@ def criar_res_theo34(congelar_backbone: bool = False, config=None):
     from .config_res_theo34 import CONFIG, validar_dropout
     config = CONFIG if config is None else config
     validar_dropout(config)
-    origem = resnet34(weights=PESOS)
+    pesos = PESOS if config.usar_pesos_pre_treinados else None
+    origem = resnet34(weights=pesos)
     modelo = ResTheo(origem, congelar_backbone)
-    resumo = conferir_transferencia(modelo, origem)
-    print(f"ImageNet: {resumo['tensores_reaproveitados']} tensores reaproveitados "
-          f"({resumo['buffers_reaproveitados']} buffers de BatchNorm incluídos).")
-    print(f"Descartados: layer4.* e fc.* originais ({len(resumo['descartados'])} tensores).")
-    print("Inicializados com Normal(0, 1): fc.weight [1, 256] e fc.bias [1].")
+    if config.usar_pesos_pre_treinados:
+        resumo = conferir_transferencia(modelo, origem)
+        print(f"ImageNet: {resumo['tensores_reaproveitados']} tensores reaproveitados "
+              f"({resumo['buffers_reaproveitados']} buffers de BatchNorm incluídos).")
+        print(f"Descartados: layer4.* e fc.* originais ({len(resumo['descartados'])} tensores).")
+    else:
+        inicializar_modelo_do_zero(modelo)
+        resumo = {"pesos": None, "inicializacao": config.inicializacao_do_zero,
+                  "inicializados": [nome for nome, _ in modelo.named_parameters()]}
+        print("Sem pesos pré-treinados: convoluções e fc com He normal (variância 2/fan_out), vieses em 0; "
+              "BatchNorm com escala 1 e deslocamento 0.")
     from .dropout_comum import instalar_dropout
-    from .config_res_theo34 import CONFIG
-    instalar_dropout(modelo, CONFIG if config is None else config)
+    instalar_dropout(modelo, config)
     return modelo, resumo

@@ -71,19 +71,19 @@ def test_pesos_oficiais_e_buffers_preservados():
         conferir_transferencia(modelo, origem_independente)
 
 
-def test_normal_apenas_nova_camada(monkeypatch):
+def test_he_normal_apenas_nova_camada(monkeypatch):
     chamadas = []
-    original = torch.nn.init.normal_
-    def registrar(tensor, mean=0.0, std=1.0, **kwargs):
-        chamadas.append((tensor, mean, std))
-        return original(tensor, mean=mean, std=std, **kwargs)
+    original = torch.nn.init.kaiming_normal_
+    def registrar(tensor, mode="fan_in", nonlinearity="leaky_relu", **kwargs):
+        chamadas.append((tensor, mode, nonlinearity))
+        return original(tensor, mode=mode, nonlinearity=nonlinearity, **kwargs)
     origem = resnet34(weights=None)
-    monkeypatch.setattr(torch.nn.init, "normal_", registrar)
+    monkeypatch.setattr(torch.nn.init, "kaiming_normal_", registrar)
     modelo = ResTheo(origem)
-    assert len(chamadas) == 2
+    assert len(chamadas) == 1
     assert chamadas[0][0] is modelo.fc.weight
-    assert chamadas[1][0] is modelo.fc.bias
-    assert all((media, desvio) == (0.0, 1.0) for _, media, desvio in chamadas)
+    assert chamadas[0][1:] == ("fan_out", "relu")
+    assert torch.equal(modelo.fc.bias, torch.zeros_like(modelo.fc.bias))
 
 
 def test_congelamento_inclui_batchnorm():
@@ -140,6 +140,35 @@ def test_divisao_antes_ampliacao_e_rotulos(tmp_path):
     with pytest.raises(ValueError, match="Vazamento"):
         carregar_divisao(manifesto)
     assert split_de("a" * 64, 42, 0.2, 0.1) == split_de("a" * 64, 42, 0.2, 0.1)
+
+
+def test_modo_originais_usa_uma_imagem_e_estica_para_224(tmp_path):
+    rows = []
+    raiz_originais = tmp_path / "originais"
+    for split, classe, sha in (("treino", "Cat", "a" * 64),
+                               ("validacao", "Dog", "b" * 64)):
+        original = f"{split}.jpg"
+        destino = raiz_originais / classe / original
+        destino.parent.mkdir(parents=True, exist_ok=True)
+        Image.new("RGB", (80, 40), (10, 20, 30)).save(destino)
+        for nome, geo, espelho, rotacao in variantes(classe, original, split):
+            rows.append(dict(split=split, classe=classe, rotulo=int(classe == "Dog"),
+                             caminho=f"inexistente/{nome}", arquivo_origem=original,
+                             sha256=sha, geometria=geo, espelho=espelho, rotacao=rotacao))
+    manifesto = tmp_path / "manifesto_variantes.csv"
+    with manifesto.open("w", newline="", encoding="utf-8") as f:
+        escritor = csv.DictWriter(f, fieldnames=list(rows[0]))
+        escritor.writeheader()
+        escritor.writerows(rows)
+    conjuntos = carregar_divisao(manifesto, ("treino", "validacao"),
+                                 usar_dados_ampliados=False,
+                                 raiz_originais=raiz_originais)
+    assert [len(conjuntos[s]) for s in ("treino", "validacao")] == [1, 1]
+    dataset = DatasetManifesto(conjuntos["treino"], usar_dados_ampliados=False)
+    x1, y1 = dataset[0]
+    x2, y2 = dataset[0]
+    assert x1.shape == (3, 224, 224)
+    assert torch.equal(x1, x2) and torch.equal(y1, y2)
 
 
 def test_perda_loop_cpu_com_batch_um():
