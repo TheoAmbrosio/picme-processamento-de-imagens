@@ -46,6 +46,6 @@
 <text x="926" y="722" font-family="DejaVu Sans,sans-serif" font-size="22" fill="#202c39" font-weight="600" text-anchor="start">V3</text>
 <text x="926" y="760" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="start">30 épocas</text>
 <rect x="1214" y="679" width="285" height="110" rx="18" fill="white" stroke="#e0e3e4"/>
-<text x="1234" y="722" font-family="DejaVu Sans,sans-serif" font-size="22" fill="#202c39" font-weight="600" text-anchor="start">V4</text>
-<text x="1234" y="760" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="start">30 épocas</text>
+<text x="1234" y="722" font-family="DejaVu Sans,sans-serif" font-size="22" fill="#202c39" font-weight="600" text-anchor="start">V4 → Final</text>
+<text x="1234" y="760" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="start">30 + 10 épocas</text>
 </svg>

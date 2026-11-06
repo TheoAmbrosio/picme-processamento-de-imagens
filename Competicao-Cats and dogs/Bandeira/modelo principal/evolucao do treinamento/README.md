@@ -3,11 +3,11 @@
 Perda e acurácia de treino/validação por época, conforme fontes salvas.
 ## Visão geral
 
-[SVG com as quatro versões](visao%20geral/treinamentos_geral.svg),
+[SVG com V1–V4 e fine-tuning final](visao%20geral/treinamentos_geral.svg),
 [PNG](visao%20geral/treinamentos_geral.png), [PDF](visao%20geral/treinamentos_geral.pdf).
 
 Históricos numéricos publicados no repositório atualizado, não estimados das
-imagens. V1–V4 são execuções separadas. A linha vertical marca a época
+imagens. V1–V4 são execuções separadas; V4_Final continua a V4 da época30. A linha vertical marca a época
 selecionada por menor perda de validação, conforme critério do autor.
 
 
@@ -38,4 +38,11 @@ selecionada por menor perda de validação, conforme critério do autor.
 
 - [Gráfico SVG](<V4/graficos.svg>) · [PNG](<V4/graficos.png>) · [PDF](<V4/graficos.pdf>).
 - [Tabela CSV](<V4/historico.csv>) · [Origem dos dados](<V4/fonte.json>).
+
+## V4_Final
+
+Épocas disponíveis:10. Checkpoint por menor perda de validação: época10. Fine-tuning do checkpoint V4 da época30;10 épocas.
+
+- [Gráfico SVG](<V4_Final/graficos.svg>) · [PNG](<V4_Final/graficos.png>) · [PDF](<V4_Final/graficos.pdf>).
+- [Tabela CSV](<V4_Final/historico.csv>) · [Origem dos dados](<V4_Final/fonte.json>).
 

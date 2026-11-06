@@ -134,30 +134,31 @@ def lisandra():
 
 def bandeira():
     base=RAIZ/'Bandeira/modelo principal';repo=RAIZ/'Bandeira/projeto';entradas=[]
-    fig,axs=plt.subplots(4,2,figsize=(16,17),layout='constrained')
-    for i,suf in enumerate(('', '_2.0','_3.0','_4.0')):
+    fig,axs=plt.subplots(5,2,figsize=(16,21),layout='constrained')
+    for i,suf in enumerate(('', '_2.0','_3.0','_4.0','_4.0_Final')):
         p=repo/f'data/training_history{suf}.csv'
         with p.open() as f:
             rows=[dict(epoca=int(float(r['epoch'])),perda_treino=float(r['train_loss']),
                 perda_validacao=float(r['val_loss']),acuracia_treino=float(r['train_acc']),
                 acuracia_validacao=float(r['val_acc'])) for r in csv.DictReader(f)]
         best=min(rows,key=lambda r:r['perda_validacao'])
-        nota=f'Checkpoint por menor perda de validação: época{best["epoca"]}. Execução independente.'
-        entradas.append(salvar('Bandeira',f'V{i+1}',rows,str(p.relative_to(RAIZ)),nota))
+        nome=f'V{i+1}' if i<4 else 'V4_Final'
+        nota=f'Checkpoint por menor perda de validação: época{best["epoca"]}. '+('Execução independente.' if i<4 else 'Fine-tuning do checkpoint V4 da época30;10 épocas.')
+        entradas.append(salvar('Bandeira',nome,rows,str(p.relative_to(RAIZ)),nota))
         for ax,chave in zip(axs[i],('perda','acuracia')):
             for fase in ('treino','validacao'):ax.plot([r['epoca'] for r in rows],[r[f'{chave}_{fase}'] for r in rows],label=fase)
             ax.axvline(best['epoca'],ls=':',color='black',label='checkpoint por val_loss')
-            ax.set(title=f'V{i+1}: {chave}',xlabel='Época',ylabel=chave);ax.legend(fontsize=8);ax.grid(alpha=.2)
+            ax.set(title=f'{nome}: {chave}',xlabel='Época',ylabel=chave);ax.legend(fontsize=8);ax.grid(alpha=.2)
     destino=base/'evolucao do treinamento/visao geral';destino.mkdir(exist_ok=True)
     for ext in ('svg','png','pdf'):fig.savefig(destino/f'treinamentos_geral.{ext}',dpi=140)
     plt.close(fig)
     indice('Bandeira',entradas,'''## Visão geral
 
-[SVG com as quatro versões](visao%20geral/treinamentos_geral.svg),
+[SVG com V1–V4 e fine-tuning final](visao%20geral/treinamentos_geral.svg),
 [PNG](visao%20geral/treinamentos_geral.png), [PDF](visao%20geral/treinamentos_geral.pdf).
 
 Históricos numéricos publicados no repositório atualizado, não estimados das
-imagens. V1–V4 são execuções separadas. A linha vertical marca a época
+imagens. V1–V4 são execuções separadas; V4_Final continua a V4 da época30. A linha vertical marca a época
 selecionada por menor perda de validação, conforme critério do autor.
 ''')
 
@@ -173,7 +174,7 @@ Esta seção é sobre resultados de treinamento, distinta da documentação dos 
 |---|---|---|
 | Theo |Referência21 épocas, repetição36 e Aug8 com30; CSVs e plot geral|[Evolução](Theo/modelo%20principal/evolucao%20do%20treinamento/README.md)|
 | Dulce |CNN final120 épocas; séries históricas100 épocas; logs224 e ResNet18|[Evolução](Dulce/modelo%20principal/evolucao%20do%20treinamento/README.md)|
-| Bandeira |Históricos completos V1–V4, CSVs e gráficos numéricos|[Evolução](Bandeira/modelo%20principal/evolucao%20do%20treinamento/README.md)|
+| Bandeira |Históricos V1–V4 e V4_Final (10 épocas), CSVs e gráficos numéricos|[Evolução](Bandeira/modelo%20principal/evolucao%20do%20treinamento/README.md)|
 | Lisandra |Pacote com10 épocas;checkpoint declarado da5 por menor loss;novo peso compatível recebido|[Evolução](Lisandra/modelo%20principal/evolucao%20do%20treinamento/README.md)|
 
 Gráficos dos dados numéricos em SVG/PNG/PDF, tabelas em CSV, fonte identificada

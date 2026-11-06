@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img">
+<title>V4 → V4 Final</title>
+<defs><marker id="seta" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#657384"/></marker></defs>
+<rect width="1600" height="900" fill="#fcfbf8"/>
+<text x="65" y="54" font-family="DejaVu Sans,sans-serif" font-size="17" fill="#657384" font-weight="600" text-anchor="start">BANDEIRA</text>
+<text x="65" y="112" font-family="DejaVu Sans,sans-serif" font-size="40" fill="#202c39" font-weight="700" text-anchor="start">V4 → V4 Final</text>
+<text x="65" y="153" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#657384" font-weight="400" text-anchor="start">30 épocas do zero + 10 de fine-tuning · mudança de etapa após a época 30</text>
+<text x="120" y="286" font-family="DejaVu Sans,sans-serif" font-size="28" fill="#202c39" font-weight="600" text-anchor="start">Acurácia</text>
+<path d="M120,705.0 L740,705.0" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="104" y="711.0" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">40%</text>
+<path d="M120,608.75 L740,608.75" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="104" y="614.75" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">55%</text>
+<path d="M120,512.5 L740,512.5" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="104" y="518.5" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">70%</text>
+<path d="M120,416.25 L740,416.25" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="104" y="422.25" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">85%</text>
+<path d="M120,320.0 L740,320.0" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="104" y="326.0" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">100%</text>
+<text x="120.0" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">1</text>
+<text x="278.97435897435895" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">11</text>
+<text x="422.05128205128204" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">20</text>
+<text x="581.0256410256411" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">30</text>
+<text x="740.0" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">40</text>
+<polyline fill="none" stroke="#2877ad" stroke-width="3" stroke-linejoin="round" points="120.00,545.96 135.90,503.97 151.79,486.42 167.69,473.33 183.59,460.17 199.49,450.23 215.38,440.22 231.28,430.88 247.18,421.54 263.08,414.77 278.97,405.60 294.87,400.56 310.77,393.28 326.67,390.17 342.56,385.32 358.46,379.16 374.36,377.20 390.26,373.96 406.15,373.64 422.05,366.36 437.95,365.53 453.85,365.65 469.74,361.00 485.64,359.53 501.54,359.46 517.44,358.69 533.33,357.44 549.23,355.20 565.13,357.38 581.03,355.87 596.92,350.48 612.82,351.76 628.72,350.74 644.62,350.99 660.51,349.61 676.41,351.15 692.31,351.86 708.21,352.37 724.10,351.09 740.00,351.15"/>
+<polyline fill="none" stroke="#da7639" stroke-width="3" stroke-linejoin="round" points="120.00,506.34 135.90,484.65 151.79,477.98 167.69,503.77 183.59,452.82 199.49,453.34 215.38,504.54 231.28,464.89 247.18,482.73 263.08,395.84 278.97,410.73 294.87,383.14 310.77,383.78 326.67,401.49 342.56,383.65 358.46,370.05 374.36,365.94 390.26,374.16 406.15,369.15 422.05,363.25 437.95,388.53 453.85,361.58 469.74,358.50 485.64,356.32 501.54,355.29 517.44,356.45 533.33,355.55 549.23,356.45 565.13,356.58 581.03,354.39 596.92,355.42 612.82,354.26 628.72,353.37 644.62,354.01 660.51,354.39 676.41,353.50 692.31,353.88 708.21,354.26 724.10,353.37 740.00,353.62"/>
+<path d="M588.9743589743589,320 L588.9743589743589,705" fill="none" stroke="#866294" stroke-width="2" stroke-dasharray="6 6"/>
+<text x="430.0" y="773" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="middle">Época</text>
+<text x="920" y="286" font-family="DejaVu Sans,sans-serif" font-size="28" fill="#202c39" font-weight="600" text-anchor="start">Perda</text>
+<path d="M920,705.0 L1510,705.0" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="904" y="711.0" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">0.00</text>
+<path d="M920,608.75 L1510,608.75" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="904" y="614.75" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">0.17</text>
+<path d="M920,512.5 L1510,512.5" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="904" y="518.5" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">0.34</text>
+<path d="M920,416.25 L1510,416.25" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="904" y="422.25" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">0.52</text>
+<path d="M920,320.0 L1510,320.0" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="904" y="326.0" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">0.69</text>
+<text x="920.0" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">1</text>
+<text x="1071.2820512820513" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">11</text>
+<text x="1207.4358974358975" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">20</text>
+<text x="1358.7179487179487" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">30</text>
+<text x="1510.0" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">40</text>
+<polyline fill="none" stroke="#2877ad" stroke-width="3" stroke-linejoin="round" points="920.00,354.79 935.13,389.73 950.26,409.86 965.38,425.52 980.51,443.43 995.64,455.92 1010.77,469.96 1025.90,485.96 1041.03,504.56 1056.15,512.45 1071.28,530.42 1086.41,540.62 1101.54,552.84 1116.67,556.76 1131.79,568.26 1146.92,578.00 1162.05,583.20 1177.18,590.22 1192.31,591.33 1207.44,603.47 1222.56,605.21 1237.69,606.95 1252.82,613.62 1267.95,616.12 1283.08,616.57 1298.21,620.77 1313.33,622.90 1328.46,625.97 1343.59,624.38 1358.72,625.74 1373.85,635.29 1388.97,634.39 1404.10,636.99 1419.23,634.98 1434.36,636.17 1449.49,635.56 1464.62,633.98 1479.74,633.71 1494.87,635.57 1510.00,636.42"/>
+<polyline fill="none" stroke="#da7639" stroke-width="3" stroke-linejoin="round" points="920.00,391.84 935.13,410.86 950.26,417.69 965.38,348.52 980.51,446.02 995.64,448.84 1010.77,357.05 1025.90,413.64 1041.03,364.91 1056.15,536.71 1071.28,509.35 1086.41,568.61 1101.54,567.22 1116.67,535.82 1131.79,569.73 1146.92,595.30 1162.05,598.20 1177.18,589.96 1192.31,596.16 1207.44,609.10 1222.56,546.43 1237.69,611.85 1252.82,617.72 1267.95,623.44 1283.08,624.14 1298.21,626.46 1313.33,626.63 1328.46,628.37 1343.59,627.49 1358.72,629.07 1373.85,627.55 1388.97,628.31 1404.10,629.60 1419.23,630.06 1434.36,628.78 1449.49,630.06 1464.62,629.70 1479.74,629.98 1494.87,629.38 1510.00,630.32"/>
+<path d="M1366.2820512820513,320 L1366.2820512820513,705" fill="none" stroke="#866294" stroke-width="2" stroke-dasharray="6 6"/>
+<text x="1215.0" y="773" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="middle">Época</text>
+<path d="M90,215 L135,215" fill="none" stroke="#2877ad" stroke-width="3"/>
+<text x="147" y="222" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#202c39" font-weight="400" text-anchor="start">Treino</text>
+<path d="M320,215 L365,215" fill="none" stroke="#da7639" stroke-width="3"/>
+<text x="377" y="222" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#202c39" font-weight="400" text-anchor="start">Validação</text>
+<path d="M630,215 L675,215" fill="none" stroke="#866294" stroke-width="3"/>
+<text x="687" y="222" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#202c39" font-weight="400" text-anchor="start">Linha vertical: início do fine-tuning</text>
+</svg>

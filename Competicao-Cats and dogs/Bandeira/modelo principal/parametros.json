@@ -1,5 +1,5 @@
 {
-  "versao": "V4, código vigente",
+  "versao": "V4 Final — fine-tuning",
   "entrada": [
     3,
     384,
@@ -15,15 +15,15 @@
   "bloco": "Conv3x3 padding1, BatchNorm, ReLU, MaxPool2",
   "cabeca": "GAP, Flatten, Dropout0.5, Linear512→1",
   "otimizador": "AdamW",
-  "learning_rate": 0.001,
+  "learning_rate": 1e-05,
   "weight_decay": 0.0001,
   "batch_size": 64,
-  "epocas_maximas": 30,
-  "early_stopping_patience": 7,
+  "epocas_maximas": 10,
+  "early_stopping_patience": 4,
   "criterio_checkpoint": "menor perda de validação",
   "scheduler": "CosineAnnealingLR",
-  "T_max": 30,
-  "eta_min": 1e-06,
+  "T_max": 10,
+  "eta_min": 1e-07,
   "perda": "BCEWithLogitsLoss",
   "semente": 42,
   "divisao": "80/20 estratificada",
@@ -39,9 +39,30 @@
       0.25537651824850094
     ]
   },
-  "fonte": "projeto/src/model.py, train.py, dataset.py",
-  "commit": "c02a77502bdfe5de55660bf0985d0e7789cd0899",
-  "checkpoint": "projeto/data/best_model_4.0.pth",
-  "melhor_epoca_por_val_loss": 30,
-  "historico": "projeto/data/training_history_4.0.csv"
+  "fonte": "projeto/src/model.py, fine_tuning.py, dataset.py",
+  "commit": "bd92c13ec428b890192f290bbb79cf69d34c8a8d",
+  "checkpoint": "projeto/data/best_model_4.0_Final.pth",
+  "melhor_epoca_por_val_loss": 10,
+  "historico": "projeto/data/training_history_4.0_Final.csv",
+  "checkpoint_inicial": "projeto/data/best_model_4.0.pth",
+  "epoca_checkpoint_inicial": 30,
+  "congelados": "features[:12]: parâmetros dos blocos 1–3",
+  "treinaveis": "features[12:] e classifier: blocos 4–5 e cabeça",
+  "batchnorm": "model.train() mantém estatísticas correntes dos blocos congelados atualizáveis",
+  "augmentation": {
+    "random_resized_crop": {
+      "size": 384,
+      "scale": [
+        0.9,
+        1.0
+      ]
+    },
+    "flip_horizontal": 0.5,
+    "rotacao_graus": 5,
+    "color_jitter": {
+      "brightness": 0.05,
+      "contrast": 0.05
+    }
+  },
+  "validacao": "Resize((384,384)), ToTensor, Normalize; preparação offline documentada separadamente"
 }

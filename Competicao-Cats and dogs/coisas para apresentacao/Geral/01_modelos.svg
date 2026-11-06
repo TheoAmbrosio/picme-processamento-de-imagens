@@ -28,7 +28,7 @@
 <rect x="820" y="525" width="715" height="305" rx="18" fill="white" stroke="#e0e3e4"/>
 <rect x="843" y="552" width="5" height="38" rx="2" fill="#4367a6" stroke="#4367a6"/>
 <text x="866" y="582" font-family="DejaVu Sans,sans-serif" font-size="29" fill="#4367a6" font-weight="700" text-anchor="start">Bandeira</text>
-<text x="848" y="631" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">CNN V4</text>
+<text x="848" y="631" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">CNN V4 Final</text>
 <text x="848" y="670" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">32 → 64 → 128 → 256 → 512</text>
 <text x="848" y="709" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Média global → 1 saída</text>
 <text x="848" y="748" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Cinco blocos convolucionais</text>

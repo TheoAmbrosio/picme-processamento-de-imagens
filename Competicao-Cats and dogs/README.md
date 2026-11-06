@@ -10,7 +10,7 @@ Não foram executados treinamentos, testes finais ou alterações metodológicas
 | Theo | ResTheo34 Aug8, com antecedentes selecionados | [Abrir](Theo/modelo%20principal/README.md) |
 | Lisandra | AlexNetBinary vigente no GitHub | [Abrir](Lisandra/modelo%20principal/README.md) |
 | Dulce | CNN224 v2, declarada final no README da autora | [Abrir](Dulce/modelo%20principal/README.md) |
-| Bandeira | CNN V4 vigente em src/model.py | [Abrir](Bandeira/modelo%20principal/README.md) |
+| Bandeira | CNN V4 Final — fine-tuning de10 épocas | [Abrir](Bandeira/modelo%20principal/README.md) |
 
 Cada participante tem `modelo principal/`, com arquitetura SVG, método,
 parâmetros e gráficos disponíveis. As fontes originais ficam separadas dos
@@ -32,7 +32,7 @@ abaixo descreve as imagens e a preparação delas.
 - **Dulce:** histórico completo de120 épocas da CNN224 v2; validação96,9036%
   na época112. O experimento ResNet18 também existe no clone, mas não foi
   escolhido como substituto da CNN final pela organização.
-- **Bandeira:** fonte V4 e análises V1–V4. Pesos, históricos CSV e predições
+- **Bandeira:** V4 Final, derivada da V4;10 épocas de fine-tuning. Análises V1–V4 preservadas. Pesos, históricos CSV e predições
   de validação V1–V4 disponíveis no clone atualizado. Gráficos numéricos
   SVG/PNG/PDF por época na seção de evolução; V4 compatível com os pesos.
 - **Lisandra:** pacote publicado com10 épocas e checkpoint declarado da5

@@ -1,28 +1,20 @@
-# Bandeira — CNN V4 (código vigente)
+# Bandeira — CNN V4 Final
 
-Identificada pela classe CNN em `src/model.py` e pelo loop V4 em `src/train.py`.
-O README agora distingue a arquitetura base V1–V3 da V4; o diagrama segue a V4.
+Modelo atual: fine-tuning do checkpoint da época 30 da V4, publicado no commit `bd92c13`.
+A arquitetura foi preservada: cinco blocos 32→64→128→256→512, média global e uma saída.
 
-- [Método](METODO.md) e [parâmetros](parametros.json).
-- [Arquitetura SVG](arquitetura.svg).
-- [Gráficos salvos V1–V4](graficos/README.md).
-- [Registro original V4](../projeto/ChangesV4.md).
-- [Código original](../projeto/src/) e [análise V4](../projeto/Analysis/resultsV4.ipynb).
+- [Método e fases](METODO.md) · [Registro](REGISTRO_MODELO.md).
+- [Parâmetros finais](parametros.json) · [Parâmetros da V4 base](parametros_v4_base.json).
+- [Arquitetura no formato livro](arquitetura_livro.svg).
+- [Evolução por época e painel geral](evolucao%20do%20treinamento/README.md).
+- [Banco e transformações](BANCO_DE_DADOS.md).
+- [Conferência final](CONFERENCIA_FINAL.json) · [Pontos de atenção](CONFERENCIA_ATUALIZACAO.md).
+- [Checkpoint final](../projeto/data/best_model_4.0_Final.pth).
+- [Histórico final](../projeto/data/training_history_4.0_Final.csv).
+- [Predições salvas](../projeto/data/val_predictions_4.0_Final.csv).
+- [Código do fine-tuning](../projeto/src/fine_tuning.py).
 
-Os históricos CSV, predições e checkpoints V1–V4 estão publicados no clone atualizado.
-Os gráficos numéricos ficam na seção de evolução; figuras originais dos notebooks
-também foram preservadas. Nenhum treinamento ou teste final foi executado.
-
-- [Checkpoint V4](../projeto/data/best_model_4.0.pth).
-- [Histórico V4](../projeto/data/training_history_4.0.csv).
-- [Predições de validação V4](../projeto/data/val_predictions_4.0.csv).
-- [Conferência dos artefatos](CONFERENCIA_ATUALIZACAO.json).
-- [Conferência completa e ponto de pré-processamento a confirmar](CONFERENCIA_ATUALIZACAO.md).
-
-## Banco de dados do treinamento
-
-[Origem, quantidades, divisão e transformações por modelo](BANCO_DE_DADOS.md).
-
-## Evolução de treino e validação por época
-
-[Gráficos, tabelas CSV e fontes dos históricos](evolucao%20do%20treinamento/README.md).
+Checkpoint escolhido por menor perda: época 10 do fine-tuning, acurácia 94,76%,
+BCE 0,13356867 e F1 0,94726248. Maior acurácia da etapa: 94,80% nas épocas 3 e 9.
+V1–V4 continuam preservadas como execuções anteriores; a etapa Final deriva apenas da V4.
+Sem novo treinamento ou avaliação no conjunto de imagens.

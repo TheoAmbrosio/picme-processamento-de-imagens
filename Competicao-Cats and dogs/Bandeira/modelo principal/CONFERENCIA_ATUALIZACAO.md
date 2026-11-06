@@ -43,3 +43,14 @@ Essa observação não invalida os cálculos dos históricos recebidos.
 Evolução agora tem CSVs e plots SVG/PNG/PDF por versão, além do painel geral.
 Resultados numéricos detalhados em CONFERENCIA_ATUALIZACAO.json.
 Não foi executado treino, teste final ou alteração metodológica.
+
+
+## V4 Final — bd92c13
+
+Nova etapa de10 épocas, derivada do checkpoint V4/30. Checkpoint por menor
+val_loss na10 (94,76%), máximo de acurácia94,80% nas3 e9. Conferência detalhada
+em CONFERENCIA_FINAL.json: carregamento estrito, pesos finitos, forward artificial
+1×3×384×384→1×1;5000 predições conferidas com o histórico. Não avaliado nas imagens.
+O ponto sobre preparação offline versus imagem nova descrito acima permanece.
+O congelamento anunciado se aplica aos parâmetros; os buffers de BatchNorm
+continuam atualizáveis no código do autor. Nenhum código original foi alterado.

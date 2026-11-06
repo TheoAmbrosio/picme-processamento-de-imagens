@@ -1,3 +1,3 @@
 # Bandeira
 
-[Documentação consolidada da V4](modelo%20principal/README.md). Clone original e versões anteriores em `projeto/`.
+[Modelo atual: CNN V4 Final](modelo%20principal/README.md). Fine-tuning da V4; versões anteriores preservadas.

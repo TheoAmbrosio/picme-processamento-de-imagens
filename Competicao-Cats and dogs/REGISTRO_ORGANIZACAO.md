@@ -195,3 +195,42 @@ Retirado o primeiro fine-tuning independente da narrativa do modelo principal, d
 ## 06/11/2026 — Fotos distintas nas arquiteturas
 
 Mantida a foto de cachorro do Theo; selecionadas outras fotos: gato para Lisandra, cachorro para Dulce e gato para Bandeira. Atualizados os diagramas no formato livro (SVG, PNG, PDF) e os SVGs da apresentação. Fotos ilustrativas locais em imagens arquiteturas/. Verificados quatro SVGs com imagens incorporadas distintas. Sem alterações nos modelos ou treinos.
+
+
+## 06/11/2026 — V4 Final publicada
+
+Atualização para commit `bd92c13`: fine-tuning de10 épocas a partir da V4/30.
+Arquitetura preservada. Checkpoint Final/10 por menor perda;94,76% e F1≈0,94726248.
+Histórico, métodos, banco, gráficos e apresentação atualizados. Peso carregado
+estritamente e forward artificial aprovados; métricas recalculadas exclusivamente
+nas predições publicadas, sem avaliação real, treino ou teste final.
+
+
+## 06/11/2026 — Inferência no ZIP Pets
+
+Solicitada execução dos quatro modelos fechados no ZIP enviado. Geradas77 predições por modelo (Theo Aug8/29, Lisandra BatchNorm/5 declarada, Dulce CNN224v2/112, Bandeira V4 Final/10), com filename, probability=P(Cão), pred_label>=0,5. CUDA RTX A4500, float32/eval/inference_mode, load_state_dict estrito, pipelines originais preservados. Bandeira segue inferência para imagem nova de predict.py, sem preparação offline adicional. Manifesto e hashes de entradas/checkpoints gravados em avaliação local (avaliacoes_pets/20261106_190610). CSVs verificados:77 linhas únicas em ordem idêntica, probabilidades finitas e rótulos coerentes. Unanimidade44, divergências33; sem tratar concordância como acerto e sem usar nomes das pastas como rótulos. Criados heatmap, concordância, amostra visual e ZIP dos CSVs. Sem treino, ajuste ou envio das fotos ao GitHub.
+
+
+## 06/11/2026 — Pets na apresentação e ranking
+
+Movida a avaliação completa para coisas para apresentacao/Resultados Pets/20261106_190610, preservando imagens, CSVs e hashes. Relatório e ranking por acurácia calculados usando pastas do ZIP como referência (45 gatos,32 cães), sem revisão manual independente. Theo66/77, Bandeira61/77, Dulce59/77, Lisandra48/77. Incluídos precisão/recall/F1 de Cão, acurácia balanceada, matrizes de confusão, lista de erros, ranking SVG/PNG/PDF e painel HTML. Conferidos totais e consistência com os CSVs. Sem nova inferência, treino, calibração ou ajuste; imagens e saídas continuam locais e ignoradas pelo Git.
+
+
+## 06/11/2026 — Validação original versus Pets
+
+Adicionada comparação das acurácias de validação dos checkpoints efetivamente usados:Theo Aug8/29 98,32%;Bandeira Final/10 94,76%;Dulce v2/112 96,903633%;Lisandra/5 declarada 90,16%. CSV inclui fontes, critério de seleção, treino, perda de validação, Pets e diferença em pontos percentuais. Atualizados relatório e painel;criado gráfico SVG/PNG/PDF. Valores extraídos dos históricos por época, não dos máximos de checkpoints diferentes. Cálculos conferidos, sem nova inferência ou treinamento.
+
+
+## 06/11/2026 — Simplificação do relatório Pets
+
+Retiradas coluna e referências a épocas dos checkpoints do relatório escrito e do painel, conforme solicitado. Métricas e ranking preservados; proveniência técnica mantida nos CSVs e metadados. Gerador atualizado para preservar essa apresentação nas próximas execuções.
+
+
+## 06/11/2026 — Métodos de treinamento no relatório Pets
+
+Conferidos os métodos nos parâmetros salvos e códigos publicados. Adicionados tabela de hiperparâmetros e textos por participante:origem dos pesos, Adam/AdamW, LRs, decay, batch, duração, scheduler, dropout e posições, BatchNorm, congelamento, perda, seleção, seeds, dados e ampliações. Incluída amostra das oito variantes Theo usando DatasetManifesto real e configuração salva do Aug8, com seed42 só para ilustração, em fotos do banco original. Sampling identificado como ilustração do método, não lote histórico. Painel HTML atualizado; ranking e predições preservados. Nenhuma nova inferência de classificação ou treinamento.
+
+
+## 06/11/2026 — Publicação da atualização
+
+Preparada cópia pública do relatório e métricas agregadas em coisas para apresentacao/Resumo publico Pets, incluindo comparação com validação e sampling ilustrativo Aug8. Fotos pessoais, predições individuais e arquivos originais da avaliação continuam ignorados e locais. Incluídas atualização Bandeira V4 Final, métodos e geradores.

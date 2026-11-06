@@ -37,7 +37,7 @@ MODELOS = {
           ('Flatten9216',9216,1,1,True),('FC4096 + ReLU + Dropout50%',4096,1,1,True),
           ('FC4096 + ReLU + Dropout50%',4096,1,1,True),
           ('FC1 logit',1,1,1,True)]),
-    'Bandeira': dict(titulo='Bandeira — CNN V4',fonte='src/model.py, classe CNN (V4)',
+    'Bandeira': dict(titulo='Bandeira — CNN V4 Final',fonte='src/model.py, classe CNN (V4)',
         saida='1 logit; sigmoid na avaliação',
         volumes=[('RGB',3,384,384,False),
           ('Conv3×3 p1 + BN + ReLU + Pool2',32,192,192,False),

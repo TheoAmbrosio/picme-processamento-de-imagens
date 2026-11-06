@@ -4,7 +4,7 @@
 <rect width="1600" height="900" fill="#fcfbf8"/>
 <text x="65" y="54" font-family="DejaVu Sans,sans-serif" font-size="17" fill="#657384" font-weight="600" text-anchor="start">BANDEIRA</text>
 <text x="65" y="112" font-family="DejaVu Sans,sans-serif" font-size="40" fill="#202c39" font-weight="700" text-anchor="start">Evolução das versões</text>
-<text x="65" y="153" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#657384" font-weight="400" text-anchor="start">Execuções independentes, treinadas do zero</text>
+<text x="65" y="153" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#657384" font-weight="400" text-anchor="start">V1–V4: do zero · Final: continua o checkpoint 30 da V4</text>
 <rect x="65" y="205" width="715" height="290" rx="18" fill="white" stroke="#e0e3e4"/>
 <rect x="88" y="232" width="5" height="38" rx="2" fill="#4367a6" stroke="#4367a6"/>
 <text x="111" y="262" font-family="DejaVu Sans,sans-serif" font-size="29" fill="#4367a6" font-weight="700" text-anchor="start">V1</text>
@@ -25,8 +25,8 @@
 <text x="93" y="709" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Checkpoint: época 28</text>
 <rect x="820" y="525" width="715" height="290" rx="18" fill="white" stroke="#e0e3e4"/>
 <rect x="843" y="552" width="5" height="38" rx="2" fill="#4367a6" stroke="#4367a6"/>
-<text x="866" y="582" font-family="DejaVu Sans,sans-serif" font-size="29" fill="#4367a6" font-weight="700" text-anchor="start">V4</text>
-<text x="848" y="631" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">384 × 384 · cinco blocos</text>
-<text x="848" y="670" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">30 épocas</text>
-<text x="848" y="709" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Checkpoint: época 30</text>
+<text x="866" y="582" font-family="DejaVu Sans,sans-serif" font-size="29" fill="#4367a6" font-weight="700" text-anchor="start">V4 → Final</text>
+<text x="848" y="631" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">30 épocas + 10 de fine-tuning</text>
+<text x="848" y="670" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Congelamento dos blocos 1–3 na fase final</text>
+<text x="848" y="709" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Checkpoint final: época 10</text>
 </svg>

@@ -20,3 +20,12 @@ README agora distingue arquitetura base V1–V3 e otimizada V4. Preparação
 offline no notebook data-setting faz resize mantendo proporção e crop central
 antes dos loaders. Nenhum código do autor modificado, treino ou teste final
 executado. Conferência numérica em CONFERENCIA_ATUALIZACAO.json.
+
+
+## 06/11/2026 — V4 Final publicada
+
+Atualização para commit `bd92c13`: fine-tuning de10 épocas a partir da V4/30.
+Arquitetura preservada. Checkpoint Final/10 por menor perda;94,76% e F1≈0,94726248.
+Histórico, métodos, banco, gráficos e apresentação atualizados. Peso carregado
+estritamente e forward artificial aprovados; métricas recalculadas exclusivamente
+nas predições publicadas, sem avaliação real, treino ou teste final.

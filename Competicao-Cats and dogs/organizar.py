@@ -141,77 +141,8 @@ foram usadas para escolher ou alterar configurações nesta organização.
 
 
 def bandeira():
-    repo=RAIZ/'Bandeira/projeto'
-    d=principal('Bandeira','''# Bandeira — CNN V4 (código vigente)
-
-Identificada pela classe CNN em `src/model.py` e pelo loop V4 em `src/train.py`.
-O README agora distingue a arquitetura base V1–V3 da V4; o diagrama segue a V4.
-
-- [Método](METODO.md) e [parâmetros](parametros.json).
-- [Arquitetura SVG](arquitetura.svg).
-- [Gráficos salvos V1–V4](graficos/README.md).
-- [Registro original V4](../projeto/ChangesV4.md).
-- [Código original](../projeto/src/) e [análise V4](../projeto/Analysis/resultsV4.ipynb).
-
-Os históricos CSV, predições e checkpoints V1–V4 estão publicados no clone atualizado.
-Os gráficos numéricos ficam na seção de evolução; figuras originais dos notebooks
-também foram preservadas. Nenhum treinamento ou teste final foi executado.
-
-- [Checkpoint V4](../projeto/data/best_model_4.0.pth).
-- [Histórico V4](../projeto/data/training_history_4.0.csv).
-- [Predições de validação V4](../projeto/data/val_predictions_4.0.csv).
-- [Conferência dos artefatos](CONFERENCIA_ATUALIZACAO.json).
-- [Conferência completa e ponto de pré-processamento a confirmar](CONFERENCIA_ATUALIZACAO.md).
-''')
-    params=dict(versao='V4, código vigente',entrada=[3,384,384],canais=[32,64,128,256,512],
-        bloco='Conv3x3 padding1, BatchNorm, ReLU, MaxPool2',cabeca='GAP, Flatten, Dropout0.5, Linear512→1',
-        otimizador='AdamW',learning_rate=.001,weight_decay=1e-4,batch_size=64,epocas_maximas=30,
-        early_stopping_patience=7,criterio_checkpoint='menor perda de validação',
-        scheduler='CosineAnnealingLR',T_max=30,eta_min=1e-6,perda='BCEWithLogitsLoss',semente=42,
-        divisao='80/20 estratificada',normalizacao=json.loads((repo/'data/norm_stats_3.0.json').read_text()),
-        fonte='projeto/src/model.py, train.py, dataset.py')
-    json_salvar(d/'parametros.json',params)
-    gravar(d/'METODO.md','''# Método documentado no código V4
-
-CNN do zero com cinco blocos, canais32/64/128/256/512, entrada384×384.
-Cada bloco: uma Conv3×3 padding1, BatchNorm, ReLU e MaxPool2.
-GAP → Flatten → Dropout50% → Linear512→1. BCEWithLogitsLoss.
-AdamW LR0.001, decay0.0001, batch64, até30 épocas, paciência7,
-checkpoint por menor perda de validação. Cosseno30 até1e-6 e AMP em CUDA.
-
-Divisão80/20 estratificada, seed42. Treino: RandomResizedCrop384
-(scale0.8–1), flip horizontal, rotação±15°, brilho/contraste0.2.
-Validação: Resize384×384. Normalização própria preservada em parametros.json.
-
-A análise V4 salva informa acurácia0.9464 e F1 binário0.9461 no conjunto
-de validação de5000 imagens. São saídas já existentes, não recalculadas.
-Atualização publicada: histórico V4 completo com30 épocas; menor perda de
-validação na época30. CSVs de predições/histórico e pesos agora disponíveis.
-As predições salvas reproduzem94,64% de acurácia e F1 binário0,9461;
-pesos V4 carregados estritamente no modelo e forward artificial aprovado.
-''')
-    diagrama(d/'arquitetura.svg','Bandeira — CNN V4',[
-        'RGB384×384',*[f'Conv3×3 → {c} canais → BatchNorm → ReLU → Pool2' for c in [32,64,128,256,512]],
-        'AdaptiveAvgPool1×1 → Flatten512','Dropout50% → Linear512→1 (logit)'],
-        'Fonte: src/model.py, classe CNN; versões antigas preservadas no clone.')
-    graficos=d/'graficos';graficos.mkdir(exist_ok=True)
-    for p in sorted((repo/'Analysis').glob('*.ipynb')):
-        n=notebook(p)
-        for i,c in enumerate(n['cells']):
-            if 'df_history["train_loss"]' not in ''.join(c.get('source',[])):continue
-            for o in c.get('outputs',[]):
-                imagem=o.get('data',{}).get('image/png')
-                if imagem:
-                    if isinstance(imagem,list):imagem=''.join(imagem)
-                    (graficos/f'{p.stem}_treinamento.png').write_bytes(base64.b64decode(imagem))
-    gravar(graficos/'README.md','# Gráficos originais salvos\n\n'+''.join(f'- [{p.stem}]({p.name})\n' for p in sorted(graficos.glob('*.png')))+'\nExtraídos das células que plotam df_history. CSVs também disponíveis no clone atualizado; gráficos numéricos na seção evolucao do treinamento. V1–V4 são experimentos distintos.\n')
-    figuras=sorted(graficos.glob('resultsV*_treinamento.png'))
-    if figuras:
-        fig,axs=plt.subplots(len(figuras),1,figsize=(16,5*len(figuras)),squeeze=False,layout='constrained')
-        for ax,p in zip(axs[:,0],figuras):
-            ax.imshow(plt.imread(p));ax.set_title(p.stem+' — figura original');ax.axis('off')
-        fig.savefig(graficos/'treinamentos_geral.png',dpi=140);plt.close(fig)
-    gravar(RAIZ/'Bandeira/README.md','# Bandeira\n\n[Documentação consolidada da V4](modelo%20principal/README.md). Clone original e versões anteriores em `projeto/`.\n')
+    from bandeira_atualizado import atualizar
+    atualizar()
 
 
 def lisandra():

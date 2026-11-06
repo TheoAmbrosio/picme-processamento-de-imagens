@@ -47,9 +47,9 @@ TREINO={
  'Dulce':dict(origem='Inicialização do zero',linhas=['Adam · LR 0,0003','Batch 32 · 120 épocas','Cópias fixas + augmentation online','Dropout 20% nos cinco blocos','Entropia cruzada'],
      fluxo=['Split por origem','Cópias de giro e ruído','Augmentation nos lotes','Validação e checkpoint'],
      selecao=['Maior acurácia de validação','Época 112']),
- 'Bandeira':dict(origem='Inicialização do zero',linhas=['AdamW · LR 0,001 · decay 0,0001','Batch 64 · até 30 épocas','Cosseno · early stopping 7','Dropout 50% na cabeça','BCEWithLogitsLoss'],
-     fluxo=['Preparar o banco','Augmentation no treino','Treinar a CNN V4','Validação e checkpoint'],
-     selecao=['Menor perda de validação','Época 30'])}
+ 'Bandeira':dict(origem='Fine-tuning do checkpoint V4 / época 30',linhas=['AdamW · LR 0,00001 · decay 0,0001','Batch 64 · 10 épocas finais','Cosseno · early stopping 4','Dropout 50% na cabeça','BCEWithLogitsLoss'],
+     fluxo=['Carregar checkpoint V4','Congelar blocos 1–3','Treinar blocos 4–5 e cabeça','Validação e checkpoint'],
+     selecao=['Menor perda de validação','Época 10 do fine-tuning'])}
 
 def grade(titulo,sub,cartas,arquivo):
     t=Tela(titulo,'Geral',sub)
@@ -61,7 +61,7 @@ def geral():
      'Theo':['ResTheo34 Aug8','ResNet-34 sem layer4','64 → 128 → 256 canais','Resíduos + média global'],
      'Lisandra':['AlexNetBinary com BatchNorm','96 → 256 → 384 → 384 → 256','Cabeça 4096 → 4096 → 1','Dois dropouts de 50%'],
      'Dulce':['CNN224 v2','32 → 64 → 64 → 128 → 128','Cabeça 1024 → 32 → 2','Cinco blocos com dropout de 20%'],
-     'Bandeira':['CNN V4','32 → 64 → 128 → 256 → 512','Média global → 1 saída','Cinco blocos convolucionais']},'01_modelos.svg')
+     'Bandeira':['CNN V4 Final','32 → 64 → 128 → 256 → 512','Média global → 1 saída','Cinco blocos convolucionais']},'01_modelos.svg')
     grade('Como cada modelo foi treinado','',{n:[d['origem'],*d['linhas'][:4]] for n,d in TREINO.items()},'02_treinamentos.svg')
     grade('Dados e ampliações','Conjuntos de validação distintos entre os participantes',{
      'Theo':['19.998 originais de treino · 5.000 validação','8 versões por original no Aug8','Ruído, quadrados e esticamentos','RGB 224 × 224 · ImageNet Normalize'],
@@ -73,7 +73,7 @@ def geral():
      'Theo':[('Referência','21 épocas'),('Repetição','36 épocas'),('Aug8','30 épocas')],
      'Lisandra':[('Execução publicada','10 épocas'),('Seleção por val_loss','Checkpoint da época 5')],
      'Dulce':[('Primeiro modelo','100 épocas'),('CNN224','50 / 200 épocas'),('CNN224 v2','120 épocas'),('ResNet18','5 épocas')],
-     'Bandeira':[('V1','15 épocas'),('V2','23 épocas'),('V3','30 épocas'),('V4','30 épocas')]}
+     'Bandeira':[('V1','15 épocas'),('V2','23 épocas'),('V3','30 épocas'),('V4 → Final','30 + 10 épocas')]}
     for j,n in enumerate(NOMES):
         y=220+j*153;t.text(65,y+53,n,27,CORES[n],700)
         for i,(a,b) in enumerate(etapas[n]):
@@ -132,8 +132,18 @@ def historicos():
     evolucao('Dulce',rows,112,'CNN224 v2 · 120 épocas · seleção por acurácia de validação')
     rows=ler_csv(RAIZ/'Lisandra/projeto/resultados_para_competicao/historico_epocas.csv',{'epoca':'epoca','loss_treino':'perda_treino','loss_validacao':'perda_validacao','acc_treino':'acuracia_treino','acc_validacao':'acuracia_validacao'})
     evolucao('Lisandra',rows,5,'10 épocas registradas · seleção por menor perda de validação')
-    rows=ler_csv(RAIZ/'Bandeira/projeto/data/training_history_4.0.csv',{'epoca':'epoch','loss_treino':'train_loss','loss_validacao':'val_loss','acc_treino':'train_acc','acc_validacao':'val_acc'})
-    evolucao('Bandeira',rows,30,'CNN V4 · 30 épocas · seleção por menor perda de validação','03_evolucao_v4.svg')
+    rows=ler_csv(RAIZ/'Bandeira/projeto/data/training_history_4.0_Final.csv',{'epoca':'epoch','loss_treino':'train_loss','loss_validacao':'val_loss','acc_treino':'train_acc','acc_validacao':'val_acc'})
+    evolucao('Bandeira',rows,10,'V4 Final · 10 épocas de fine-tuning · seleção por menor perda de validação','03_evolucao_v4.svg')
+    mapa={'epoca':'epoch','loss_treino':'train_loss','loss_validacao':'val_loss','acc_treino':'train_acc','acc_validacao':'val_acc'}
+    base=ler_csv(RAIZ/'Bandeira/projeto/data/training_history_4.0.csv',mapa)
+    finais=[dict(r,epoca=r['epoca']+30) for r in rows]
+    t=Tela('V4 → V4 Final','Bandeira','30 épocas do zero + 10 de fine-tuning · mudança de etapa após a época 30')
+    series=[('V4 + Final',base+finais)]
+    chart(t,120,320,620,385,series,'acc','Acurácia',30.5)
+    chart(t,920,320,590,385,series,'loss','Perda',30.5)
+    for x,c,label in ((90,'#2877ad','Treino'),(320,'#da7639','Validação'),(630,'#866294','Linha vertical: início do fine-tuning')):
+        t.line(x,215,x+45,215,cor=c,esp=3);t.text(x+57,222,label,21)
+    t.save(DEST/'Bandeira/05_linhagem_v4_final.svg')
     etapas=json.loads((RAIZ/'Theo/modelo principal/graficos/resumo_trajetoria.json').read_text())
     series=[];offset=0;limites=[]
     for e,label in zip(etapas,('Referência','Repetição','Aug8')):
@@ -163,11 +173,11 @@ def extras():
           ('CNN224',['Execução de 50 épocas','Outra execução de 200 épocas','Históricos distintos']),
           ('CNN224 v2',['Adam · LR 0,0003','120 épocas','Modelo final declarado pela autora']),
           ('ResNet18',['ImageNet + fine-tuning','5 épocas','Experimento separado'])]),
-        ('Bandeira','Evolução das versões','Execuções independentes, treinadas do zero',[
+        ('Bandeira','Evolução das versões','V1–V4: do zero · Final: continua o checkpoint 30 da V4',[
           ('V1',['224 × 224 · Adam','15 épocas','Checkpoint: época 15']),
           ('V2',['224 × 224 · AdamW','23 épocas executadas','Checkpoint: época 18']),
           ('V3',['384 × 384 · AdamW','30 épocas','Checkpoint: época 28']),
-          ('V4',['384 × 384 · cinco blocos','30 épocas','Checkpoint: época 30'])])]:
+          ('V4 → Final',['30 épocas + 10 de fine-tuning','Congelamento dos blocos 1–3 na fase final','Checkpoint final: época 10'])])]:
         t=Tela(titulo,n,sub)
         for i,(s,ls) in enumerate(dados):t.card(65+(i%2)*755,205+(i//2)*320,715,290,s,ls,CORES[n])
         t.save(DEST/n/'04_experimentos.svg')
@@ -187,8 +197,10 @@ SVGs prontos para navegador e slides, em páginas1600×900.
 - [Theo](Theo/README.md): arquitetura, treino, curvas e linhagem até Aug8.
 - [Lisandra](Lisandra/README.md): arquitetura com BatchNorm, treino e10 épocas.
 - [Dulce](Dulce/README.md): CNN224 v2, treino, curvas e experimentos.
-- [Bandeira](Bandeira/README.md): CNN V4, treino, curvas e versões.
+- [Bandeira](Bandeira/README.md): CNN V4 Final, fine-tuning, curvas e versões.
 - [Galeria de todos os SVGs](galeria.html).
+- [Relatório Pets publicado: métodos, ranking e gráficos](<Resumo publico Pets/README.md>).
+- [Avaliação completa local: CSVs e fotos](<Resultados Pets/README.md>).
 
 Arquiteturas sem rodapés explicativos; blocos, dimensões e resíduos preservados.
 Detalhes ficam nos documentos principais para apoiar a fala de vocês.
@@ -198,14 +210,14 @@ incluem uma referência de método; o Aug8 parte diretamente do checkpoint33 da 
 No desenho, a cabeça densa tem escala esquemática e layer3 do Theo é abreviada.
 
 Fontes: CSV/JSON dos treinamentos e configurações preservadas. Gerador:
-../gerar_apresentacao.py. Nenhum treinamento ou teste executado.
+../gerar_apresentacao.py. Os SVGs de treinamento usam históricos existentes. A avaliação Pets está separada e documentada, sem novo treinamento.
 ''')
     cards=[]
     for p in arquivos:
         rel=str(p.relative_to(DEST))
         cards.append(f'<section><h2>{html.escape(rel.replace("_"," "))}</h2><a href="{html.escape(rel)}"><img loading="lazy" src="{html.escape(rel)}" alt="{html.escape(p.stem)}"></a></section>')
         ET.parse(p)
-    (DEST/'galeria.html').write_text('<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>Coisas para apresentação</title><style>body{margin:32px;font-family:system-ui;background:#eceeec;color:#243343}section{background:white;padding:18px;margin:28px auto;max-width:1400px;border-radius:14px}img{width:100%;height:auto}h2{font-size:18px}</style><h1>Coisas para apresentação</h1>'+'\n'.join(cards)+'</html>')
+    (DEST/'galeria.html').write_text('<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>Coisas para apresentação</title><style>body{margin:32px;font-family:system-ui;background:#eceeec;color:#243343}section{background:white;padding:18px;margin:28px auto;max-width:1400px;border-radius:14px}img{width:100%;height:auto}h2{font-size:18px}</style><h1>Coisas para apresentação</h1><p><a href="Resultados%20Pets/20261106_190610/index.html">Resultados Pets — ranking, relatório e predições</a></p>'+'\n'.join(cards)+'</html>')
     return arquivos
 
 def main():

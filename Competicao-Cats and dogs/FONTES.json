@@ -9,7 +9,9 @@
     "participante": "Bandeira",
     "url": "https://github.com/Mateus-Band/Dogs-vs-Cats-IMPATech.git",
     "branch": "main",
-    "commit": "c02a77502bdfe5de55660bf0985d0e7789cd0899"
+    "commit": "bd92c13ec428b890192f290bbb79cf69d34c8a8d",
+    "modelo": "CNN V4 Final",
+    "checkpoint": "data/best_model_4.0_Final.pth"
   },
   {
     "participante": "Lisandra",

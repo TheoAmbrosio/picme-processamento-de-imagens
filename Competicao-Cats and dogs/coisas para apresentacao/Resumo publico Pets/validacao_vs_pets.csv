@@ -1,0 +1,5 @@
+modelo,epoca_checkpoint,acuracia_treino_checkpoint,acuracia_validacao_checkpoint,perda_validacao_checkpoint,acuracia_pets,diferenca_pets_menos_validacao_pp,criterio_checkpoint,fonte
+Theo,29,0.9294679467946795,0.9832,0.053269144147634506,0.8571428571428571,-12.605714285714287,maior acurácia de validação,Theo/modelo principal/treinamento_aug8/historico.csv
+Bandeira,10,0.95145,0.9476,0.13356867464780808,0.7922077922077922,-15.539220779220775,menor perda de validação na fase Final,Bandeira/projeto/data/training_history_4.0_Final.csv
+Dulce,112,0.9783457249070632,0.9690363349131121,0.09399268467797299,0.7662337662337663,-20.280256867934586,maior acurácia de validação,Dulce/projeto/Cats vs Dogs/historico/historico_treino_224_v2.json
+Lisandra,5,0.9206920692069207,0.9016,0.2237321689724922,0.6233766233766234,-27.82233766233766,menor perda de validação; associação ao peso declarada pela autora,Lisandra/modelo principal/evolucao do treinamento/historico_epocas.csv

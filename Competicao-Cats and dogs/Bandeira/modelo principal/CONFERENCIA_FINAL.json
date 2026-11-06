@@ -1,0 +1,22 @@
+{
+  "epocas": 10,
+  "checkpoint_epoca": 10,
+  "acuracia": 0.9476,
+  "perda_historico": 0.13356867464780808,
+  "bce_predicoes": 0.13356866750256835,
+  "f1": 0.9472624798711755,
+  "amostras": 5000,
+  "maior_acuracia": 0.948,
+  "epocas_maior_acuracia": [
+    3,
+    9
+  ],
+  "sha256": "812b41fad3487cfab9a6897cc21238ba0aa9979acf7c21157ff1438d52ba7b14",
+  "carregamento_estrito": true,
+  "forward_artificial": [
+    1,
+    1
+  ],
+  "parametros": 1571073,
+  "parametros_treinaveis": 1477377
+}
