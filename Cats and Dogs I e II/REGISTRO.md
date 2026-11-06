@@ -1014,6 +1014,16 @@ Este arquivo acompanha as tentativas e os avanços do projeto. Os resultados aba
 - Verificação:197 testes pytest aprovados em19.22s. Sem treinamento ou teste
   final. Publicação sem force; artefatos locais não foram apagados.
 
+# 2026-11-06 — integração para publicação na main
+
+- Pedido explícito de disponibilizar o conteúdo também na main para compartilhar.
+- Integrado histórico remoto da main, preservando o registro integral anterior.
+  README raiz atualizado com entrada para a competição e instrução de clone.
+  Primeiro modelo mantido no caminho arquivado, após conferir igualdade
+  com as cópias reintroduzidas pelo merge. Cópias temporárias preservadas.
+- Código metodológico não alterado nesta integração; artefatos locais continuam
+  excluídos e a validação anterior de197 testes permanece aplicável.
+
 # Histórico recebido da main (8c4838a)
 
 # Registro de trabalho — Cats and Dogs I e II

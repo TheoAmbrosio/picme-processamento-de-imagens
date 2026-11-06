@@ -1,28 +1,38 @@
 # Picme: processamento de imagens
 
-Repositório dos trabalhos de processamento de imagens.
+Projetos de processamento de imagens e organização da competição Cats and Dogs.
+O conteúdo está disponível na branch **main**.
 
-O projeto **Cats and Dogs I e II** está na branch `cats-and-dogs`. Os notebooks e as instruções da competição ficam na pasta `Cats and Dogs I e II` dessa branch.
+## Competição Cats and Dogs
 
-As imagens do dataset e os fatores SVD gerados localmente não são versionados.
+[Abra a pasta da competição](Competicao-Cats%20and%20dogs/README.md) para
+consultar os modelos de **Theo, Lisandra, Dulce e Bandeira**, com métodos,
+parâmetros, registros e diagramas de arquitetura.
 
-## Rodar Cats and Dogs em outro computador
+- [Evolução dos treinamentos](Competicao-Cats%20and%20dogs/EVOLUCAO_TREINAMENTOS.md).
+- [Bancos de imagens](Competicao-Cats%20and%20dogs/BANCOS_DE_DADOS.md).
+- [Fontes e commits](Competicao-Cats%20and%20dogs/FONTES.json).
+- [Arquivos publicados e artefatos locais](Competicao-Cats%20and%20dogs/PUBLICACAO.md).
 
-1. Clone a branch: `git clone --branch cats-and-dogs https://github.com/TheoAmbrosio/picme-processamento-de-imagens.git`.
-2. Abra `Cats and Dogs I e II/modelo.ipynb` no Jupyter, tendo essa pasta como diretório de trabalho.
-3. Instale as dependências no ambiente do notebook: `%pip install numpy pillow scipy torch matplotlib kagglehub` e reinicie o kernel.
-4. Execute as células em ordem. A célula inicial baixa o espelho [Microsoft Cats vs. Dogs no Kaggle](https://www.kaggle.com/datasets/shaunthesheep/microsoft-catsvsdogs-dataset) se `dataset/PetImages/Cat` e `Dog` ainda não existirem. Pode ser necessário autenticar-se no Kaggle.
-5. Ajuste `k_modelo`, `escala_cinza`, `usar_todos_dados` e `N` na célula de configuração. A preparação cria o cache SVD localmente em `datasets_processados/`; ele é reutilizado em execuções posteriores.
+## Projeto do Theo
 
-O download depende da disponibilidade e da estrutura do dataset no Kaggle. As imagens, os vetores SVD e as credenciais não são enviados ao GitHub.
+- [Guia do projeto Cats and Dogs](Cats%20and%20Dogs%20I%20e%20II/README.md).
+- [Modelo principal ResTheo34 Aug8](Cats%20and%20Dogs%20I%20e%20II/modelo%20principal/README.md).
+- [Registro completo](Cats%20and%20Dogs%20I%20e%20II/REGISTRO.md).
+- [Primeiro modelo arquivado e suas instruções](Cats%20and%20Dogs%20I%20e%20II/arquivados/modelos_antigos/Primeiro%20modelo%20que%20deu%20errado/README.md).
+- [Apresentações de Understanding Deep Learning](apresentacoes/understanding-deep-learning-10-3-a-10-5/README.md).
 
-## Execução por script
+## Obter o repositório
 
-No diretório `Cats and Dogs I e II`, instale as dependências com `python -m pip install -r requirements.txt`. Edite os valores no início de `treinar_modelo.py` e execute `python treinar_modelo.py`. Esse comando baixa o dataset quando necessário, prepara ou reutiliza os vetores SVD, treina e mostra o gráfico de MSE. O módulo `preparar_dados.py` contém o download, o pré-processamento e o cache; `modelo.ipynb` continua disponível para uso interativo.
+```bash
+git clone https://github.com/TheoAmbrosio/picme-processamento-de-imagens.git
+```
 
-## Conteúdo da main incorporado localmente
+Código, documentação e diagramas estão versionados. Datasets, ambientes,
+checkpoints, logs e históricos/gráficos de execuções mantidos apenas localmente
+não acompanham o clone. Os índices documentam esses arquivos, mas seus links
+locais podem não abrir no GitHub. Para executar inferência são necessários
+os pesos correspondentes; não há execução automática de treinamento ou teste.
 
-- [Competição Cats and Dogs — Theo, Lisandra, Dulce e Bandeira](Competicao-Cats%20and%20dogs/README.md).
-
-- [Primeiro modelo arquivado](Cats%20and%20Dogs%20I%20e%20II/arquivados/modelos_antigos/Primeiro%20modelo%20que%20deu%20errado/README.md)
-- [Apresentações](apresentacoes/understanding-deep-learning-10-3-a-10-5/README.md)
+Os repositórios dos outros participantes são independentes; seus endereços e
+comandos para obtê-los estão no guia de publicação da competição.
