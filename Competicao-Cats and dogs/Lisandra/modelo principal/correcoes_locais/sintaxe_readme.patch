@@ -1,0 +1,140 @@
+diff --git a/CatsandDogs_classification.ipynb b/CatsandDogs_classification.ipynb
+index 65376fc..f084390 100644
+--- a/CatsandDogs_classification.ipynb
++++ b/CatsandDogs_classification.ipynb
+@@ -361,7 +361,7 @@
+         "\n",
+         "        running_loss = train_loss / train_total\n",
+         "        running_acc = (train_correct / train_total) * 100\n",
+-        "        print(f\"\rÉpoca [{epoch:02d}/{epochs:02d}] - Lote [{batch_idx:03d}/{len(train_loader):03d}] | \"\n",
++        "        print(f\"\\rÉpoca [{epoch:02d}/{epochs:02d}] - Lote [{batch_idx:03d}/{len(train_loader):03d}] | \"\n",
+         "              f\"Loss Lote: {loss.item():.4f} | Loss Médio: {running_loss:.4f} | Acc Média: {running_acc:.2f}%\", end=\"\", flush=True)\n",
+         "\n",
+         "    print()  # Quebra de linha após finalizar os lotes de treino\n",
+@@ -387,7 +387,7 @@
+         "            val_correct += (predictions == targets).sum().item()\n",
+         "            val_total += targets.size(0)\n",
+         "\n",
+-        "            print(f\"\rValidando... Lote [{val_idx:03d}/{len(val_loader):03d}]\", end=\"\", flush=True)\n",
++        "            print(f\"\\rValidando... Lote [{val_idx:03d}/{len(val_loader):03d}]\", end=\"\", flush=True)\n",
+         "\n",
+         "    print()  # Quebra de linha após a validação\n",
+         "\n",
+@@ -418,7 +418,7 @@
+         "        patience_counter += 1\n",
+         "        print(f\"   -> Val Loss não melhorou ({patience_counter}/{patience})\")\n",
+         "        if patience_counter >= patience:\n",
+-        "            print(f\"\nEarly Stopping ativado na época {epoch}!\")\n",
++        "            print(f\"\\nEarly Stopping ativado na época {epoch}!\")\n",
+         "            print(f\"Melhor Val Loss registrado: {best_val_loss:.4f}\")\n",
+         "            break\n",
+         "\n",
+@@ -559,7 +559,7 @@
+         "        img_numpy = np.clip(img_numpy, 0, 1)\n",
+         "\n",
+         "        axes[i].imshow(img_numpy)\n",
+-        "        axes[i].set_title(f\"Pred: {pred_class} ({prob:.2f})\nReal: {real_class}\", color=cor, fontsize=11)\n",
++        "        axes[i].set_title(f\"Pred: {pred_class} ({prob:.2f})\\nReal: {real_class}\", color=cor, fontsize=11)\n",
+         "        axes[i].axis(\"off\")\n",
+         "\n",
+         "plt.tight_layout()\n",
+@@ -605,4 +605,4 @@
+   },
+   "nbformat": 4,
+   "nbformat_minor": 0
+-}
+\ No newline at end of file
++}
+diff --git a/README.md b/README.md
+index 93bdde2..556a55d 100644
+--- a/README.md
++++ b/README.md
+@@ -11,16 +11,31 @@ Repositório contendo a implementação e avaliação de uma Rede Neural Convolu
+ 
+ ## Arquitetura da Rede (`AlexNetBinary`)
+ 
+-A rede mantém a estrutura de 5 camadas convolucionais da AlexNet seguidas por 3 camadas totalmente conectadas, com adaptação final para saída escalar probabilística:
++A rede possui 5 camadas convolucionais com BatchNorm e 3 camadas totalmente conectadas. O forward retorna um logit por imagem; a probabilidade é obtida aplicando sigmoide externamente:
+ 
+-- **Conv 1:** 96 filtros 11 × 11, stride 4, padding 2 → ReLU → MaxPool (3 × 3, stride 2) → Saída: 27 × 27 × 96
+-- **Conv 2:** 256 filtros 5 × 5, stride 1, padding 2 → ReLU → MaxPool (3 × 3, stride 2) → Saída: 13 × 13 × 256
+-- **Conv 3:** 384 filtros 3 × 3, stride 1, padding 1 → ReLU → Saída: 13 × 13 × 384
+-- **Conv 4:** 384 filtros 3 × 3, stride 1, padding 1 → ReLU → Saída: 13 × 13 × 384
+-- **Conv 5:** 256 filtros 3 × 3, stride 1, padding 1 → ReLU → MaxPool (3 × 3, stride 2) → Saída: 6 × 6 × 256
++- **Conv 1:** 96 filtros 11 × 11, stride 4, padding 2 → BatchNorm → ReLU → MaxPool (3 × 3, stride 2) → Saída: 27 × 27 × 96
++- **Conv 2:** 256 filtros 5 × 5, stride 1, padding 2 → BatchNorm → ReLU → MaxPool (3 × 3, stride 2) → Saída: 13 × 13 × 256
++- **Conv 3:** 384 filtros 3 × 3, stride 1, padding 1 → BatchNorm → ReLU → Saída: 13 × 13 × 384
++- **Conv 4:** 384 filtros 3 × 3, stride 1, padding 1 → BatchNorm → ReLU → Saída: 13 × 13 × 384
++- **Conv 5:** 256 filtros 3 × 3, stride 1, padding 1 → BatchNorm → ReLU → MaxPool (3 × 3, stride 2) → Saída: 6 × 6 × 256
+ - **Vetorização (Flatten):** 6 × 6 × 256 = 9216 elementos.
+ - **Classificador (FC):**
+-  - **FC 1:** Linear (9216 → 4096) + ReLU
+-  - **FC 2:** Linear (4096 → 4096) + ReLU
+-  - **FC 3:** Linear (4096 → 1000) + ReLU
+-  - **Saída:** Linear (1000 → 1) + Sigmoide
++  - **FC 1:** Linear (9216 → 4096) + ReLU + Dropout (0,5)
++  - **FC 2:** Linear (4096 → 4096) + ReLU + Dropout (0,5)
++  - **FC 3:** Linear (4096 → 1), sem Sigmoid no modelo
++
++## Treinamento e pré-processamento
++
++Adam com learning rate `0.0001`, batch `50` e `BCEWithLogitsLoss`.
++São previstas 40 épocas; os resultados publicados registram 10, com early
++stopping de paciência 5 pela menor perda de validação e restauração da época 5.
++Na época selecionada, a acurácia de validação é 90,16%; o máximo de acurácia
++da série é 91,08% na época 8, que não é o critério de escolha dos pesos.
++
++Imagens RGB: `Resize((224, 224))`, `ToTensor` e normalização ImageNet
++(`mean=[0.485,0.456,0.406]`, `std=[0.229,0.224,0.225]`). Sem data augmentation
++ou seed manual definidos. Rótulos pela pasta pai imediata: Cat=0 e Dog=1.
++Durante a classificação, logit >= 0 equivale a probabilidade >= 0,5.
++
++Configuração, histórico e informações declaradas do checkpoint estão em
++[resultados_para_competicao](resultados_para_competicao/README.md).
+diff --git a/resultados_para_competicao/CatsandDogs_classification_saidas.ipynb b/resultados_para_competicao/CatsandDogs_classification_saidas.ipynb
+index 30c325b..f5fb14a 100644
+--- a/resultados_para_competicao/CatsandDogs_classification_saidas.ipynb
++++ b/resultados_para_competicao/CatsandDogs_classification_saidas.ipynb
+@@ -359,7 +359,7 @@
+         "\n",
+         "        running_loss = train_loss / train_total\n",
+         "        running_acc = (train_correct / train_total) * 100\n",
+-        "        print(f\"\rÉpoca [{epoch:02d}/{epochs:02d}] - Lote [{batch_idx:03d}/{len(train_loader):03d}] | \"\n",
++        "        print(f\"\\rÉpoca [{epoch:02d}/{epochs:02d}] - Lote [{batch_idx:03d}/{len(train_loader):03d}] | \"\n",
+         "              f\"Loss Lote: {loss.item():.4f} | Loss Médio: {running_loss:.4f} | Acc Média: {running_acc:.2f}%\", end=\"\", flush=True)\n",
+         "\n",
+         "    print()  # Quebra de linha após finalizar os lotes de treino\n",
+@@ -385,7 +385,7 @@
+         "            val_correct += (predictions == targets).sum().item()\n",
+         "            val_total += targets.size(0)\n",
+         "\n",
+-        "            print(f\"\rValidando... Lote [{val_idx:03d}/{len(val_loader):03d}]\", end=\"\", flush=True)\n",
++        "            print(f\"\\rValidando... Lote [{val_idx:03d}/{len(val_loader):03d}]\", end=\"\", flush=True)\n",
+         "\n",
+         "    print()  # Quebra de linha após a validação\n",
+         "\n",
+@@ -416,7 +416,7 @@
+         "        patience_counter += 1\n",
+         "        print(f\"   -> Val Loss não melhorou ({patience_counter}/{patience})\")\n",
+         "        if patience_counter >= patience:\n",
+-        "            print(f\"\nEarly Stopping ativado na época {epoch}!\")\n",
++        "            print(f\"\\nEarly Stopping ativado na época {epoch}!\")\n",
+         "            print(f\"Melhor Val Loss registrado: {best_val_loss:.4f}\")\n",
+         "            break\n",
+         "\n",
+@@ -565,7 +565,7 @@
+         "        img_numpy = np.clip(img_numpy, 0, 1)\n",
+         "\n",
+         "        axes[i].imshow(img_numpy)\n",
+-        "        axes[i].set_title(f\"Pred: {pred_class} ({prob:.2f})\nReal: {real_class}\", color=cor, fontsize=11)\n",
++        "        axes[i].set_title(f\"Pred: {pred_class} ({prob:.2f})\\nReal: {real_class}\", color=cor, fontsize=11)\n",
+         "        axes[i].axis(\"off\")\n",
+         "\n",
+         "plt.tight_layout()\n",
+@@ -619,4 +619,4 @@
+   },
+   "nbformat": 4,
+   "nbformat_minor": 0
+-}
+\ No newline at end of file
++}

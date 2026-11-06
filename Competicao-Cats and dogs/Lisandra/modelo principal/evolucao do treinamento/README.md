@@ -1,22 +1,16 @@
-# Evolução de treino e validação — Lisandra
+# Evolução da Lisandra — execução1 publicada
 
-CSV recebido da autora via Theo: **10 épocas completas**, com perda,
-acurácia e erro de treino/validação. Arquivo original preservado; acurácias
-convertidas de porcentagem para fração0–1 somente na cópia normalizada.
+Histórico completo de10 épocas, com40 previstas e early stopping de paciência5.
+O pacote da autora identifica o checkpoint da **época5 por menor val_loss**.
+Na época5: validação90,16%, perda0,223732; na época8: maior acurácia91,08%,
+mas perda0,224588, superior à da5. São critérios diferentes.
 
-- [Gráfico SVG](evolucao_epocas.svg), [PNG](evolucao_epocas.png), [PDF](evolucao_epocas.pdf).
-- [Histórico normalizado CSV](historico_epocas.csv).
-- [CSV original recebido](../../resultados_recebidos/training_history_Lisandra.csv).
-- [Fonte, integridade e resumo](disponibilidade.json).
+- [Plot SVG](evolucao_epocas.svg), [PNG](evolucao_epocas.png), [PDF](evolucao_epocas.pdf).
+- [CSV oficial por época](historico_epocas.csv).
+- [Metadados e disponibilidade](disponibilidade.json).
+- [Especificação original do checkpoint](../documentacao_publicada/checkpoint_info.json).
+- [Pendências de código e pesos](../PENDENCIAS_ATUAIS.md).
 
-Maior acurácia de validação:91.08%, época8.
-Menor perda de validação:0.223732, época5.
-Última época: treino96.83%, validação90.32%.
-
-## Associação aos pesos e configuração
-
-O CSV tem10 épocas; o notebook publicado configura5 e só mostra parte da
-primeira. Não foi presumido que os pesos enviados sejam da melhor época
-por acurácia ou por perda deste CSV, nem que toda a configuração seja idêntica.
-Essa associação depende de confirmação da autora. Nenhuma métrica de teste final
-foi incluída. Não foram executados treino ou inferência em imagens reais.
+Dados numéricos conferidos contra o CSV bruto publicado, normalização0–1
+consistente. Não foram executados novos treinos, inferência real ou teste final.
+A associação à época5 é documentada pela autora; o novo arquivo de pesos recebido é compatível com a arquitetura publicada.

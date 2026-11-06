@@ -1,0 +1,30 @@
+{
+  "arquivo_checkpoint": "alexnet_cats_dogs_best.pth",
+  "caminho_relativo": "alexnet_cats_dogs_best.pth",
+  "tamanho_bytes": 233178729,
+  "tamanho_mb": 222.38,
+  "execucao_associada": "1",
+  "epoca_salva": 5,
+  "criterio_selecao": "menor_perda_validacao",
+  "descricao_criterio": "Menor perda no conjunto de validação (val_loss mínima). O Early Stopping monitorou val_loss com paciência de 5 épocas e restaurou os pesos da época de melhor desempenho antes de salvar.",
+  "metodologia_identificacao_epoca": "Comprovada pela análise cruzada do histórico numérico (training_history_Lisandra.csv) com a lógica do script de treino: a época 5 obteve o menor val_loss global (0.223732). As épocas 6 a 10 não superaram essa marca, acionando a tolerância de 5 épocas sem melhora e disparando a restauração do estado da época 5.",
+  "informacao_confirmada_por": "Recuperada diretamente dos arquivos de histórico e da lógica determinística do código de treinamento (não inferida pelo nome do arquivo).",
+  "metricas_epoca_selecionada": {
+    "epoca": 5,
+    "perda_treino": 0.18776149981760337,
+    "perda_validacao": 0.2237321689724922,
+    "acuracia_treino": 0.9206920692069207,
+    "acuracia_validacao": 0.9016,
+    "taxa_erro_treino": 0.07930793079307932,
+    "taxa_erro_validacao": 0.0984,
+    "f1_score_treino": null,
+    "f1_score_validacao": null
+  },
+  "metricas_ultima_epoca_executada": {
+    "epoca": 10,
+    "perda_treino": 0.07926650413523728,
+    "perda_validacao": 0.31611017376184464,
+    "acuracia_treino": 0.9682968296829682,
+    "acuracia_validacao": 0.9032
+  }
+}

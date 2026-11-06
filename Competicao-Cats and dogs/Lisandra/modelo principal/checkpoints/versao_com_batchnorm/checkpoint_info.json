@@ -1,0 +1,49 @@
+{
+  "arquivo": "alexnet_cats_dogs_best.pth",
+  "status_atual": "compatível com a arquitetura publicada538a5e9",
+  "conferencia_versao_atual": {
+    "commit": "538a5e9d40a702fe1bbf915126d6319fc4905292",
+    "erros_sintaxe": [],
+    "peso_novo_presente_no_clone": false,
+    "tamanho_declarado_peso_atual": 233178729,
+    "alteracoes_locais": [
+      " M CatsandDogs_classification.ipynb",
+      " M README.md",
+      " M resultados_para_competicao/CatsandDogs_classification_saidas.ipynb"
+    ],
+    "readme_coerente_com_modelo": true,
+    "peso_local_recebido": "Lisandra/modelo principal/checkpoints/versao_com_batchnorm/alexnet_cats_dogs_best.pth",
+    "tamanho_recebido": 233178729,
+    "compativel_com_arquitetura_atual": true,
+    "chaves_faltantes": [],
+    "chaves_extras": [],
+    "dimensoes_incompativeis": []
+  },
+  "conferencia_anterior": {
+    "arquivo": "alexnet_cats_dogs_best.pth",
+    "sha256": "912eb2f75827a98a867adce9866d55346b515a69b6d49bd87836306ea6d2f41b",
+    "tamanho_bytes": 233178729,
+    "formato": "state_dict",
+    "origem": "novo arquivo enviado pela Lisandra via Theo",
+    "arquitetura_commit": "538a5e9d40a702fe1bbf915126d6319fc4905292",
+    "carregamento_estrito": "aprovado",
+    "batchnorm_presente": true,
+    "pesos_finitos": true,
+    "teste_artificial": {
+      "entrada": [
+        1,
+        3,
+        224,
+        224
+      ],
+      "saida": [
+        1
+      ],
+      "logit_finito": true,
+      "sigmoid_finita": true
+    },
+    "epoca_declarada_autora": 5,
+    "criterio_declarado_autora": "menor_perda_validacao",
+    "ressalva": "Época e critério vêm dos metadados publicados; state_dict não armazena esses campos. Nenhuma avaliação real executada."
+  }
+}

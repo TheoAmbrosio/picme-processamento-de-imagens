@@ -1,5 +1,20 @@
 # Registro da organização —06/11/2026
 
+## Lisandra: atualização GitHub538a5e9
+
+Pull --ff-only concluído. Pacote oficial com configuração, metadados da
+época5/menor_val_loss, CSV normalizado, log e gráficos. Atualizados método,
+banco, fontes, parâmetros, evolução e diagramas. Código agora usa5 BatchNorm,
+Normalize ImageNet, BCEWithLogitsLoss,40 épocas previstas, early stopping5;
+histórico10 épocas consistente com CSV bruto, menor perda na5 e maior acc na8.
+
+Não validamos o arquivo local recebido como peso atual: faltam BatchNorm e
+há formas/índices incompatíveis. Tamanho recebido233148669 versus declarado
+233178729 bytes. Novo checkpoint não publicado no clone. Registrados também
+SyntaxError nas células6/10 (f-strings com quebras literais) e README raiz
+ainda com descrição FC1000/Sigmoid, divergente do código/config atuais.
+Sem mudanças no código da autora ou execução de treino/teste final.
+
 ## Lisandra: CSV completo recebido
 
 Recebido training_history_Lisandra.csv,10 épocas completas. Copiado com
@@ -148,3 +163,11 @@ Nenhum dataset baixado, novo split, treino ou teste final executado.
 ## Dulce: associação das séries de100 épocas esclarecida
 
 Em06/11/2026, autora confirmou via mensagem transmitida pelo Theo: ambas do primeiro modelo cats_and_dogs.ipynb, SGD LR0.01. Execução original só possui validação; repeticao é nova execução com mesma configuração e seed. Atualizados rótulos/fontes dos gráficos, índice e registros, sem modificar os números ou o repositório original.
+
+## Novo checkpoint Lisandra recebido: compatibilidade resolvida
+
+Arquivo alexnet_cats_dogs_best(1).pth recebido,233178729 bytes. Cópia com SHA256 conferido em checkpoints/versao_com_batchnorm/, sem substituir o anterior. Pesos finitos, load_state_dict strict=True aprovado na arquitetura atual e forward artificial1×3×224×224 com logit/sigmoid finitos. Pendência dos pesos resolvida; erros sintáticos e README da autora continuam registrados. Sem treino/teste real.
+
+## Correções locais autorizadas e publicação no repositório do Theo
+
+Theo autorizou corrigir README e sintaxe da Lisandra. Modificados somente escapes de impressão/título em células6/10 dos dois notebooks e README, sem alterar treino, arquitetura, pesos, saídas ou metadados. Todas as células Python válidas via AST; patch reverso conferido. Código remoto da Lisandra não alterado. Patch e README corrigido preservados em correcoes_locais/. Nova conferência sem pendências locais e peso compatível. Atualização do Git do Theo autorizada no pedido anterior, retomada após estas correções.

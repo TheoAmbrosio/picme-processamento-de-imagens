@@ -15,7 +15,11 @@
     "participante": "Lisandra",
     "url": "https://github.com/lisandra21/cats_vs_dogs_Lisandra.git",
     "branch": "main",
-    "commit": "830c79ef5f8aa4b5a9880deb2b21bc583d0b631d"
+    "commit": "538a5e9d40a702fe1bbf915126d6319fc4905292",
+    "pacote_resultados": "resultados_para_competicao/",
+    "checkpoint_status": "novo peso com BatchNorm recebido e compatível; época5 segundo metadados da autora",
+    "correcoes_locais": "Lisandra/modelo principal/correcoes_locais/sintaxe_readme.patch",
+    "status_codigo": "cópia local com README e sintaxe corrigidos a pedido; remoto da autora não alterado"
   },
   {
     "participante": "Theo",

@@ -29,6 +29,9 @@ def ler():
 
 
 def banco():
+    if (REPO/'resultados_para_competicao/configuracao.json').exists():
+        from lisandra_publicada import banco_publicado
+        return banco_publicado()
     d=DESTINO/'banco de dados'
     escrever(d/'AlexNetBinary.md','''# Lisandra — dados da versão vigente no GitHub
 
@@ -63,6 +66,9 @@ Referência única: notebook CatsandDogs_classification.ipynb do GitHub.
 
 
 def evolucao():
+    if (REPO/'resultados_para_competicao/historico_epocas.csv').exists():
+        from lisandra_publicada import evolucao_publicada
+        return evolucao_publicada()
     recebido=RAIZ/'Lisandra/resultados_recebidos/training_history_Lisandra.csv'
     if recebido.exists():
         evolucao_csv(recebido)
@@ -181,6 +187,9 @@ precisa ser confirmada pela autora. Nenhum treino foi iniciado aqui.''')
 
 
 def consolidar():
+    if (REPO/'resultados_para_competicao/configuracao.json').exists():
+        from lisandra_publicada import consolidar_publicado
+        return consolidar_publicado()
     from organizar import diagrama
     p,n=ler();DESTINO.mkdir(exist_ok=True)
     commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=REPO,text=True).strip()

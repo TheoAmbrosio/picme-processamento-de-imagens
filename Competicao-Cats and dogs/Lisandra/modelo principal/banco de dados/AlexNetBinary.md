@@ -1,23 +1,16 @@
-# Lisandra — dados da versão vigente no GitHub
+# Lisandra — banco da versão publicada
 
-Fonte: `projeto/CatsandDogs_classification.ipynb`, células2–4.
-Kaggle `bhavikjikadara/dog-and-cat-classification-dataset`, via kagglehub.
-Saída publicada:24998 imagens;19998 treino,2500 validação,2500 teste.
-Split80/10/10 com shuffle=True, sem random_state ou stratify explícitos.
-Nenhum manifesto nominal dos splits ou contagem por classe foi publicado.
+Fontes: configuracao.json e notebook do repositório, commit538a5e9.
+Kaggle bhavikjikadara/dog-and-cat-classification-dataset;24998 imagens.
+Treino19998, validação2500, teste2500; split80/10/10 com shuffle,
+sem random_state/stratify ou seed manual definidos. Sem manifesto nominal
+dos arquivos nem contagem por classe publicada.
 
-Rótulo usa a pasta pai imediata:1 se parent_dir.lower()=='dog',0 caso
-contrário. Para pastas Cat/Dog, Cat=0 e Dog=1. A regra atual foi conferida
-no código; não houve nova leitura de todas as imagens nesta organização.
+Rótulos pela pasta pai imediata: Dog=1, Cat=0. RGB224×224 por Resize direto,
+ToTensor e **Normalize ImageNet**: mean[0.485,0.456,0.406],
+std[0.229,0.224,0.225]. Sem data augmentation declarado. Batch50;
+400/50/50 lotes previstos. Não atribuir a este modelo a ausência de Normalize
+de versões anteriores. Sem tratamento explícito de duplicatas/ilegíveis.
 
-PIL RGB → Resize((224,224)), esticando a proporção → ToTensor[0,1].
-Sem Normalize por canal nem augmentation explícito. Mesma transformação
-nos três splits. Sem tratamento explícito de duplicatas ou imagens ilegíveis.
-
-Batch efetivo50, apesar de comentário ainda citar500. Saída:400 lotes de
-treino,50 validação e50 teste. Último lote do treino tem48 imagens pelas
-contagens publicadas. Treino shuffle=True, demais shuffle=False.
-
-A célula4 publica uma prancha de10 imagens com rótulos, extraída para
-../amostra_rotulos.png. Ela é uma amostra, não verificação exaustiva do banco.
-Não foram baixados dados nem executadas células do notebook aqui.
+Os dados de teste existem no código, mas não foram executados aqui. Dados
+originais e splits não baixados ou refeitos por esta organização.

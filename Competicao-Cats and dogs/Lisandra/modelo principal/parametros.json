@@ -1,64 +1,246 @@
 {
-  "modelo": "AlexNetBinary vigente",
-  "commit": "830c79ef5f8aa4b5a9880deb2b21bc583d0b631d",
-  "fonte": "projeto/CatsandDogs_classification.ipynb",
-  "sha256": "1bc4fa66d4cede7112ca280c64d575f96da47673794f73487ba63c81c2a2efc7",
-  "canais": [
-    96,
-    256,
-    384,
-    384,
-    256
-  ],
-  "cabeca": [
-    9216,
-    4096,
-    4096,
-    1
-  ],
-  "dropout": [
-    0.5,
-    0.5
-  ],
-  "pre_treino": "nenhum carregamento no código",
-  "entrada": [
-    3,
-    224,
-    224
-  ],
-  "otimizador": "Adam",
-  "learning_rate": 0.0001,
-  "batch_size": 50,
-  "epocas": 5,
-  "perda": "BCELoss",
-  "ativacao_final": "Sigmoid",
-  "rotulos": "pasta pai Dog→1;outras→0",
-  "split": "80/10/10; shuffle; sem random_state/stratify explícitos",
-  "normalizacao": "ToTensor[0,1]; sem Normalize",
-  "augmentation": "não definido",
-  "checkpoint_recebido": {
-    "arquivo": "alexnet_cats_dogs_best.pth",
-    "sha256": "e4d5d498c65aea23694156f1b6b52ba5ae5f91919dc113394e54e673c8ddf96d",
-    "tamanho_bytes": 233148669,
-    "origem": "arquivo enviado pela Lisandra via Theo",
-    "formato": "state_dict puro",
-    "arquitetura": "AlexNetBinary do notebook GitHub, commit830c79e",
-    "carregamento_estrito": "aprovado",
-    "pesos_finitos": true,
-    "teste_artificial": {
-      "entrada": [
-        1,
-        3,
-        224,
-        224
+  "modelo": "AlexNetBinary com BatchNorm — versão publicada",
+  "commit": "538a5e9d40a702fe1bbf915126d6319fc4905292",
+  "fonte": "resultados_para_competicao/configuracao.json",
+  "configuracao_declarada": {
+    "execucao_id": "1",
+    "modelo": {
+      "nome": "AlexNetBinary",
+      "tipo": "Rede Neural Convolucional (CNN)",
+      "camadas_features": [
+        {
+          "tipo": "Conv2d",
+          "in_channels": 3,
+          "out_channels": 96,
+          "kernel_size": 11,
+          "stride": 4,
+          "padding": 2
+        },
+        {
+          "tipo": "BatchNorm2d",
+          "num_features": 96
+        },
+        {
+          "tipo": "ReLU",
+          "inplace": true
+        },
+        {
+          "tipo": "MaxPool2d",
+          "kernel_size": 3,
+          "stride": 2
+        },
+        {
+          "tipo": "Conv2d",
+          "in_channels": 96,
+          "out_channels": 256,
+          "kernel_size": 5,
+          "stride": 1,
+          "padding": 2
+        },
+        {
+          "tipo": "BatchNorm2d",
+          "num_features": 256
+        },
+        {
+          "tipo": "ReLU",
+          "inplace": true
+        },
+        {
+          "tipo": "MaxPool2d",
+          "kernel_size": 3,
+          "stride": 2
+        },
+        {
+          "tipo": "Conv2d",
+          "in_channels": 256,
+          "out_channels": 384,
+          "kernel_size": 3,
+          "stride": 1,
+          "padding": 1
+        },
+        {
+          "tipo": "BatchNorm2d",
+          "num_features": 384
+        },
+        {
+          "tipo": "ReLU",
+          "inplace": true
+        },
+        {
+          "tipo": "Conv2d",
+          "in_channels": 384,
+          "out_channels": 384,
+          "kernel_size": 3,
+          "stride": 1,
+          "padding": 1
+        },
+        {
+          "tipo": "BatchNorm2d",
+          "num_features": 384
+        },
+        {
+          "tipo": "ReLU",
+          "inplace": true
+        },
+        {
+          "tipo": "Conv2d",
+          "in_channels": 384,
+          "out_channels": 256,
+          "kernel_size": 3,
+          "stride": 1,
+          "padding": 1
+        },
+        {
+          "tipo": "BatchNorm2d",
+          "num_features": 256
+        },
+        {
+          "tipo": "ReLU",
+          "inplace": true
+        },
+        {
+          "tipo": "MaxPool2d",
+          "kernel_size": 3,
+          "stride": 2
+        }
       ],
-      "saida": [
-        1
+      "camadas_classificador": [
+        {
+          "tipo": "Linear",
+          "in_features": 9216,
+          "out_features": 4096
+        },
+        {
+          "tipo": "ReLU",
+          "inplace": true
+        },
+        {
+          "tipo": "Dropout",
+          "probabilidade": 0.5,
+          "posicao": "apos primeira camada Linear/ReLU"
+        },
+        {
+          "tipo": "Linear",
+          "in_features": 4096,
+          "out_features": 4096
+        },
+        {
+          "tipo": "ReLU",
+          "inplace": true
+        },
+        {
+          "tipo": "Dropout",
+          "probabilidade": 0.5,
+          "posicao": "apos segunda camada Linear/ReLU"
+        },
+        {
+          "tipo": "Linear",
+          "in_features": 4096,
+          "out_features": 1
+        }
       ],
-      "probabilidade_finita": true
+      "dropout": {
+        "camadas": [
+          {
+            "indice_classificador": 2,
+            "probabilidade": 0.5
+          },
+          {
+            "indice_classificador": 5,
+            "probabilidade": 0.5
+          }
+        ],
+        "probabilidade_padrao": 0.5
+      },
+      "saida": "Logits brutos (1D após squeeze(-1))"
     },
-    "epoca": null,
-    "criterio_de_selecao": null,
-    "observacao": "Nome best não comprova critério ou época; não há metadados no state_dict. Sem avaliação em imagens reais."
-  }
+    "treinamento": {
+      "otimizador": {
+        "nome": "Adam",
+        "learning_rate": 0.0001,
+        "betas": [
+          0.9,
+          0.999
+        ],
+        "eps": 1e-08,
+        "weight_decay": 0.0
+      },
+      "funcao_perda": {
+        "nome": "BCEWithLogitsLoss",
+        "reduction": "mean"
+      },
+      "scheduler": null,
+      "batch_size": 50,
+      "epocas_previstas": 40,
+      "epocas_concluidas": 10,
+      "early_stopping": {
+        "ativo": true,
+        "paciencia": 5,
+        "metrica": "val_loss",
+        "criterio": "menor_perda_validacao",
+        "epoca_ativacao": 10,
+        "melhor_epoca_restaurada": 5
+      }
+    },
+    "origem_pesos": {
+      "tipo": "from_scratch",
+      "checkpoint_inicial": null,
+      "congelamento_camadas": false,
+      "descricao": "Treinado do zero com inicialização padrão de pesos do PyTorch, sem pesos pré-treinados e sem congelamento de camadas."
+    },
+    "mudancas_entre_etapas": {
+      "etapas": 1,
+      "descricao": "Treinamento contínuo em etapa única sem alteração de arquitetura ou taxas durante as épocas executadas."
+    },
+    "dataset": {
+      "fonte": "Kaggle: bhavikjikadara/dog-and-cat-classification-dataset",
+      "total_imagens": 24998,
+      "divisao_splits": {
+        "treino": 19998,
+        "validacao": 2500,
+        "teste": 2500,
+        "proporcao": {
+          "treino": 0.8,
+          "validacao": 0.1,
+          "teste": 0.1
+        }
+      },
+      "rotulos": {
+        "Cachorro (Dog)": 1.0,
+        "Gato (Cat)": 0.0
+      },
+      "pre_processamento": {
+        "redimensionamento": [
+          224,
+          224
+        ],
+        "to_tensor": true,
+        "normalizacao": {
+          "mean": [
+            0.485,
+            0.456,
+            0.406
+          ],
+          "std": [
+            0.229,
+            0.224,
+            0.225
+          ]
+        },
+        "ampliacoes": null
+      }
+    },
+    "reprodutibilidade": {
+      "semente_aleatoria": null,
+      "observacao_semente": "Nenhuma semente manual (manual_seed) foi fixada no código original."
+    },
+    "codigo_fonte": {
+      "repositorio": "https://github.com/lisandra21/cats_vs_dogs_Lisandra",
+      "commit_base": "8d9556ac32289ebe1f5e8bbb9aeba43c6f066c34",
+      "arquivo_notebook": "CatsandDogs_classification.ipynb"
+    }
+  },
+  "checkpoint_status": "novo peso recebido compatível com BatchNorm",
+  "epoca_checkpoint_declarada": 5,
+  "criterio_checkpoint": "menor_perda_validacao"
 }

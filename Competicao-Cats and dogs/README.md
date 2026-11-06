@@ -33,10 +33,11 @@ abaixo descreve as imagens e a preparação delas.
 - **Bandeira:** fonte V4 e análises V1–V4. Pesos, históricos CSV e predições
   de validação V1–V4 disponíveis no clone atualizado. Gráficos numéricos
   SVG/PNG/PDF por época na seção de evolução; V4 compatível com os pesos.
-- **Lisandra:** código vigente, checkpoint compatível e CSV recebido com10
-  épocas completas de treino/validação. Melhor acurácia de validação91,08%
-  na época8; menor perda na5. Correspondência do CSV com a configuração
-  exata e a época do checkpoint ainda depende da confirmação da autora.
+- **Lisandra:** pacote publicado com10 épocas e checkpoint declarado da5
+  por menor val_loss (90,16% de validação); maior acurácia91,08% na8.
+  Modelo atual usa BatchNorm, BCEWithLogitsLoss e Normalize ImageNet.
+  Novo peso com BatchNorm recebido, compatibilidade estrita e teste artificial aprovados.
+  [Pendências verificadas](Lisandra/modelo%20principal/PENDENCIAS_ATUAIS.md).
 
 **Não há ranking comum:** os participantes usaram divisões, normalizações,
 datasets e protocolos diferentes. Métricas acima são descrições de fontes

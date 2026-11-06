@@ -1,24 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="820" height="784" viewBox="0 0 820 784">
 <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#334155"/></marker></defs>
 <rect width="100%" height="100%" fill="white"/>
-<text x="410" y="28" text-anchor="middle" font-family="sans-serif" font-size="20">Lisandra — AlexNetBinary vigente</text>
+<text x="410" y="28" text-anchor="middle" font-family="sans-serif" font-size="20">Lisandra — AlexNetBinary com BatchNorm</text>
 <rect x="45" y="48" width="730" height="50" rx="8" fill="#e5effb" stroke="#334155"/>
-<text x="410" y="78" text-anchor="middle" font-family="sans-serif" font-size="15">RGB224×224</text>
+<text x="410" y="78" text-anchor="middle" font-family="sans-serif" font-size="15">RGB224×224 → Normalize ImageNet</text>
 <path d="M410,98 V123" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
 <rect x="45" y="124" width="730" height="50" rx="8" fill="#e5effb" stroke="#334155"/>
-<text x="410" y="154" text-anchor="middle" font-family="sans-serif" font-size="15">Conv11×11:96,s4,p2 → ReLU → Pool3/s2</text>
+<text x="410" y="154" text-anchor="middle" font-family="sans-serif" font-size="15">Conv11×11:96 → BN → ReLU → Pool</text>
 <path d="M410,174 V199" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
 <rect x="45" y="200" width="730" height="50" rx="8" fill="#e5effb" stroke="#334155"/>
-<text x="410" y="230" text-anchor="middle" font-family="sans-serif" font-size="15">Conv5×5:256,p2 → ReLU → Pool3/s2</text>
+<text x="410" y="230" text-anchor="middle" font-family="sans-serif" font-size="15">Conv5×5:256 → BN → ReLU → Pool</text>
 <path d="M410,250 V275" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
 <rect x="45" y="276" width="730" height="50" rx="8" fill="#e5effb" stroke="#334155"/>
-<text x="410" y="306" text-anchor="middle" font-family="sans-serif" font-size="15">Conv3×3:384 → ReLU</text>
+<text x="410" y="306" text-anchor="middle" font-family="sans-serif" font-size="15">Conv3×3:384 → BN → ReLU</text>
 <path d="M410,326 V351" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
 <rect x="45" y="352" width="730" height="50" rx="8" fill="#e5effb" stroke="#334155"/>
-<text x="410" y="382" text-anchor="middle" font-family="sans-serif" font-size="15">Conv3×3:384 → ReLU</text>
+<text x="410" y="382" text-anchor="middle" font-family="sans-serif" font-size="15">Conv3×3:384 → BN → ReLU</text>
 <path d="M410,402 V427" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
 <rect x="45" y="428" width="730" height="50" rx="8" fill="#e5effb" stroke="#334155"/>
-<text x="410" y="458" text-anchor="middle" font-family="sans-serif" font-size="15">Conv3×3:256 → ReLU → Pool3/s2</text>
+<text x="410" y="458" text-anchor="middle" font-family="sans-serif" font-size="15">Conv3×3:256 → BN → ReLU → Pool</text>
 <path d="M410,478 V503" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
 <rect x="45" y="504" width="730" height="50" rx="8" fill="#e5effb" stroke="#334155"/>
 <text x="410" y="534" text-anchor="middle" font-family="sans-serif" font-size="15">Flatten9216 → FC4096 → ReLU → Dropout50%</text>
@@ -27,5 +27,5 @@
 <text x="410" y="610" text-anchor="middle" font-family="sans-serif" font-size="15">FC4096 → ReLU → Dropout50%</text>
 <path d="M410,630 V655" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
 <rect x="45" y="656" width="730" height="50" rx="8" fill="#e5effb" stroke="#334155"/>
-<text x="410" y="686" text-anchor="middle" font-family="sans-serif" font-size="15">FC1 → Sigmoid</text>
-<text x="20" y="772" font-family="sans-serif" font-size="11">Fonte: notebook GitHub vigente, célula5.</text></svg>
+<text x="410" y="686" text-anchor="middle" font-family="sans-serif" font-size="15">FC1 logit (sigmoid somente para probabilidade)</text>
+<text x="20" y="772" font-family="sans-serif" font-size="11">Fonte: notebook e configuração publicados, commit538a5e9.</text></svg>

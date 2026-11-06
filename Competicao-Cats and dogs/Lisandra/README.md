@@ -1,3 +1,3 @@
 # Lisandra
 
-[Modelo principal vigente](modelo%20principal/README.md). [Repositório original](projeto/).
+[Modelo e resultados publicados](modelo%20principal/README.md). [Repositório local](projeto/).

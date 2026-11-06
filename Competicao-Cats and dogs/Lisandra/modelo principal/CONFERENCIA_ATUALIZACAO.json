@@ -1,0 +1,18 @@
+{
+  "commit": "538a5e9d40a702fe1bbf915126d6319fc4905292",
+  "erros_sintaxe": [],
+  "peso_novo_presente_no_clone": false,
+  "tamanho_declarado_peso_atual": 233178729,
+  "alteracoes_locais": [
+    " M CatsandDogs_classification.ipynb",
+    " M README.md",
+    " M resultados_para_competicao/CatsandDogs_classification_saidas.ipynb"
+  ],
+  "readme_coerente_com_modelo": true,
+  "peso_local_recebido": "Lisandra/modelo principal/checkpoints/versao_com_batchnorm/alexnet_cats_dogs_best.pth",
+  "tamanho_recebido": 233178729,
+  "compativel_com_arquitetura_atual": true,
+  "chaves_faltantes": [],
+  "chaves_extras": [],
+  "dimensoes_incompativeis": []
+}
