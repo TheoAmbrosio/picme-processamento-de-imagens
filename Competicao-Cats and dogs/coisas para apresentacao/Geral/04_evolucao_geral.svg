@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img">
+<title>Ensaios e versões dos projetos</title>
+<defs><marker id="seta" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#657384"/></marker></defs>
+<rect width="1600" height="900" fill="#fcfbf8"/>
+<text x="65" y="54" font-family="DejaVu Sans,sans-serif" font-size="17" fill="#657384" font-weight="600" text-anchor="start">GERAL</text>
+<text x="65" y="112" font-family="DejaVu Sans,sans-serif" font-size="40" fill="#202c39" font-weight="700" text-anchor="start">Ensaios e versões dos projetos</text>
+<text x="65" y="153" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#657384" font-weight="400" text-anchor="start">Execuções exibidas; não uma sequência única de pesos</text>
+<text x="65" y="273" font-family="DejaVu Sans,sans-serif" font-size="27" fill="#286b78" font-weight="700" text-anchor="start">Theo</text>
+<rect x="290" y="220" width="285" height="110" rx="18" fill="white" stroke="#e0e3e4"/>
+<text x="310" y="263" font-family="DejaVu Sans,sans-serif" font-size="22" fill="#202c39" font-weight="600" text-anchor="start">Referência</text>
+<text x="310" y="301" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="start">21 épocas</text>
+<rect x="598" y="220" width="285" height="110" rx="18" fill="white" stroke="#e0e3e4"/>
+<text x="618" y="263" font-family="DejaVu Sans,sans-serif" font-size="22" fill="#202c39" font-weight="600" text-anchor="start">Repetição</text>
+<text x="618" y="301" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="start">36 épocas</text>
+<rect x="906" y="220" width="285" height="110" rx="18" fill="white" stroke="#e0e3e4"/>
+<text x="926" y="263" font-family="DejaVu Sans,sans-serif" font-size="22" fill="#202c39" font-weight="600" text-anchor="start">Aug8</text>
+<text x="926" y="301" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="start">30 épocas</text>
+<text x="65" y="426" font-family="DejaVu Sans,sans-serif" font-size="27" fill="#8b5290" font-weight="700" text-anchor="start">Lisandra</text>
+<rect x="290" y="373" width="285" height="110" rx="18" fill="white" stroke="#e0e3e4"/>
+<text x="310" y="416" font-family="DejaVu Sans,sans-serif" font-size="22" fill="#202c39" font-weight="600" text-anchor="start">Execução publicada</text>
+<text x="310" y="454" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="start">10 épocas</text>
+<rect x="598" y="373" width="285" height="110" rx="18" fill="white" stroke="#e0e3e4"/>
+<text x="618" y="416" font-family="DejaVu Sans,sans-serif" font-size="22" fill="#202c39" font-weight="600" text-anchor="start">Seleção por val_loss</text>
+<text x="618" y="454" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="start">Checkpoint da época 5</text>
+<text x="65" y="579" font-family="DejaVu Sans,sans-serif" font-size="27" fill="#b96238" font-weight="700" text-anchor="start">Dulce</text>
+<rect x="290" y="526" width="285" height="110" rx="18" fill="white" stroke="#e0e3e4"/>
+<text x="310" y="569" font-family="DejaVu Sans,sans-serif" font-size="22" fill="#202c39" font-weight="600" text-anchor="start">Primeiro modelo</text>
+<text x="310" y="607" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="start">100 épocas</text>
+<rect x="598" y="526" width="285" height="110" rx="18" fill="white" stroke="#e0e3e4"/>
+<text x="618" y="569" font-family="DejaVu Sans,sans-serif" font-size="22" fill="#202c39" font-weight="600" text-anchor="start">CNN224</text>
+<text x="618" y="607" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="start">50 / 200 épocas</text>
+<rect x="906" y="526" width="285" height="110" rx="18" fill="white" stroke="#e0e3e4"/>
+<text x="926" y="569" font-family="DejaVu Sans,sans-serif" font-size="22" fill="#202c39" font-weight="600" text-anchor="start">CNN224 v2</text>
+<text x="926" y="607" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="start">120 épocas</text>
+<rect x="1214" y="526" width="285" height="110" rx="18" fill="white" stroke="#e0e3e4"/>
+<text x="1234" y="569" font-family="DejaVu Sans,sans-serif" font-size="22" fill="#202c39" font-weight="600" text-anchor="start">ResNet18</text>
+<text x="1234" y="607" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="start">5 épocas</text>
+<text x="65" y="732" font-family="DejaVu Sans,sans-serif" font-size="27" fill="#4367a6" font-weight="700" text-anchor="start">Bandeira</text>
+<rect x="290" y="679" width="285" height="110" rx="18" fill="white" stroke="#e0e3e4"/>
+<text x="310" y="722" font-family="DejaVu Sans,sans-serif" font-size="22" fill="#202c39" font-weight="600" text-anchor="start">V1</text>
+<text x="310" y="760" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="start">15 épocas</text>
+<rect x="598" y="679" width="285" height="110" rx="18" fill="white" stroke="#e0e3e4"/>
+<text x="618" y="722" font-family="DejaVu Sans,sans-serif" font-size="22" fill="#202c39" font-weight="600" text-anchor="start">V2</text>
+<text x="618" y="760" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="start">23 épocas</text>
+<rect x="906" y="679" width="285" height="110" rx="18" fill="white" stroke="#e0e3e4"/>
+<text x="926" y="722" font-family="DejaVu Sans,sans-serif" font-size="22" fill="#202c39" font-weight="600" text-anchor="start">V3</text>
+<text x="926" y="760" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="start">30 épocas</text>
+<rect x="1214" y="679" width="285" height="110" rx="18" fill="white" stroke="#e0e3e4"/>
+<text x="1234" y="722" font-family="DejaVu Sans,sans-serif" font-size="22" fill="#202c39" font-weight="600" text-anchor="start">V4</text>
+<text x="1234" y="760" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="start">30 épocas</text>
+</svg>

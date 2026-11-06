@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img">
+<title>Experimentos documentados</title>
+<defs><marker id="seta" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#657384"/></marker></defs>
+<rect width="1600" height="900" fill="#fcfbf8"/>
+<text x="65" y="54" font-family="DejaVu Sans,sans-serif" font-size="17" fill="#657384" font-weight="600" text-anchor="start">DULCE</text>
+<text x="65" y="112" font-family="DejaVu Sans,sans-serif" font-size="40" fill="#202c39" font-weight="700" text-anchor="start">Experimentos documentados</text>
+<text x="65" y="153" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#657384" font-weight="400" text-anchor="start">Cada execução preservada separadamente</text>
+<rect x="65" y="205" width="715" height="290" rx="18" fill="white" stroke="#e0e3e4"/>
+<rect x="88" y="232" width="5" height="38" rx="2" fill="#b96238" stroke="#b96238"/>
+<text x="111" y="262" font-family="DejaVu Sans,sans-serif" font-size="29" fill="#b96238" font-weight="700" text-anchor="start">Primeiro modelo</text>
+<text x="93" y="311" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">SGD · LR 0,01</text>
+<text x="93" y="350" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">100 épocas na execução original</text>
+<text x="93" y="389" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Repetição independente com mais métricas</text>
+<rect x="820" y="205" width="715" height="290" rx="18" fill="white" stroke="#e0e3e4"/>
+<rect x="843" y="232" width="5" height="38" rx="2" fill="#b96238" stroke="#b96238"/>
+<text x="866" y="262" font-family="DejaVu Sans,sans-serif" font-size="29" fill="#b96238" font-weight="700" text-anchor="start">CNN224</text>
+<text x="848" y="311" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Execução de 50 épocas</text>
+<text x="848" y="350" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Outra execução de 200 épocas</text>
+<text x="848" y="389" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Históricos distintos</text>
+<rect x="65" y="525" width="715" height="290" rx="18" fill="white" stroke="#e0e3e4"/>
+<rect x="88" y="552" width="5" height="38" rx="2" fill="#b96238" stroke="#b96238"/>
+<text x="111" y="582" font-family="DejaVu Sans,sans-serif" font-size="29" fill="#b96238" font-weight="700" text-anchor="start">CNN224 v2</text>
+<text x="93" y="631" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Adam · LR 0,0003</text>
+<text x="93" y="670" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">120 épocas</text>
+<text x="93" y="709" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Modelo final declarado pela autora</text>
+<rect x="820" y="525" width="715" height="290" rx="18" fill="white" stroke="#e0e3e4"/>
+<rect x="843" y="552" width="5" height="38" rx="2" fill="#b96238" stroke="#b96238"/>
+<text x="866" y="582" font-family="DejaVu Sans,sans-serif" font-size="29" fill="#b96238" font-weight="700" text-anchor="start">ResNet18</text>
+<text x="848" y="631" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">ImageNet + fine-tuning</text>
+<text x="848" y="670" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">5 épocas</text>
+<text x="848" y="709" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Experimento separado</text>
+</svg>

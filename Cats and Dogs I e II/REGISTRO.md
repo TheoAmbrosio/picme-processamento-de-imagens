@@ -1174,3 +1174,8 @@ Este arquivo acompanha as tentativas e os avanços do projeto. Os resultados aba
 - **Espaço:** a partição do projeto estava cheia. Ferramentas temporárias criadas pelo assistente foram removidas de /tmp; como estavam em outra partição, foi necessário mover o cache de downloads do pip para `/tmp/theo-pip-cache-preservado`, preservando seu conteúdo e liberando aproximadamente 2,9 GiB em /home. Nenhum dataset ou modelo foi removido.
 - **Configuração atual preservada:** o usuário já havia alterado k para 5 e alpha/alpha2 para zero; esses valores serão versionados como estão. O artigo Delta registra a configuração histórica explicitada na sua elaboração.
 - **Validação:** sintaxe dos scripts Python e diff conferidos, busca por padrões comuns de credenciais sem correspondências. Sem execução de treinamento. Commit e envio serão confirmados após a operação.
+
+
+## 06/11/2026 — História selecionada do Theo
+
+Retirado o primeiro fine-tuning independente da narrativa do modelo principal, dos gráficos e dos SVGs de apresentação, conforme solicitado. Preservados seus resultados originais e arquivadas as cópias consolidadas em Theo/arquivados/primeiro_finetuning. A seleção contém referência (21 épocas), repetição (36) e Aug8 (30): 87 observações. Aug8 deriva diretamente do checkpoint 33 da repetição. Regenerados os gráficos e conferidos os CSVs e a sintaxe dos SVGs, sem treino ou avaliação.

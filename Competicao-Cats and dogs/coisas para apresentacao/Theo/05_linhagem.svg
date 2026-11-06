@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img">
+<title>De onde vieram os pesos do Aug8</title>
+<defs><marker id="seta" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#657384"/></marker></defs>
+<rect width="1600" height="900" fill="#fcfbf8"/>
+<text x="65" y="54" font-family="DejaVu Sans,sans-serif" font-size="17" fill="#657384" font-weight="600" text-anchor="start">THEO</text>
+<text x="65" y="112" font-family="DejaVu Sans,sans-serif" font-size="40" fill="#202c39" font-weight="700" text-anchor="start">De onde vieram os pesos do Aug8</text>
+<rect x="65" y="275" width="350" height="240" rx="18" fill="white" stroke="#e0e3e4"/>
+<rect x="88" y="302" width="5" height="38" rx="2" fill="#286b78" stroke="#286b78"/>
+<text x="111" y="332" font-family="DejaVu Sans,sans-serif" font-size="29" fill="#286b78" font-weight="700" text-anchor="start">Referência</text>
+<text x="93" y="381" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">ImageNet</text>
+<text x="93" y="420" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">21 épocas observadas</text>
+<text x="93" y="459" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Referência de método</text>
+<rect x="530" y="275" width="370" height="240" rx="18" fill="white" stroke="#e0e3e4"/>
+<rect x="553" y="302" width="5" height="38" rx="2" fill="#286b78" stroke="#286b78"/>
+<text x="576" y="332" font-family="DejaVu Sans,sans-serif" font-size="29" fill="#286b78" font-weight="700" text-anchor="start">Repetição</text>
+<text x="558" y="381" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Reinício ImageNet</text>
+<text x="558" y="420" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">36 épocas observadas</text>
+<text x="558" y="459" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Checkpoint da época 33</text>
+<rect x="1040" y="275" width="490" height="240" rx="18" fill="white" stroke="#e0e3e4"/>
+<rect x="1063" y="302" width="5" height="38" rx="2" fill="#286b78" stroke="#286b78"/>
+<text x="1086" y="332" font-family="DejaVu Sans,sans-serif" font-size="29" fill="#286b78" font-weight="700" text-anchor="start">Aug8 principal</text>
+<text x="1068" y="381" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Parte do checkpoint 33</text>
+<text x="1068" y="420" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">30 épocas · 8 ampliações</text>
+<text x="1068" y="459" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Checkpoint escolhido: 29</text>
+<path d="M425,392 L515,392" fill="none" stroke="#dce1e3" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#seta)"/>
+<path d="M910,392 L1023,392" fill="none" stroke="#dce1e3" stroke-width="2" marker-end="url(#seta)"/>
+</svg>

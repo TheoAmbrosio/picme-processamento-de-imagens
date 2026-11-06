@@ -72,7 +72,6 @@ def gerar():
                                   (inicio_gap+gap+dx,h+dy+2),(inicio_gap,h+dy+2)],
                                  facecolor='white',edgecolor='none',zorder=6))
             ax.text(inicio_gap+gap/2,h/2,'...',ha='center',va='center',fontsize=21,zorder=7)
-            ax.text(x+largura/2,h+dy+140,'3 blocos centrais omitidos; total: 6',ha='center',fontsize=10)
         if n>1:
             for j in range(3 if abreviado else n):
                 inicio=x+j*c+(gap if abreviado and j==2 else 0)
@@ -112,12 +111,8 @@ def gerar():
             ax.annotate('',xy=(x+largura+dx+4,0),xytext=(x+largura+dx+1,0),
                         arrowprops=dict(arrowstyle='->',lw=.6))
         x+=largura+dx+5
-    ax.annotate('Sigmoid → P(Dog)',(x-5,0),xytext=(x-55,240),
-                ha='right',fontsize=11,arrowprops=dict(arrowstyle='-',lw=.65))
-    ax.set(xlim=(-60,x+70),ylim=(-290,610))
-    ax.text(0,570,'ResTheo34 Aug8 — blocos e conexões residuais',fontsize=17,fontweight='bold')
-    ax.text(x/2,-215,'I = identidade; P = projeção Conv 1×1 + BN, stride 2. Cada atalho termina na soma (+) do respectivo bloco, seguida de ReLU.',ha='center',fontsize=10)
-    ax.text(x/2,-260,'Comprimento = canais; altura/profundidade = pixels. Volumes 1×1 ampliados somente ×3 para visualização. Layer3 abreviada.',ha='center',fontsize=10)
+    ax.set(xlim=(-60,x+70),ylim=(-180,540))
+    ax.text(0,500,'Theo — ResTheo34 Aug8',fontsize=17,fontweight='bold')
     fig.subplots_adjust(left=.025,right=.985,top=.97,bottom=.04)
     for nome in ('arquitetura_res_theo34_aug8_livro','arquitetura_res_theo34_aug8_volumes'):
         for ext in ('svg','png','pdf'):

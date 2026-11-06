@@ -1,5 +1,7 @@
 # Competição Cats and Dogs
 
+[Coisas para apresentação: SVGs por participante e visões gerais](coisas%20para%20apresentacao/README.md).
+
 Organização documental dos projetos recebidos em06/11/2026.
 Não foram executados treinamentos, testes finais ou alterações metodológicas.
 

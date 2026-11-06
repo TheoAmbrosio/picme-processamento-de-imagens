@@ -12,7 +12,6 @@ Modelo principal: **ResTheo34 Aug8**.
 - [res_theo34_aug8](<banco de dados/modelos/res_theo34_aug8.md>).
 - [res_theo34_aug8_continuacao](<banco de dados/modelos/res_theo34_aug8_continuacao.md>).
 - [res_theo34_barras](<banco de dados/modelos/res_theo34_barras.md>).
-- [res_theo34_finetuning](<banco de dados/modelos/res_theo34_finetuning.md>).
 - [res_theo34_misto](<banco de dados/modelos/res_theo34_misto.md>).
 - [res_theo34_repeticao](<banco de dados/modelos/res_theo34_repeticao.md>).
 - [res_theo_especial](<banco de dados/modelos/res_theo_especial.md>).

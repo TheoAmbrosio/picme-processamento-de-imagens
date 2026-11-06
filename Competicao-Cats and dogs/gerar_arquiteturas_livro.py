@@ -66,14 +66,14 @@ def desenhar(participante, config):
         ax.add_patch(Polygon([(x+largura,0),(x+largura+dx,dy),(x+largura+dx,altura+dy),(x+largura,altura)],facecolor=cor,edgecolor='black',lw=.65,zorder=2))
         ax.add_patch(Polygon([(x,altura),(x+dx,altura+dy),(x+largura+dx,altura+dy),(x+largura,altura)],facecolor=cor,edgecolor='black',lw=.65,zorder=4))
         if i==0:
-            foto=PROJETO_THEO/'dataset/PetImages/Dog/0.jpg'
+            foto=RAIZ/'imagens arquiteturas'/f'{participante.lower()}.jpg'
             if foto.exists():
                 with Image.open(foto) as im:
                     imagem=ImageOps.fit(ImageOps.exif_transpose(im).convert('RGB'),(224,224))
                     ax.imshow(imagem,extent=(0,1,0,1),origin='upper',
                         transform=Affine2D.from_values(dx,dy,0,altura,x+largura,0)+ax.transData,zorder=4)
         centro=x+largura/2
-        dimensao=f'{c} × {h} × {p}' if not densa else f'{c} componentes'
+        dimensao=f'{c} × {h} × {p}' if not densa else f'{c}'
         if densa:
             ax.annotate(dimensao,(centro,altura+dy),xytext=(centro,65+(i%2)*60),
                 fontsize=10,rotation=30,ha='left',arrowprops=dict(arrowstyle='-',lw=.5))
@@ -85,14 +85,8 @@ def desenhar(participante, config):
         if i<len(config['volumes'])-1:
             ax.annotate('',xy=(fim+6,0),xytext=(fim+1,0),arrowprops=dict(arrowstyle='->',lw=.6))
         x=fim+(18 if densa else 7)
-    ax.annotate(config['saida'],(x-22,0),xytext=(x+100,topo*.6),
-        ha='right',fontsize=11,arrowprops=dict(arrowstyle='-',lw=.65))
-    ax.text(0,topo+180,config['titulo']+' — arquitetura em volumes',fontsize=18,fontweight='bold')
-    ax.text(0,topo+135,'Dimensões C × H × W nas saídas de cada bloco; blocos convolucionais em escala comum.',fontsize=11)
-    ax.text(x/2,-340,'Comprimento = canais; altura e profundidade = pixels. Cabeça densa em escala esquemática, com dimensões indicadas.',ha='center',fontsize=10)
-    ax.text(x/2,-385,'ReLU após convoluções e FCs intermediárias; DO = dropout. Sem resíduos. Foto RGB ilustrativa.',ha='center',fontsize=10)
-    ax.text(x/2,-425,'Fonte: '+config['fonte']+'. Nenhum treinamento executado para gerar o desenho.',ha='center',fontsize=10)
-    ax.set(xlim=(-70,x+160),ylim=(-460,topo+230))
+    ax.text(0,topo+100,config['titulo'],fontsize=18,fontweight='bold')
+    ax.set(xlim=(-70,x+100),ylim=(-240,topo+150))
     fig.subplots_adjust(left=.025,right=.985,top=.97,bottom=.04)
     destino=RAIZ/participante/'modelo principal'
     for ext in ('svg','png','pdf'):
@@ -107,6 +101,10 @@ def main():
     for ext in ('svg','png','pdf'):
         shutil.copy2(PROJETO_THEO/'docs/diagramas'/f'arquitetura_res_theo34_aug8_livro.{ext}',
             RAIZ/'Theo/modelo principal'/f'arquitetura_livro.{ext}')
+        for destino in (PROJETO_THEO/'modelo principal/arquitetura', RAIZ/'Theo/modelo principal/arquitetura'):
+            if destino.exists():
+                shutil.copy2(PROJETO_THEO/'docs/diagramas'/f'arquitetura_res_theo34_aug8_livro.{ext}',
+                             destino/f'arquitetura_res_theo34_aug8_livro.{ext}')
     print('SVG, PNG e PDF no padrão livro: Theo, Lisandra, Dulce e Bandeira.')
 
 

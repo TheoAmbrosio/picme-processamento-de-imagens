@@ -14,9 +14,7 @@ ETAPAS=(
   'res_theo34/complementados,dropout,com_back',0,21),
  ('Repetição: ImageNet; Adam LR0,001;16×; dropout0',
   'res_theo34_repeticao/20261105_105951_490569_bs64_ep50_cong5ep_do0_dadosamp_pre',0,36),
- ('Ramo da33: LRs1e-5/5e-5/1e-4; cosseno; dropout na cabeça7%;16×',
-  'res_theo34_finetuning/20261105_152655_704173_bs64_ep30_cong0ep_do7_dadosamp_pre',0,30),
- ('Principal — novo ramo da33: mesmos LRs/cosseno; dropout10%;8×',
+ ('Principal — direto da33: LRs diferenciais/cosseno; dropout10%;8×',
   'res_theo34_aug8/20261105_163938_589179_bs64_ep30_cong0ep_do10_dadosamp_pre',0,30))
 
 
@@ -39,7 +37,7 @@ def arquitetura():
 
 
 def trajetoria():
-    fig,eixos=plt.subplots(len(ETAPAS),2,figsize=(23,20),layout='constrained')
+    fig,eixos=plt.subplots(len(ETAPAS),2,figsize=(23,15),layout='constrained')
     resumo=[]
     for linha,(titulo,relativo,inicio,fim) in enumerate(ETAPAS):
         pasta=RAIZ/'resultados_residuals_networks'/relativo
@@ -60,7 +58,7 @@ def trajetoria():
                 y=float(melhor['acuracia_validacao'])*100
                 ax.scatter([int(melhor['epoca'])],[y],color='black',zorder=5)
                 ax.annotate(f'{y:.2f}% · época {melhor["epoca"]}',(int(melhor['epoca']),y),xytext=(8,-20),textcoords='offset points')
-    fig.suptitle('Trajetória do ResTheo34 Aug8 — referência, repetição e ramos de fine-tuning\nCada linha é uma etapa independente; não implica continuidade entre todos os pesos.',fontsize=21)
+    fig.suptitle('Trajetória do ResTheo34 Aug8 — referência, repetição e Aug8\nCada linha é uma etapa independente; não implica continuidade entre todos os pesos.',fontsize=21)
     destino=RAIZ/'resultados_residuals_networks/res_theo34_aug8'
     for ext in ('png','pdf'):
         fig.savefig(destino/f'trajetoria_treinamentos.{ext}',dpi=180,facecolor='white')
@@ -77,8 +75,7 @@ def trajetoria_unificada():
     descricoes=(
         '1 · Referência histórica: ImageNet; Adam 0,001; batch 64; 16×; dropout 0%; backbone liberado na época 6.',
         '2 · REINÍCIO ImageNet: repetição nas mesmas condições; melhor checkpoint na época 33 (97,34%).',
-        '3 · RETORNO ao checkpoint 33: AdamW novo; LRs 1e-5 / 5e-5 / 1e-4; cosseno; dropout na cabeça 7%; 16×.',
-        '4 · NOVO RETORNO ao checkpoint 33: mesmos grupos de LR e cosseno; dropout na cabeça 10%; ampliação 8× com ruído, quadrados e esticamentos.')
+        '3 · DIRETO ao checkpoint 33: mesmos grupos de LR e cosseno; dropout na cabeça 10%; ampliação 8× com ruído, quadrados e esticamentos.')
     deslocamento=0
     for indice,((titulo,relativo,inicio,fim),cor) in enumerate(zip(ETAPAS,cores),1):
         with (RAIZ/'resultados_residuals_networks'/relativo/'historico.csv').open() as f:

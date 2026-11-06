@@ -33,7 +33,7 @@ Validação:5000 imagens determinísticas históricas, sem corrupções novas.
 ## Proveniência e material preservado
 
 LINHAGEM_MODELO_PRINCIPAL.md identifica a referência, repetição
-e os dois ramos de fine-tuning. REGISTRO.md documenta pedidos e verificações.
+e o fine-tuning Aug8. REGISTRO.md documenta pedidos e verificações.
 Cada execução preserva parametros.json, codigo/, historico.csv, treinamento.log,
 identificação, gráficos e checkpoints. Gráfico unificado SVG/PNG/PDF na pasta
 do Aug8; diagramas da arquitetura em docs/diagramas/.

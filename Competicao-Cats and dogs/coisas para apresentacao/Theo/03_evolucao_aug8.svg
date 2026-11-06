@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img">
+<title>Treino e validação — Theo</title>
+<defs><marker id="seta" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#657384"/></marker></defs>
+<rect width="1600" height="900" fill="#fcfbf8"/>
+<text x="65" y="54" font-family="DejaVu Sans,sans-serif" font-size="17" fill="#657384" font-weight="600" text-anchor="start">THEO</text>
+<text x="65" y="112" font-family="DejaVu Sans,sans-serif" font-size="40" fill="#202c39" font-weight="700" text-anchor="start">Treino e validação — Theo</text>
+<text x="65" y="153" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#657384" font-weight="400" text-anchor="start">Aug8 · 30 épocas · seleção por acurácia de validação</text>
+<path d="M70,201 L115,201" fill="none" stroke="#2877ad" stroke-width="3"/>
+<text x="127" y="208" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#202c39" font-weight="400" text-anchor="start">Treino</text>
+<path d="M265,201 L310,201" fill="none" stroke="#da7639" stroke-width="3"/>
+<text x="322" y="208" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#202c39" font-weight="400" text-anchor="start">Validação</text>
+<path d="M500,201 L545,201" fill="none" stroke="#866294" stroke-width="3" stroke-dasharray="6 6"/>
+<text x="557" y="208" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#202c39" font-weight="400" text-anchor="start">Checkpoint: época 29</text>
+<text x="120" y="286" font-family="DejaVu Sans,sans-serif" font-size="28" fill="#202c39" font-weight="600" text-anchor="start">Acurácia</text>
+<path d="M120,705.0 L740,705.0" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="104" y="711.0" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">40%</text>
+<path d="M120,608.75 L740,608.75" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="104" y="614.75" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">55%</text>
+<path d="M120,512.5 L740,512.5" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="104" y="518.5" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">70%</text>
+<path d="M120,416.25 L740,416.25" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="104" y="422.25" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">85%</text>
+<path d="M120,320.0 L740,320.0" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="104" y="326.0" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">100%</text>
+<text x="120.0" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">1</text>
+<text x="269.65517241379314" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">8</text>
+<text x="440.68965517241384" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">16</text>
+<text x="590.3448275862069" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">23</text>
+<text x="740.0" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">30</text>
+<polyline fill="none" stroke="#2877ad" stroke-width="3" stroke-linejoin="round" points="120.00,459.86 141.38,439.75 162.76,422.98 184.14,409.74 205.52,401.60 226.90,394.21 248.28,389.34 269.66,385.22 291.03,382.22 312.41,379.48 333.79,377.20 355.17,374.88 376.55,374.02 397.93,372.07 419.31,371.17 440.69,369.97 462.07,369.75 483.45,368.51 504.83,367.95 526.21,367.84 547.59,367.16 568.97,366.97 590.34,366.52 611.72,366.37 633.10,365.54 654.48,366.30 675.86,365.23 697.24,365.78 718.62,365.26 740.00,365.93"/>
+<polyline fill="none" stroke="#da7639" stroke-width="3" stroke-linejoin="round" points="120.00,341.05 141.38,337.20 162.76,335.40 184.14,333.35 205.52,333.35 226.90,332.96 248.28,332.32 269.66,332.70 291.03,332.19 312.41,332.06 333.79,331.42 355.17,331.55 376.55,331.42 397.93,332.06 419.31,331.68 440.69,331.81 462.07,331.42 483.45,331.16 504.83,331.81 526.21,331.29 547.59,331.42 568.97,330.91 590.34,331.81 611.72,331.04 633.10,331.55 654.48,331.16 675.86,331.29 697.24,331.29 718.62,330.78 740.00,331.42"/>
+<path d="M718.6206896551724,320 L718.6206896551724,705" fill="none" stroke="#866294" stroke-width="2" stroke-dasharray="6 6"/>
+<text x="430.0" y="773" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="middle">Época</text>
+<text x="920" y="286" font-family="DejaVu Sans,sans-serif" font-size="28" fill="#202c39" font-weight="600" text-anchor="start">Perda</text>
+<path d="M920,705.0 L1510,705.0" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="904" y="711.0" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">0.00</text>
+<path d="M920,608.75 L1510,608.75" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="904" y="614.75" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">0.18</text>
+<path d="M920,512.5 L1510,512.5" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="904" y="518.5" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">0.36</text>
+<path d="M920,416.25 L1510,416.25" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="904" y="422.25" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">0.53</text>
+<path d="M920,320.0 L1510,320.0" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="904" y="326.0" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">0.71</text>
+<text x="920.0" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">1</text>
+<text x="1062.4137931034484" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">8</text>
+<text x="1225.1724137931035" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">16</text>
+<text x="1367.5862068965516" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">23</text>
+<text x="1510.0" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">30</text>
+<polyline fill="none" stroke="#2877ad" stroke-width="3" stroke-linejoin="round" points="920.00,348.52 940.34,497.29 960.69,527.40 981.03,546.87 1001.38,559.56 1021.72,570.21 1042.07,578.24 1062.41,584.14 1082.76,589.65 1103.10,593.67 1123.45,597.97 1143.79,601.32 1164.14,603.19 1184.48,605.63 1204.83,607.36 1225.17,609.60 1245.52,610.39 1265.86,612.27 1286.21,613.25 1306.55,613.64 1326.90,615.16 1347.24,614.66 1367.59,615.51 1387.93,616.22 1408.28,616.65 1428.62,616.59 1448.97,617.32 1469.31,616.76 1489.66,617.97 1510.00,617.10"/>
+<polyline fill="none" stroke="#da7639" stroke-width="3" stroke-linejoin="round" points="920.00,623.52 940.34,652.07 960.69,660.21 981.03,666.89 1001.38,669.99 1021.72,671.81 1042.07,672.71 1062.41,672.85 1082.76,673.94 1103.10,674.46 1123.45,675.14 1143.79,674.89 1164.14,675.40 1184.48,675.07 1204.83,675.96 1225.17,675.51 1245.52,676.14 1265.86,675.79 1286.21,676.83 1306.55,675.53 1326.90,676.26 1347.24,676.11 1367.59,676.49 1387.93,676.76 1408.28,675.86 1428.62,676.40 1448.97,676.47 1469.31,675.21 1489.66,676.12 1510.00,676.50"/>
+<path d="M1489.655172413793,320 L1489.655172413793,705" fill="none" stroke="#866294" stroke-width="2" stroke-dasharray="6 6"/>
+<text x="1215.0" y="773" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="middle">Época</text>
+</svg>

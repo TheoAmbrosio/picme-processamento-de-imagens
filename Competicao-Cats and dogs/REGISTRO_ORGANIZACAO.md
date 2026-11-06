@@ -1,5 +1,19 @@
 # Registro da organização —06/11/2026
 
+## SVGs para a apresentação
+
+Criada coisas para apresentacao/ com20 SVGs, separados em Geral, Theo,
+Lisandra, Dulce e Bandeira. Inclui modelos, métodos de treino, dados,
+curvas por época, versões e a linhagem do Theo. Fontes são os CSVs/JSON
+e configurações já preservados; gráficos não representam ranking em teste comum.
+
+Arquiteturas do livro limpas: retirados rodapés explicativos, subtítulo
+de escala/dimensões e chamadas externas de saída. Mantidos os volumes,
+dimensões sobre blocos e resíduos explícitos do Theo. Explicações da escala
+esquemática da cabeça e abreviação da layer3 ficam no README, fora da figura.
+Nenhuma alteração em arquitetura, método de treino, dados ou pesos.
+SVGs1600×900 e galeria HTML local; renderização visual de amostras conferida.
+
 ## Lisandra: atualização GitHub538a5e9
 
 Pull --ff-only concluído. Pacote oficial com configuração, metadados da
@@ -171,3 +185,13 @@ Arquivo alexnet_cats_dogs_best(1).pth recebido,233178729 bytes. Cópia com SHA25
 ## Correções locais autorizadas e publicação no repositório do Theo
 
 Theo autorizou corrigir README e sintaxe da Lisandra. Modificados somente escapes de impressão/título em células6/10 dos dois notebooks e README, sem alterar treino, arquitetura, pesos, saídas ou metadados. Todas as células Python válidas via AST; patch reverso conferido. Código remoto da Lisandra não alterado. Patch e README corrigido preservados em correcoes_locais/. Nova conferência sem pendências locais e peso compatível. Atualização do Git do Theo autorizada no pedido anterior, retomada após estas correções.
+
+
+## 06/11/2026 — História selecionada do Theo
+
+Retirado o primeiro fine-tuning independente da narrativa do modelo principal, dos gráficos e dos SVGs de apresentação, conforme solicitado. Preservados seus resultados originais e arquivadas as cópias consolidadas em Theo/arquivados/primeiro_finetuning. A seleção contém referência (21 épocas), repetição (36) e Aug8 (30): 87 observações. Aug8 deriva diretamente do checkpoint 33 da repetição. Regenerados os gráficos e conferidos os CSVs e a sintaxe dos SVGs, sem treino ou avaliação.
+
+
+## 06/11/2026 — Fotos distintas nas arquiteturas
+
+Mantida a foto de cachorro do Theo; selecionadas outras fotos: gato para Lisandra, cachorro para Dulce e gato para Bandeira. Atualizados os diagramas no formato livro (SVG, PNG, PDF) e os SVGs da apresentação. Fotos ilustrativas locais em imagens arquiteturas/. Verificados quatro SVGs com imagens incorporadas distintas. Sem alterações nos modelos ou treinos.

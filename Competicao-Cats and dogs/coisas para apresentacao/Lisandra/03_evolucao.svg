@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img">
+<title>Treino e validação — Lisandra</title>
+<defs><marker id="seta" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#657384"/></marker></defs>
+<rect width="1600" height="900" fill="#fcfbf8"/>
+<text x="65" y="54" font-family="DejaVu Sans,sans-serif" font-size="17" fill="#657384" font-weight="600" text-anchor="start">LISANDRA</text>
+<text x="65" y="112" font-family="DejaVu Sans,sans-serif" font-size="40" fill="#202c39" font-weight="700" text-anchor="start">Treino e validação — Lisandra</text>
+<text x="65" y="153" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#657384" font-weight="400" text-anchor="start">10 épocas registradas · seleção por menor perda de validação</text>
+<path d="M70,201 L115,201" fill="none" stroke="#2877ad" stroke-width="3"/>
+<text x="127" y="208" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#202c39" font-weight="400" text-anchor="start">Treino</text>
+<path d="M265,201 L310,201" fill="none" stroke="#da7639" stroke-width="3"/>
+<text x="322" y="208" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#202c39" font-weight="400" text-anchor="start">Validação</text>
+<path d="M500,201 L545,201" fill="none" stroke="#866294" stroke-width="3" stroke-dasharray="6 6"/>
+<text x="557" y="208" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#202c39" font-weight="400" text-anchor="start">Checkpoint: época 5</text>
+<text x="120" y="286" font-family="DejaVu Sans,sans-serif" font-size="28" fill="#202c39" font-weight="600" text-anchor="start">Acurácia</text>
+<path d="M120,705.0 L740,705.0" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="104" y="711.0" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">40%</text>
+<path d="M120,608.75 L740,608.75" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="104" y="614.75" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">55%</text>
+<path d="M120,512.5 L740,512.5" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="104" y="518.5" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">70%</text>
+<path d="M120,416.25 L740,416.25" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="104" y="422.25" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">85%</text>
+<path d="M120,320.0 L740,320.0" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="104" y="326.0" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">100%</text>
+<text x="120.0" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">1</text>
+<text x="257.77777777777777" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">3</text>
+<text x="464.44444444444446" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">6</text>
+<text x="602.2222222222222" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">8</text>
+<text x="740.0" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">10</text>
+<polyline fill="none" stroke="#2877ad" stroke-width="3" stroke-linejoin="round" points="120.00,505.04 188.89,426.62 257.78,396.78 326.67,380.29 395.56,370.89 464.44,360.72 533.33,354.27 602.22,347.75 671.11,344.80 740.00,340.34"/>
+<polyline fill="none" stroke="#da7639" stroke-width="3" stroke-linejoin="round" points="120.00,442.69 188.89,417.28 257.78,395.97 326.67,399.05 395.56,383.14 464.44,394.69 533.33,391.10 602.22,377.24 671.11,421.13 740.00,382.11"/>
+<path d="M395.55555555555554,320 L395.55555555555554,705" fill="none" stroke="#866294" stroke-width="2" stroke-dasharray="6 6"/>
+<text x="430.0" y="773" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="middle">Época</text>
+<text x="920" y="286" font-family="DejaVu Sans,sans-serif" font-size="28" fill="#202c39" font-weight="600" text-anchor="start">Perda</text>
+<path d="M920,705.0 L1510,705.0" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="904" y="711.0" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">0.00</text>
+<path d="M920,608.75 L1510,608.75" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="904" y="614.75" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">0.15</text>
+<path d="M920,512.5 L1510,512.5" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="904" y="518.5" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">0.30</text>
+<path d="M920,416.25 L1510,416.25" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="904" y="422.25" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">0.45</text>
+<path d="M920,320.0 L1510,320.0" fill="none" stroke="#dce1e3" stroke-width="1"/>
+<text x="904" y="326.0" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="end">0.60</text>
+<text x="920.0" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">1</text>
+<text x="1051.111111111111" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">3</text>
+<text x="1247.7777777777778" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">6</text>
+<text x="1378.888888888889" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">8</text>
+<text x="1510.0" y="735" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#657384" font-weight="400" text-anchor="middle">10</text>
+<polyline fill="none" stroke="#2877ad" stroke-width="3" stroke-linejoin="round" points="920.00,348.52 985.56,462.98 1051.11,526.12 1116.67,558.54 1182.22,584.23 1247.78,602.82 1313.33,621.45 1378.89,632.49 1444.44,643.09 1510.00,654.02"/>
+<polyline fill="none" stroke="#da7639" stroke-width="3" stroke-linejoin="round" points="920.00,425.74 985.56,488.39 1051.11,526.44 1116.67,522.98 1182.22,561.09 1247.78,496.89 1313.33,502.98 1378.89,560.54 1444.44,374.58 1510.00,501.68"/>
+<path d="M1182.2222222222222,320 L1182.2222222222222,705" fill="none" stroke="#866294" stroke-width="2" stroke-dasharray="6 6"/>
+<text x="1215.0" y="773" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#657384" font-weight="400" text-anchor="middle">Época</text>
+</svg>

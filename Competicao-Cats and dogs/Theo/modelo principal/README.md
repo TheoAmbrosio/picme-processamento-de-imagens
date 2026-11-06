@@ -48,7 +48,7 @@ Os arquivos grandes continuam no lugar, sem cópias redundantes:
 
 `treinamento_aug8/codigo/` preserva os fontes associados à execução;
 `historico_das_etapas/` contém os dados e gráficos das etapas da linhagem.
-O gráfico geral inclui referências e ramos alternativos; não representa todos
+O gráfico geral inclui a referência metodológica e a linhagem do Aug8; não representa todos
 como uma única sequência de transferência de pesos. Consulte a linhagem.
 
 Esta pasta é uma cópia organizada dos artefatos existentes. Caminhos absolutos

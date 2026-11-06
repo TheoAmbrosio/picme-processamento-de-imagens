@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img">
+<title>Treinamento — Dulce</title>
+<defs><marker id="seta" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#657384"/></marker></defs>
+<rect width="1600" height="900" fill="#fcfbf8"/>
+<text x="65" y="54" font-family="DejaVu Sans,sans-serif" font-size="17" fill="#657384" font-weight="600" text-anchor="start">DULCE</text>
+<text x="65" y="112" font-family="DejaVu Sans,sans-serif" font-size="40" fill="#202c39" font-weight="700" text-anchor="start">Treinamento — Dulce</text>
+<text x="65" y="153" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#657384" font-weight="400" text-anchor="start">Inicialização do zero</text>
+<rect x="65" y="220" width="330" height="110" rx="18" fill="white" stroke="#e0e3e4"/>
+<text x="230" y="280" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#b96238" font-weight="600" text-anchor="middle">Split por origem</text>
+<path d="M402,275 L438,275" fill="none" stroke="#dce1e3" stroke-width="2" marker-end="url(#seta)"/>
+<rect x="450" y="220" width="330" height="110" rx="18" fill="white" stroke="#e0e3e4"/>
+<text x="615" y="280" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#b96238" font-weight="600" text-anchor="middle">Cópias de giro e ruído</text>
+<path d="M787,275 L823,275" fill="none" stroke="#dce1e3" stroke-width="2" marker-end="url(#seta)"/>
+<rect x="835" y="220" width="330" height="110" rx="18" fill="white" stroke="#e0e3e4"/>
+<text x="1000" y="280" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#b96238" font-weight="600" text-anchor="middle">Augmentation nos lotes</text>
+<path d="M1172,275 L1208,275" fill="none" stroke="#dce1e3" stroke-width="2" marker-end="url(#seta)"/>
+<rect x="1220" y="220" width="330" height="110" rx="18" fill="white" stroke="#e0e3e4"/>
+<text x="1385" y="280" font-family="DejaVu Sans,sans-serif" font-size="21" fill="#b96238" font-weight="600" text-anchor="middle">Validação e checkpoint</text>
+<rect x="65" y="395" width="715" height="350" rx="18" fill="white" stroke="#e0e3e4"/>
+<rect x="88" y="422" width="5" height="38" rx="2" fill="#b96238" stroke="#b96238"/>
+<text x="111" y="452" font-family="DejaVu Sans,sans-serif" font-size="29" fill="#b96238" font-weight="700" text-anchor="start">Configuração</text>
+<text x="93" y="501" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Adam · LR 0,0003</text>
+<text x="93" y="540" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Batch 32 · 120 épocas</text>
+<text x="93" y="579" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Cópias fixas + augmentation online</text>
+<text x="93" y="618" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Dropout 20% nos cinco blocos</text>
+<text x="93" y="657" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Entropia cruzada</text>
+<rect x="820" y="395" width="715" height="350" rx="18" fill="white" stroke="#e0e3e4"/>
+<rect x="843" y="422" width="5" height="38" rx="2" fill="#b96238" stroke="#b96238"/>
+<text x="866" y="452" font-family="DejaVu Sans,sans-serif" font-size="29" fill="#b96238" font-weight="700" text-anchor="start">Seleção do modelo</text>
+<text x="848" y="501" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Maior acurácia de validação</text>
+<text x="848" y="540" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Época 112</text>
+<text x="848" y="579" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Avaliação sem dropout</text>
+<text x="848" y="618" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Histórico por época</text>
+</svg>

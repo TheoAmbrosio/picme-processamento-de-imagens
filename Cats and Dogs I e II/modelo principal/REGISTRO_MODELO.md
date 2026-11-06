@@ -8,10 +8,7 @@ Consolidado em06/11/2026 a partir dos artefatos preservados, sem novo treino.
    de seus pesos para a repetição.
 2. Repetição: nova partida ImageNet nas mesmas condições; executou até36.
    Melhor checkpoint na33:97,34% validação.
-3. Primeiro ramo de fine-tuning: da33, LRs diferenciais, cosseno30,
-   dropout7%,16 ampliações; interrompido após16 épocas completas.
-   Ramo alternativo, não origem dos pesos do Aug8.
-4. Aug8 principal: novo ramo diretamente da33, AdamW com grupos
+3. Aug8 principal: novo ramo diretamente da33, AdamW com grupos
    LR1e-5/5e-5/1e-4, decay0.01, cosseno30 até1e-7, batch64,
    dropout10% antes da fc,8 ampliações,30 épocas completas.
    Melhor época29:98,32% validação; checkpoint preservado.

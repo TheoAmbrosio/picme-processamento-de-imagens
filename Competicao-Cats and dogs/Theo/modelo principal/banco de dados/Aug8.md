@@ -39,7 +39,7 @@ o split do original; a validação não é multiplicada por8.
 
 ## Diferença para as etapas anteriores
 
-Referência, repetição e primeiro fine-tuning usaram16 variantes físicas
+Referência e repetição usaram16 variantes físicas
 por original:2 geometrias(recorte/esticada) ×2 espelhamentos ×4 rotações
 (0/90/180/270). São319968 amostras de treino, com os mesmos5000 exemplos
 de validação. A ampliação8× pertence ao Aug8, não a essas fases anteriores.

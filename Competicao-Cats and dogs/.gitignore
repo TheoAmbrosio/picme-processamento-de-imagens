@@ -9,3 +9,8 @@
 *.pt
 *.pth
 *.ckpt
+
+# Resultados arquivados continuam locais.
+/Theo/arquivados/primeiro_finetuning/evolucao/
+/Theo/arquivados/primeiro_finetuning/historico_competicao/
+/Theo/arquivados/primeiro_finetuning/historico_original/

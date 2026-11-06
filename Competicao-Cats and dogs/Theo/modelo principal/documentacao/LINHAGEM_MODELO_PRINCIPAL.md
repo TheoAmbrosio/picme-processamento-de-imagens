@@ -14,8 +14,7 @@ em seu parametros.json/checkpoint, nunca a configuração atual de outro pacote.
 | Etapa | Pasta dentro de resultados_residuals_networks | O que foi feito |
 |---|---|---|
 | Referência histórica | res_theo34/complementados,dropout,com_back | Adam0.001, batch64,50 épocas previstas, backbone congelado5, fc Normal(0,1), dropout0,16×. Interrompida na21; referência metodológica, sem transferência dos pesos para a repetição. |
-| Repetição | res_theo34_repeticao/20261105_105951_490569_bs64_ep50_cong5ep_do0_dadosamp_pre | Reiniciou ImageNet nas condições históricas; chegou à36. Melhor checkpoint da33:97.34% validação. Origem dos pesos dos dois ramos de fine-tuning. |
-| Primeiro ramo de fine-tuning | res_theo34_finetuning/20261105_152655_704173_bs64_ep30_cong0ep_do7_dadosamp_pre | Partiu da33; AdamW novo, LR1e-5/5e-5/1e-4 por grupo, cosseno30 até1e-7, dropout7% antes de fc,16×. Interrompido depois da16 completa; não forneceu os pesos iniciais do Aug8. |
+| Repetição | res_theo34_repeticao/20261105_105951_490569_bs64_ep50_cong5ep_do0_dadosamp_pre | Reiniciou ImageNet nas condições históricas; chegou à36. Melhor checkpoint da33:97.34% validação. Origem dos pesos do Aug8. |
 | Principal Aug8 | res_theo34_aug8/20261105_163938_589179_bs64_ep30_cong0ep_do10_dadosamp_pre | Novo ramo da33; mesmo AdamW/grupos/cosseno, dropout10% antes de fc,30 épocas e ampliação8×. |
 
 ## Dados e artefatos

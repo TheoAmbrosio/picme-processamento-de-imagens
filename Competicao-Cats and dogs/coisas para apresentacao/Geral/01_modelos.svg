@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img">
+<title>Quatro modelos para gatos e cachorros</title>
+<defs><marker id="seta" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#657384"/></marker></defs>
+<rect width="1600" height="900" fill="#fcfbf8"/>
+<text x="65" y="54" font-family="DejaVu Sans,sans-serif" font-size="17" fill="#657384" font-weight="600" text-anchor="start">GERAL</text>
+<text x="65" y="112" font-family="DejaVu Sans,sans-serif" font-size="40" fill="#202c39" font-weight="700" text-anchor="start">Quatro modelos para gatos e cachorros</text>
+<rect x="65" y="200" width="715" height="305" rx="18" fill="white" stroke="#e0e3e4"/>
+<rect x="88" y="227" width="5" height="38" rx="2" fill="#286b78" stroke="#286b78"/>
+<text x="111" y="257" font-family="DejaVu Sans,sans-serif" font-size="29" fill="#286b78" font-weight="700" text-anchor="start">Theo</text>
+<text x="93" y="306" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">ResTheo34 Aug8</text>
+<text x="93" y="345" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">ResNet-34 sem layer4</text>
+<text x="93" y="384" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">64 → 128 → 256 canais</text>
+<text x="93" y="423" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Resíduos + média global</text>
+<rect x="820" y="200" width="715" height="305" rx="18" fill="white" stroke="#e0e3e4"/>
+<rect x="843" y="227" width="5" height="38" rx="2" fill="#8b5290" stroke="#8b5290"/>
+<text x="866" y="257" font-family="DejaVu Sans,sans-serif" font-size="29" fill="#8b5290" font-weight="700" text-anchor="start">Lisandra</text>
+<text x="848" y="306" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">AlexNetBinary com BatchNorm</text>
+<text x="848" y="345" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">96 → 256 → 384 → 384 → 256</text>
+<text x="848" y="384" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Cabeça 4096 → 4096 → 1</text>
+<text x="848" y="423" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Dois dropouts de 50%</text>
+<rect x="65" y="525" width="715" height="305" rx="18" fill="white" stroke="#e0e3e4"/>
+<rect x="88" y="552" width="5" height="38" rx="2" fill="#b96238" stroke="#b96238"/>
+<text x="111" y="582" font-family="DejaVu Sans,sans-serif" font-size="29" fill="#b96238" font-weight="700" text-anchor="start">Dulce</text>
+<text x="93" y="631" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">CNN224 v2</text>
+<text x="93" y="670" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">32 → 64 → 64 → 128 → 128</text>
+<text x="93" y="709" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Cabeça 1024 → 32 → 2</text>
+<text x="93" y="748" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Cinco blocos com dropout de 20%</text>
+<rect x="820" y="525" width="715" height="305" rx="18" fill="white" stroke="#e0e3e4"/>
+<rect x="843" y="552" width="5" height="38" rx="2" fill="#4367a6" stroke="#4367a6"/>
+<text x="866" y="582" font-family="DejaVu Sans,sans-serif" font-size="29" fill="#4367a6" font-weight="700" text-anchor="start">Bandeira</text>
+<text x="848" y="631" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">CNN V4</text>
+<text x="848" y="670" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">32 → 64 → 128 → 256 → 512</text>
+<text x="848" y="709" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Média global → 1 saída</text>
+<text x="848" y="748" font-family="DejaVu Sans,sans-serif" font-size="23" fill="#202c39" font-weight="400" text-anchor="start">Cinco blocos convolucionais</text>
+</svg>
