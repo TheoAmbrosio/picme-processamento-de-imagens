@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="708" viewBox="0 0 820 708">
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#334155"/></marker></defs>
+<rect width="100%" height="100%" fill="white"/>
+<text x="410" y="28" text-anchor="middle" font-family="sans-serif" font-size="20">Bandeira — CNN V4</text>
+<rect x="45" y="48" width="730" height="50" rx="8" fill="#e5effb" stroke="#334155"/>
+<text x="410" y="78" text-anchor="middle" font-family="sans-serif" font-size="15">RGB384×384</text>
+<path d="M410,98 V123" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
+<rect x="45" y="124" width="730" height="50" rx="8" fill="#e5effb" stroke="#334155"/>
+<text x="410" y="154" text-anchor="middle" font-family="sans-serif" font-size="15">Conv3×3 → 32 canais → BatchNorm → ReLU → Pool2</text>
+<path d="M410,174 V199" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
+<rect x="45" y="200" width="730" height="50" rx="8" fill="#e5effb" stroke="#334155"/>
+<text x="410" y="230" text-anchor="middle" font-family="sans-serif" font-size="15">Conv3×3 → 64 canais → BatchNorm → ReLU → Pool2</text>
+<path d="M410,250 V275" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
+<rect x="45" y="276" width="730" height="50" rx="8" fill="#e5effb" stroke="#334155"/>
+<text x="410" y="306" text-anchor="middle" font-family="sans-serif" font-size="15">Conv3×3 → 128 canais → BatchNorm → ReLU → Pool2</text>
+<path d="M410,326 V351" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
+<rect x="45" y="352" width="730" height="50" rx="8" fill="#e5effb" stroke="#334155"/>
+<text x="410" y="382" text-anchor="middle" font-family="sans-serif" font-size="15">Conv3×3 → 256 canais → BatchNorm → ReLU → Pool2</text>
+<path d="M410,402 V427" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
+<rect x="45" y="428" width="730" height="50" rx="8" fill="#e5effb" stroke="#334155"/>
+<text x="410" y="458" text-anchor="middle" font-family="sans-serif" font-size="15">Conv3×3 → 512 canais → BatchNorm → ReLU → Pool2</text>
+<path d="M410,478 V503" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
+<rect x="45" y="504" width="730" height="50" rx="8" fill="#e5effb" stroke="#334155"/>
+<text x="410" y="534" text-anchor="middle" font-family="sans-serif" font-size="15">AdaptiveAvgPool1×1 → Flatten512</text>
+<path d="M410,554 V579" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
+<rect x="45" y="580" width="730" height="50" rx="8" fill="#e5effb" stroke="#334155"/>
+<text x="410" y="610" text-anchor="middle" font-family="sans-serif" font-size="15">Dropout50% → Linear512→1 (logit)</text>
+<text x="20" y="696" font-family="sans-serif" font-size="11">Fonte: src/model.py, classe CNN; versões antigas preservadas no clone.</text></svg>

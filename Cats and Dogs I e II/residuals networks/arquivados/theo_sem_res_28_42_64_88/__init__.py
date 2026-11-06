@@ -1,0 +1,1 @@
+"""Variante sequencial sem resíduos."""

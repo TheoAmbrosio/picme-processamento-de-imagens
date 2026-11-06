@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 import os
 from pathlib import Path
 
-RAIZ = Path(__file__).resolve().parents[2]  # Cats and Dogs I e II: dados compartilhados.
+RAIZ = Path(__file__).resolve().parents[3]  # Cats and Dogs I e II: dados compartilhados.
 
 
 @dataclass
@@ -33,7 +33,7 @@ class ConfigTreino:
     argumentos_otimizador: dict = field(default_factory=dict)
 
     manifesto: str = str(RAIZ / "dataset_ampliado/224x224/manifesto_variantes.csv")
-    checkpoint: str = str(RAIZ / "resultados_residuals_networks/res_theo_especial/ultima_epoca.pt")
+    checkpoint: str = str(RAIZ / "resultados_residuals_networks/arquivados/res_theo_especial/ultima_epoca.pt")
     semente: int = 42  # Mantém a semente já utilizada no projeto.
     congelar_backbone: bool = False
     epocas_backbone_congelado: int | None = None  # Quando definido, tem prioridade sobre passos.

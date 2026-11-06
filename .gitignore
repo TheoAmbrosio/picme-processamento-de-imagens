@@ -13,3 +13,27 @@ __pycache__/
 **/.venv/
 **/resultados_busca*/**/*.pt
 **/resultados_busca*/**/*.tmp
+
+# Artefatos locais: preservar fora das publicações, inclusive cópias consolidadas.
+*.pt
+*.pth
+*.ckpt
+*.log
+*.pid
+**/resultados_busca*/
+**/modelo principal/graficos/
+**/modelo principal/treinamento_aug8/
+**/modelo principal/historico_das_etapas/
+**/evolucao do treinamento/**
+!**/evolucao do treinamento/
+!**/evolucao do treinamento/README.md
+**/resultados_recebidos/
+**/amostras*.png
+**/amostra_rotulos.png
+**/comparacao_blur*.png
+**/frequencia_resultados.png
+**/modelo principal/historico.json
+**/historico_parcial_celula*.json
+**/saidas_notebook.txt
+Competicao-Cats and dogs/Lisandra/arquivados/
+**/arquivados/documentos/etapa3_retirada_do_principal/

@@ -1,0 +1,42 @@
+[
+  {
+    "celula": 4,
+    "codigo": "import kagglehub\n\ncaminho = kagglehub.dataset_download(\"bhavikjikadara/dog-and-cat-classification-dataset\")\nprint(caminho)",
+    "saidas": [
+      "/home/al.dulce.costa/.cache/kagglehub/datasets/bhavikjikadara/dog-and-cat-classification-dataset/versions/1\n"
+    ]
+  },
+  {
+    "celula": 12,
+    "codigo": "# A rede precisa de pelo menos 94 px em cada lado.\nimagens = [d for d in imagens if min(d[\"largura\"], d[\"altura\"]) >= 94]\nprint(\"Imagens com pelo menos 94 px em cada lado:\", len(imagens))\n\nmenor = min(imagens, key=lambda d: d[\"largura\"] * d[\"altura\"])\nLARGURA, ALTURA = menor[\"largura\"], menor[\"altura\"]\nmesma_area = {(d[\"largura\"], d[\"altura\"]) for d in imagens\n              if d[\"largura\"] * d[\"altura\"] == LARGURA * ALTURA}\n\nprint(\"Tamanho-alvo:\", LARGURA, \"x\", ALTURA, \"(largura x altura)\")\nprint(\"Formatos com essa mesma área:\", mesma_area)\nassert len(mesma_area) == 1, \"DECIDIR: há mais de um formato com a menor área.\"",
+    "saidas": [
+      "Imagens com pelo menos 94 px em cada lado: 24822\nTamanho-alvo: 100 x 94 (largura x altura)\nFormatos com essa mesma área: {(100, 94)}\n"
+    ]
+  },
+  {
+    "celula": 19,
+    "codigo": "def adicionar_ruido(img):\n    ruidosa = img + rng.normal(0, 2, size=img.shape)\n    return np.clip(ruidosa, 0, 255).astype(np.float32)",
+    "saidas": []
+  },
+  {
+    "celula": 21,
+    "codigo": "n = len(imagens)\nordem = rng.permutation(n)\nn_rotacao = round(0.10 * n)\nn_ruido = round(0.10 * n)\nvao_girar = set(ordem[:n_rotacao].tolist())\nvao_ruido = set(ordem[n_rotacao:n_rotacao + n_ruido].tolist())\nprint(\"Vão ganhar uma versão girada:\", len(vao_girar), \"| com ruído:\", len(vao_ruido))",
+    "saidas": [
+      "Vão ganhar uma versão girada: 2482 | com ruído: 2482\n"
+    ]
+  },
+  {
+    "celula": 22,
+    "codigo": "classes = sorted({d[\"classe\"] for d in imagens})\nX, y, grupo = [], [], []\n\nfor i, d in enumerate(imagens):\n    with Image.open(d[\"arquivo\"]) as im:\n        img = np.asarray(im.convert(\"RGB\"), dtype=np.float32)   # valores de 0 a 255\n\n    # A rotação é feita antes de redimensionar; o ruído, depois.\n    base = redimensionar(img)\n    versoes = [base]\n    if i in vao_girar:\n        versoes.append(redimensionar(girar_horario(img)))\n    elif i in vao_ruido:\n        versoes.append(adicionar_ruido(base))\n\n    for v in versoes:\n        X.append(v)\n        y.append(classes.index(d[\"classe\"]))\n        grupo.append(d[\"origem\"])   # a versão nova fica com a mesma origem da original\n\nX = torch.from_numpy(np.stack(X)).permute(0, 3, 1, 2).contiguous() / 255   # (n, 3, altura, largura), de 0 a 1\ny = torch.tensor(y)\ngrupo = np.array(grupo)\ndados = TensorDataset(X, y)\n\nprint(\"Classes:\", classes)\nprint(\"Total de imagens (originais + novas):\", len(y), \"| formato:\", tuple(X.shape))",
+    "saidas": [
+      "Classes: ['Cat', 'Dog']\nTotal de imagens (originais + novas): 29786 | formato: (29786, 3, 94, 100)\n"
+    ]
+  },
+  {
+    "celula": 24,
+    "codigo": "def separar_por_grupo(indices, fracao):\n    # Sorteia grupos inteiros até juntar a fração pedida das imagens.\n    contagem = Counter(grupo[indices].tolist())\n    alvo = round(fracao * len(indices))\n    escolhidos, total = [], 0\n    for g in rng.permutation(sorted(contagem)):\n        if total >= alvo:\n            break\n        escolhidos.append(g)\n        total += contagem[g]\n    separado = np.isin(grupo[indices], escolhidos)\n    return indices[~separado], indices[separado]\n\ntreino, teste = separar_por_grupo(np.arange(len(y)), 0.15)\ntreino, validacao = separar_por_grupo(treino, 0.15)\n\nprint(\"Treino:\", len(treino), \"| validação:\", len(validacao), \"| teste:\", len(teste))",
+    "saidas": [
+      "Treino: 21520 | validação: 3798 | teste: 4468\n"
+    ]
+  }
+]

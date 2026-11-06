@@ -1,0 +1,27 @@
+[
+  {
+    "participante": "Dulce",
+    "url": "https://github.com/dulce-costa/Picme2.2Cats_Dogs.git",
+    "branch": "main",
+    "commit": "1128441b349075f38e73a8c11f64fcd1d91bf449"
+  },
+  {
+    "participante": "Bandeira",
+    "url": "https://github.com/Mateus-Band/Dogs-vs-Cats-IMPATech.git",
+    "branch": "main",
+    "commit": "c02a77502bdfe5de55660bf0985d0e7789cd0899"
+  },
+  {
+    "participante": "Lisandra",
+    "url": "https://github.com/lisandra21/cats_vs_dogs_Lisandra.git",
+    "branch": "main",
+    "commit": "830c79ef5f8aa4b5a9880deb2b21bc583d0b631d"
+  },
+  {
+    "participante": "Theo",
+    "origem": "../Cats and Dogs I e II/modelo principal",
+    "modelo": "ResTheo34 Aug8",
+    "melhor_epoca": 29,
+    "validacao": 0.9832
+  }
+]

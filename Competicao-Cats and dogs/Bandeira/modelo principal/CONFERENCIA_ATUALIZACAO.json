@@ -1,0 +1,65 @@
+{
+  "versoes": [
+    {
+      "versao": 1,
+      "epocas": 15,
+      "melhor_epoca_loss": 15,
+      "acuracia_csv": 0.9154,
+      "acuracia_historico": 0.9154,
+      "bce_csv": 0.21874880362080826,
+      "bce_historico": 0.2187488464925438,
+      "f1": 0.9116356799665761,
+      "pesos_finitos": true,
+      "rotulos": {
+        "0": 2500,
+        "1": 2500
+      }
+    },
+    {
+      "versao": 2,
+      "epocas": 23,
+      "melhor_epoca_loss": 18,
+      "acuracia_csv": 0.9326,
+      "acuracia_historico": 0.9326,
+      "bce_csv": 0.16631974134913877,
+      "bce_historico": 0.1663199436634779,
+      "f1": 0.9325055077107951,
+      "pesos_finitos": true,
+      "rotulos": {
+        "0": 2500,
+        "1": 2500
+      }
+    },
+    {
+      "versao": 3,
+      "epocas": 30,
+      "melhor_epoca_loss": 28,
+      "acuracia_csv": 0.9242,
+      "acuracia_historico": 0.9242,
+      "bce_csv": 0.19383965053678587,
+      "bce_historico": 0.19383950434923172,
+      "f1": 0.9242151569686062,
+      "pesos_finitos": true,
+      "rotulos": {
+        "0": 2500,
+        "1": 2500
+      }
+    },
+    {
+      "versao": 4,
+      "epocas": 30,
+      "melhor_epoca_loss": 30,
+      "acuracia_csv": 0.9464,
+      "acuracia_historico": 0.9464,
+      "bce_csv": 0.13580615754437653,
+      "bce_historico": 0.13580621190816164,
+      "f1": 0.9460764587525151,
+      "pesos_finitos": true,
+      "rotulos": {
+        "0": 2500,
+        "1": 2500
+      }
+    }
+  ],
+  "teste_artificial_v4": "carregamento estrito e forward1x3x384x384 aprovados"
+}

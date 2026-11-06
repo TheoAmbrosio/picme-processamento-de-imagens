@@ -19,3 +19,10 @@ O download depende da disponibilidade e da estrutura do dataset no Kaggle. As im
 ## Execução por script
 
 No diretório `Cats and Dogs I e II`, instale as dependências com `python -m pip install -r requirements.txt`. Edite os valores no início de `treinar_modelo.py` e execute `python treinar_modelo.py`. Esse comando baixa o dataset quando necessário, prepara ou reutiliza os vetores SVD, treina e mostra o gráfico de MSE. O módulo `preparar_dados.py` contém o download, o pré-processamento e o cache; `modelo.ipynb` continua disponível para uso interativo.
+
+## Conteúdo da main incorporado localmente
+
+- [Competição Cats and Dogs — Theo, Lisandra, Dulce e Bandeira](Competicao-Cats%20and%20dogs/README.md).
+
+- [Primeiro modelo arquivado](Cats%20and%20Dogs%20I%20e%20II/arquivados/modelos_antigos/Primeiro%20modelo%20que%20deu%20errado/README.md)
+- [Apresentações](apresentacoes/understanding-deep-learning-10-3-a-10-5/README.md)

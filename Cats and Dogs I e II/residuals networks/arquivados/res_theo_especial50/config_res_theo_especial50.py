@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 import os
 from pathlib import Path
 
-RAIZ = Path(__file__).resolve().parents[2]  # Cats and Dogs I e II: dados compartilhados.
+RAIZ = Path(__file__).resolve().parents[3]  # Cats and Dogs I e II: dados compartilhados.
 
 
 @dataclass

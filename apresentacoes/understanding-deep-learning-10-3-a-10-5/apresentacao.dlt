@@ -1,0 +1,145 @@
+<document lang="pt-BR" type="presentation" theme-accent="blue">
+<title>Convoluções em imagens: seções 10.3–10.5</title>
+
+<slide>
+<title>Convoluções em imagens</title>
+Uma conversa sobre kernels, imagens e onde essas ideias aparecem.
+</slide>
+
+<slide>
+<title>O caminho da apresentação</title>
+Vamos ver como um kernel lê pedacinhos da imagem, como a gente diminui e aumenta os mapas e onde essas ideias aparecem em tarefas de visão.
+
+Durante a apresentação, repara no que muda no tamanho da imagem e no tipo de informação que a rede guarda.
+
+Não vou mostrar código hoje porque a gente já vai tomar um chá disso ao longo da semana. Aqui, vamos focar em entender as ideias olhando para as imagens.
+</slide>
+
+<slide>
+<title>10.3 · O que um kernel calcula?</title>
+Pensa no kernel como uma janelinha com pesos. Em cada posição, ele multiplica os valores daquela região pelos pesos e soma tudo. Para uma imagem com vários canais, a conta também combina os canais:
+
+$$Y_{i,j,o}=b_o+\sum_{u=0}^{k-1}\sum_{v=0}^{k-1}\sum_{c=1}^{C_i}K_{u,v,c,o}X_{i+u,j+v,c}.$$
+
+O kernel desliza pela imagem e reutiliza os mesmos pesos em cada lugar. E esses pesos não precisam ser escolhidos na mão: durante o treino, a rede aprende quais valores usar para ajudar na tarefa. Depois, uma função de ativação ajuda a juntar padrões mais simples em outros mais complexos.
+</slide>
+
+<slide>
+<title>10.3 · Uma convolução sobre RGB</title>
+<figure src="assets/figura_10_10.svg" style="width: 900px"></figure>
+Aqui o kernel olha uma janelinha $3\times3$ nos três canais de cor e calcula um valor. Um kernel gera um canal de saída; vários kernels geram vários canais.
+</slide>
+
+<slide>
+<title>Kernel em ação · pixel art</title>
+<video src="Scripts/KernelEmAcao_1080p30.mp4" controls="true" style="width: 640px"></video>
+
+Na animação, a janelinha $3\times3$ passeia pelo Naruto. Dois kernels aparecem trabalhando, e no final dá para comparar o que os cinco filtros destacam. Os números na janela são os pesos que multiplicam os pixels. Esses pesos são justamente o tipo de coisa que a rede pode aprender no treino.
+</slide>
+
+<slide>
+<title>Reduzir canais não é reduzir resolução</title>
+Uma convolução pode misturar os canais RGB e produzir só um canal de saída. Isso não quer dizer que virou uma foto em preto e branco: é um mapa de características, com valores que respondem ao filtro. Com passo 1, a altura e a largura podem continuar iguais; aí só muda o número de canais.
+
+Se a gente quiser diminuir também a altura e a largura, pode usar passo 2 ou pooling. Uma representação $H\times W\times C$ fica mais ou menos $(H/2)\times(W/2)\times C$: sobra um quarto das posições. Essa redução perde detalhes e não dá para desfazer perfeitamente depois.
+</slide>
+
+<slide>
+<title>10.4.1 · Três formas de downsampling</title>
+<figure src="assets/figura_10_11.svg" style="width: 950px"></figure>
+Tem alguns jeitos de fazer downsampling. Com passo 2, o kernel calcula só em posições alternadas. No max pooling, fica o maior valor de cada bloco; no average pooling, fica a média. Na figura, o mapa vai de $4\times4$ para $2\times2$.
+</slide>
+
+<slide>
+<title>Qual redução escolher?</title>
+Com passo 2, a saída tem menos posições: de certa forma, a rede é forçada a resumir a informação. No caso da convolução, os pesos do kernel são aprendidos no treino e definem como combinar cada região. Isso pode ser uma compressão esperta, mas não garante que tudo que importa seja preservado. Max pooling e average pooling usam regras fixas: guardam, respectivamente, o maior valor ou a média de cada janela.
+
+Se a entrada mede $H\times W$ e a janela é $2\times2$, sem sobreposição, a saída fica mais ou menos $(H/2)\times(W/2)$. As próximas camadas têm menos valores para processar e cada posição passa a representar uma região maior da imagem, mas alguns detalhes finos somem.
+</slide>
+
+<slide>
+<title>10.4.2 · Três formas de upsampling</title>
+<figure src="assets/figura_10_12.svg" style="width: 950px"></figure>
+Para aumentar o mapa, dá para duplicar cada valor, estimar os novos valores interpolando os vizinhos ou usar max unpooling para recolocar cada máximo onde ele estava. São operações com regras fixas; nenhuma recupera todos os detalhes que foram perdidos.
+</slide>
+
+<slide>
+<title>Convolução transposta</title>
+<figure src="assets/figura_10_13.svg" style="width: 790px"></figure>
+Também dá para aumentar a resolução com convolução transposta. Aqui a rede tem pesos que aprende durante o treino; cada valor de entrada pode contribuir para várias posições da saída. No desenho em 1D, a matriz é a transposta da matriz da convolução com passo 2. Isso não é uma operação inversa, então não traz de volta automaticamente o que foi perdido.
+</slide>
+
+<slide>
+<title>10.4.3 · Mudar o número de canais</title>
+<figure src="assets/figura_10_14.png" style="width: 850px"></figure>
+Uma convolução $1\times1$ mistura os canais em cada posição, sem mexer na altura e na largura. Os pesos dessa mistura também são aprendidos durante o treino. Se entram $C_i$ canais e queremos $C_o$ canais na saída, são $C_iC_o$ pesos, além dos vieses.
+
+No desenho, dá para acompanhar a mistura dos canais numa posição. Isso muda os canais, não a resolução da imagem.
+</slide>
+
+<slide>
+<title>10.5 · O que fazemos com esses mapas?</title>
+No livro aparecem três tarefas comuns de visão:
+
+Classificação: que coisa é essa imagem? Detecção: o que aparece e onde está? Segmentação: que classe tem cada pixel?
+
+O notebook 10.5 usa MNIST para mostrar uma rede que classifica dígitos. É um exemplo de classificação.
+</slide>
+
+<slide>
+<title>Classificação · uma classe para a imagem</title>
+<figure src="assets/figura_10_15.jpg" style="width: 900px"></figure>
+Essas imagens variam bastante: muda o tamanho do objeto, a textura, a cor e até quantas coisas aparecem. A tarefa continua sendo escolher uma classe para a imagem toda.
+</slide>
+
+<slide>
+<title>AlexNet · convoluções até a decisão</title>
+<figure src="assets/figura_10_16.png" style="width: 670px"></figure>
+Na AlexNet, convoluções vão extraindo características e o pooling vai diminuindo os mapas. No final, a rede junta o que encontrou e escolhe uma classe.
+</slide>
+
+<slide>
+<title>VGG · mais etapas de extração</title>
+<figure src="assets/figura_10_17.png" style="width: 900px"></figure>
+Na VGG, essa sequência se repete: convoluções $3\times3$, depois pooling. Os mapas ficam menores, mas ganham mais canais para guardar características.
+</slide>
+
+<slide>
+<title>Detecção · o quê e onde?</title>
+<figure src="assets/figura_10_18.jpg" style="width: 720px"></figure>
+No exemplo do YOLO, a imagem é dividida em regiões. A rede sugere classes e caixas para os objetos; depois, ficam as caixas mais confiáveis para o cachorro, a bicicleta e o carro.
+</slide>
+
+<slide>
+<title>Segmentação · voltar a uma saída espacial</title>
+<figure src="assets/figura_10_19.png" style="width: 900px"></figure>
+Aqui a rede primeiro encolhe os mapas para entender a imagem como um todo. Depois aumenta a resolução de novo para prever uma classe em cada posição.
+</slide>
+
+<slide>
+<title>Segmentação · comparar previsão e referência</title>
+<figure src="assets/figura_10_20.jpg" style="width: 800px"></figure>
+Da esquerda para a direita: a imagem, a marcação correta e o resultado da rede. Repara como os contornos podem sair um pouco diferentes.
+</slide>
+
+
+<slide>
+<title>Do filtro ao mapa de características</title>
+Nesse visualizador dá para desenhar um dígito e acompanhar o que acontece: cada filtro responde a partes diferentes do desenho, e as camadas seguintes vão combinando essas respostas.
+
+<link href="https://adamharley.com/nn_vis/cnn/2d.html">Abrir visualizador</link>
+</slide>
+
+<slide>
+<title>Exemplo: o dígito 8</title>
+<figure src="assets/harley_8.png" style="width: 900px"></figure>
+O visualizador aponta 8 como primeira hipótese.
+</slide>
+
+<slide>
+<title>Exemplo: o dígito 1</title>
+<figure src="assets/harley_1.png" style="width: 900px"></figure>
+Agora o desenho é 1, e essa é a primeira hipótese.
+</slide>
+
+</document>

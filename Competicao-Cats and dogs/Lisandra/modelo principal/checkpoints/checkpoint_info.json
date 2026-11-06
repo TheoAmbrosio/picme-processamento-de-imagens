@@ -1,0 +1,25 @@
+{
+  "arquivo": "alexnet_cats_dogs_best.pth",
+  "sha256": "e4d5d498c65aea23694156f1b6b52ba5ae5f91919dc113394e54e673c8ddf96d",
+  "tamanho_bytes": 233148669,
+  "origem": "arquivo enviado pela Lisandra via Theo",
+  "formato": "state_dict puro",
+  "arquitetura": "AlexNetBinary do notebook GitHub, commit830c79e",
+  "carregamento_estrito": "aprovado",
+  "pesos_finitos": true,
+  "teste_artificial": {
+    "entrada": [
+      1,
+      3,
+      224,
+      224
+    ],
+    "saida": [
+      1
+    ],
+    "probabilidade_finita": true
+  },
+  "epoca": null,
+  "criterio_de_selecao": null,
+  "observacao": "Nome best não comprova critério ou época; não há metadados no state_dict. Sem avaliação em imagens reais."
+}

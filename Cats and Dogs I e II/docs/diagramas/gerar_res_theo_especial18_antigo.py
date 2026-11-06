@@ -10,7 +10,9 @@ DESTINO = Path(__file__).resolve().parent
 CORES = ["#e9a55c", "#75aed9", "#85bca6"]
 
 
-def desenhar(ax, nome="res_theo_especial", canais_estagios=(32, 64, 128), rodape=None):
+def desenhar(ax, nome="res_theo_especial", canais_estagios=(32, 64, 128), rodape=None,
+             blocos=None, dropout_interno=True):
+    blocos = blocos or (2,) * len(canais_estagios)
     ax.set_xlim(0, 10)
     ax.set_ylim(21, 0)
     ax.axis("off")
@@ -36,18 +38,18 @@ def desenhar(ax, nome="res_theo_especial", canais_estagios=(32, 64, 128), rodape
                                     shrinkA=0, shrinkB=0))
 
     texto(4.9, .35, nome, 20, fontweight="bold", color="#24374b")
-    texto(4.9, .76, f"ResNet-18 estreita até layer{len(canais_estagios)} • blocos {[2] * len(canais_estagios)}",
+    texto(4.9, .76, f"{'ResNet-18 estreita' if dropout_interno else 'ResNet-34'} até layer{len(canais_estagios)} • blocos {list(blocos)}",
           10, color="#516176")
     caixa(1.1, "RGB 224 × 224", "Normalização ImageNet", "#f1f3f5")
     seta(1.71, 1.94)
     caixa(1.94, f"Conv 7×7, {canais_estagios[0]} · stride 2",
-          "BatchNorm → D → ReLU → D → MaxPool 3×3 → D", "#c9bfdf", .76)
+          "BatchNorm → D → ReLU → D → MaxPool 3×3 → D" if dropout_interno else "BatchNorm → ReLU → MaxPool 3×3", "#c9bfdf", .76)
     texto(cx, 2.87, f"{canais_estagios[0]} × 56 × 56", 8.5, color="#516176")
     y = 3.14
     seta(2.70, y)
 
     for estagio, (quantidade, canais, lado, cor) in enumerate(zip(
-            (2, 2, 2), canais_estagios, (56, 28, 14), CORES), start=1):
+            blocos, canais_estagios, (56, 28, 14), CORES), start=1):
         topo = y
         ax.add_patch(FancyBboxPatch(
             (.35, topo - .08), 8.8, quantidade * 1.57 + .40,
@@ -62,10 +64,10 @@ def desenhar(ax, nome="res_theo_especial", canais_estagios=(32, 64, 128), rodape
             texto(1.68, y + .68, f"Bloco {bloco + 1}", 7.6, color="#516176")
             seta(y, entrada)
             caixa(entrada, f"Conv 3×3, {canais} · stride {stride}",
-                  "D → BN → D → ReLU → D", cor, .46)
+                  "D → BN → D → ReLU → D" if dropout_interno else "BN → ReLU", cor, .46)
             seta(entrada + .46, entrada + .59)
             caixa(entrada + .59, f"Conv 3×3, {canais} · stride 1",
-                  "D → BN → D", cor, .46)
+                  "D → BN → D" if dropout_interno else "BN", cor, .46)
             soma = entrada + 1.21
             seta(entrada + 1.05, soma - .10)
             ax.add_patch(Circle((cx, soma), .10, facecolor="white",
@@ -80,9 +82,9 @@ def desenhar(ax, nome="res_theo_especial", canais_estagios=(32, 64, 128), rodape
             ax.annotate("", xy=(cx + .10, soma), xytext=(cx + .48, soma),
                         arrowprops=dict(arrowstyle="-|>", color=cor_residuo, lw=.9))
             texto(sx + .13, entrada + .48,
-                  "Conv 1×1\ns2 → D → BN → D" if projecao else "Identidade",
+                  ("Conv 1×1\ns2 → D → BN → D" if dropout_interno else "Conv 1×1\nstride 2 → BN") if projecao else "Identidade",
                   7, ha="left", color=cor_residuo)
-            texto(cx, soma + .21, "ReLU → D", 7.8)
+            texto(cx, soma + .21, "ReLU → D" if dropout_interno else "ReLU", 7.8)
             y += 1.57
             if bloco < quantidade - 1:
                 seta(soma + .29, y + .24)
@@ -91,12 +93,12 @@ def desenhar(ax, nome="res_theo_especial", canais_estagios=(32, 64, 128), rodape
         y += .47
         seta(soma + .29, y)
 
-    caixa(y, "Média global → Flatten", f"{canais_estagios[-1]} características · D após ambas",
+    caixa(y, "Média global → Flatten", f"{canais_estagios[-1]} características · " + ("D após ambas" if dropout_interno else "Dropout 10% após Flatten"),
           "#d8dde4")
     y += .61
     seta(y, y + .21)
     y += .21
-    caixa(y, f"fc: Linear {canais_estagios[-1]} → 1", "He normal fan_out · sem dropout", "#e8b6c4", .72)
+    caixa(y, f"fc: Linear {canais_estagios[-1]} → 1", "He normal fan_out · sem dropout" if dropout_interno else "Pesos carregados do melhor checkpoint", "#e8b6c4", .72)
     y += .72
     seta(y, y + .20)
     y += .20
@@ -107,7 +109,7 @@ def desenhar(ax, nome="res_theo_especial", canais_estagios=(32, 64, 128), rodape
     caixa(y, "Avaliação: sigmoid", "P(cachorro) · limiar 0,5", "#d9e6ed")
     y += .88
     texto(cx, y, ("layer3 e layer4 removidas" if len(canais_estagios) == 2 else "layer4 removida")
-          + " • modelo inicializado do zero", 8.4,
+          + (" • modelo inicializado do zero" if dropout_interno else " • origem ImageNet; fine-tuning da época 33"), 8.4,
           fontweight="bold")
     y += .34
     for linha in rodape or (

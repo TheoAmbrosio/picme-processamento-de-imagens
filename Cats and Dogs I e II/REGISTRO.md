@@ -626,3 +626,541 @@ Este arquivo acompanha as tentativas e os avanços do projeto. Os resultados aba
 - Verificação antes da publicação: suíte completa aprovada (`59 passed`),
   lista de arquivos staged sem datasets/resultados/checkpoints/ambientes e
   `git diff --cached --check` aprovado após formatação dos SVGs.
+
+# 2026-11-05 — variantes sequenciais sem resíduos
+
+- Pedido confirmado: uma única convolução 3×3 por estágio, sem resíduos,
+  canais 28/42/64 e uma segunda variante 28/42/64/88; conv7×7 inicial com 28.
+- Criados theo_sem_res_28_42_64 e theo_sem_res_28_42_64_88, com iniciadores
+  e resultados independentes; BN/ReLU, strides 1 no primeiro estágio e 2 nos
+  seguintes, média global e saída única. Inicialização He normal fan_out.
+- Mantida integralmente a configuração recente: AdamW 0.001, decay 0.01,
+  batch 16, 50 épocas originais + 30 ampliadas, warmup 51–75 e dropout
+  0→20→10→5%. Posições adaptadas às operações internas existentes,
+  preservando a exclusão da conv inicial e da camada final.
+- Incluídos F1, gráficos por época e melhor checkpoint. Nenhum treino iniciado.
+- Verificação: dois testes artificiais aprovados para identidade dos parâmetros,
+  convoluções, strides, dimensões, gradientes, avaliação e recarga exata de pesos;
+  iniciadores validados com bash -n e git diff --check aprovado.
+- Suíte integrada final: `61 passed`.
+
+# 2026-11-05 — repetição do ResTheo34 histórico 115733
+
+- Pedido: repetir res_theo34/complementados,dropout,com_back nas condições
+  originais, preservando pesos da melhor validação.
+- Checkpoint, JSON e log confirmam Adam 0.001, batch64, 50 épocas, dropout0,
+  16 ampliações, divisão80/20, semente42 e backbone congelado 5 épocas.
+  ImageNet V1, layer4 removida e fc com peso/bias Normal(0,1) foram restaurados
+  no pacote independente res_theo34_repeticao. Não é retomada da época21.
+- Configuração histórica comparada campo a campo; hash do manifesto coincide
+  com o checkpoint. CUDA RTX A4500 confirmada no ambiente do projeto.
+- Teste artificial aprovado para transferência, inicialização Normal e liberação
+  do backbone na época6 (`1 passed`); scripts passaram em bash -n.
+- Repetição colocada em fila no serviço de usuário systemd
+  res-theo34-repeticao.service, aguardando o treino
+  existente PID130509 terminar, sem interrompê-lo. A fila então inicia o launcher
+  com CUDA e resultados exclusivos, melhor_modelo.pt e ultima_epoca.pt.
+- Acompanhamento da fila: resultados_residuals_networks/res_theo34_repeticao/fila.log.
+- A primeira tentativa nohup não persistiu após a célula; substituída pelo serviço
+  systemd, confirmado ativo para persistir independentemente desta sessão.
+
+# 2026-11-05 — continuação ResTheo34 com dropout 7% e AdamW
+
+- Pedido autorizado: encerrar o treino corrente e continuar do ponto salvo com
+  dropout fixo 7%; depois solicitado AdamW. Mantido decay 0.01 previamente
+  definido para AdamW pelo participante, learning rate 0.001 e batch64.
+- Processo132819 encerrado com SIGTERM. Checkpoint completo disponível na
+  época36; continuação da37 até50, mantendo dados ampliados e divisão original.
+- Pesos, buffers, momentos/passos do Adam e scaler restaurados. AdamW aplica
+  decay desacoplado a partir da retomada; não reinicia o congelamento inicial.
+- Instala dropout nas posições internas já definidas, excluindo conv1 e fc.
+  Parte incompleta da época interrompida não é recuperável; os checkpoints
+  antigos não guardam RNG/estado dos loaders, portanto a ordem de batches não
+  é uma continuação bit a bit. A metodologia de leitura continua a mesma.
+- Melhor checkpoint anterior preservado na pasta nova; comparação de melhor
+  validação mantém o histórico das épocas anteriores.
+- Nova pasta: 20261105_132625_348115_bs64_ep50_cong5ep_do7_dadosamp_pre,
+  em resultados_residuals_networks/res_theo34_repeticao/.
+- Serviço res-theo34-drop7.service ativo; PID155108; CUDA RTX A4500 confirmada.
+- Verificação prévia: configuração validada, pesos carregados estritamente e
+  89 estados de parâmetros do otimizador restaurados em AdamW.
+
+# 2026-11-05 — fine-tuning discriminativo do melhor ResTheo34
+
+- Configuração definida pelo participante: partir dos pesos da época33 com
+  97.34% validação; AdamW novo, decay0.01, batch64, 30 épocas e 16 ampliações.
+- Grupos conv1/bn1/layer1/layer2 LR1e-5, layer3 LR5e-5, fc LR1e-4.
+  Layer4 continua removida. Dropout7% somente na entrada de fc (após Flatten).
+- CosineAnnealingLR T_max30/eta_min1e-7; ajuste após cada época. Salva estado
+  do scheduler, LRs usados e época acumulada34–63, além de pesos/AdamW/scaler.
+- Novo pacote res_theo34_finetuning; resultados separados, com último e melhor
+  checkpoint. Não retoma momentos do Adam nem treina novamente a época33.
+- Verificado: pesos idênticos ao checkpoint, cobertura dos parâmetros sem
+  duplicação, grupos/LRs/decay, dropout e término do cosseno em1e-7 (`1 passed`).
+- Torch2.11.0+cu128/torchvision0.26.0+cu128; CUDA RTX A4500 confirmada.
+- Iniciado pelo serviço res-theo34-finetuning.service; pasta
+  20261105_152655_704173_bs64_ep30_cong0ep_do7_dadosamp_pre.
+
+# 2026-11-05 — nova ampliação8×, dropout10% e troca de execução
+
+- Pedido: ruídos e quadrados pretos centrais; esticar horizontal/vertical2×
+  e recortar o quadrado central. Dropout10%,8× treino e30 épocas fine-tuning.
+- Implementado em res_theo34_aug8; oito versões documentadas em AMPLIACAO.md,
+  variância0.08,2% pixels brancos,8 quadrados20–40 com centros na região150×150.
+- Manifesto original preservado, divisão conferida:159984 amostras de treino,
+ 5000 validação e sem origens compartilhadas. JPEGs de validação não alterados.
+- Mantidos checkpoint época33, gruposLR, AdamW/decay0.01, batch64 e cosseno30
+  definidos pelo participante. Dropout10% somente antes de fc.
+- Participante autorizou encerrar a execução atual. Serviço res-theo34-finetuning
+  encerrado; último checkpoint completo na época16 desta fase preservado.
+- Iniciada nova fase pelo serviço res-theo34-aug8, RTX A4500, pasta
+ 20261105_163938_589179_bs64_ep30_cong0ep_do10_dadosamp_pre.
+- Teste artificial aprovado para oito variantes, dimensões, deformação horizontal,
+  aleatoriedade dos quadrados e preservação da avaliação (`1 passed`).
+
+# 2026-11-05 — amostra visual da ampliação8×
+
+- Gerada e inspecionada prancha com oito variantes de um gato e um cachorro,
+  usando o próprio DatasetManifesto do treino. Script docs/amostrar_aug8.py;
+  imagem local resultados_residuals_networks/res_theo34_aug8/amostras_aug8.png.
+- Prancha mostra ruídos, quadrados centrais, esticamentos com crop e combinações;
+  o treinamento em andamento não foi modificado.
+
+# 2026-11-05 — Aug8 promovido a principal e organização da linhagem
+
+- Pedido: arquivar demais modelos/resultados, manter os antecedentes do Aug8,
+  documentar as mudanças de cada treino e criar SVG próprio/gráfico grande.
+- Arquivados códigos e resultados de ResTheo18, Especial18, Theo Ajuste,
+  Curto, 48/88, 28/42/64 e ambas as variantes sem resíduos. Iniciadores antigos
+  foram movidos junto aos já arquivados. Nenhum dataset/checkpoint foi apagado.
+- Mantidos referência histórica ResTheo34, repetição/continuação, primeiro ramo
+  de fine-tuning e principal Aug8. Outros resultados ResTheo34 foram arquivados.
+- Criado LINHAGEM_MODELO_PRINCIPAL.md com pastas, proveniência dos pesos,
+  alterações, dados e artefatos. README aponta para o principal e os antecedentes.
+- Oito SVGs antigos foram removidos por pedido explícito; os PNGs/PDFs antigos
+  permanecem em docs/diagramas/arquivados. SVG/PNG/PDF do Aug8 foram gerados.
+- Criado gráfico grande de acurácia/BCE por etapa, sem fundir ramos distintos,
+  em resultados_residuals_networks/res_theo34_aug8/trajetoria_treinamentos.*.
+  Gerador reutilizável e atualização final após encerramento do Aug8 preparados.
+- Paths de dados dos códigos arquivados ajustados à nova profundidade; fontes
+  e metadados das execuções preservados. Processo de treino principal não alterado.
+- Verificação final: `64 passed`; SVG e gráfico completo inspecionados visualmente.
+  Serviço principal ativo na época26/30. Serviço atualizar-trajetoria-aug8 aguarda
+  o término para regenerar o gráfico final automaticamente.
+
+# 2026-11-05 — trajetória unificada em SVG
+
+- Pedido: juntar todos os treinamentos em um gráfico com linhas verticais
+  e legenda das alterações. Criado trajetoria_unificada.svg (também PNG/PDF)
+  na pasta de resultados do principal, com acurácia e BCE na mesma figura.
+- Eixo horizontal concatena épocas observadas de cada etapa. Reinícios são
+  explícitos e segmentos não são ligados; cores e números identificam etapas.
+- Gerador executado e renderização inspecionada. Atualização final automática
+  também inclui o SVG unificado. Nenhum treinamento alterado.
+
+# 2026-11-05 — diagrama horizontal em volumes do Aug8
+
+- Pedido: SVG no estilo de volumes em perspectiva da referência enviada.
+- Gerados arquitetura_res_theo34_aug8_volumes.svg, PNG e PDF em docs/diagramas/.
+  Mostra resolução/canais, grupos [3,4,6], atalhos esquemáticos, redução espacial,
+  média global, dropout10% antes de fc e saída binária.
+- Inspeção visual concluída; mudança exclusivamente documental.
+
+# 2026-11-05 — refinamento do diagrama no estilo do livro
+
+- Simplificado o SVG horizontal: fonte serifada, volumes compactos em tons
+  terracota/verde, contornos finos, dimensões e rótulos inclinados, sem grandes
+  títulos ou caixas de explicação. Mantidas as dimensões reais e os BasicBlocks.
+- Gerados arquitetura_res_theo34_aug8_livro.* e atualizada a versão volumes.*;
+  título reposicionado após inspeção para não sobrepor o rótulo da entrada.
+
+# 2026-11-05 — volumes com escala proporcional única
+
+- Pedido: comprimento representa canais, altura/profundidade representam
+  resolução; cada estágio concatena seus blocos preservando dimensões.
+- Corrigidos SVG/PNG/PDF livro e volumes: layer1=3×64=192 de comprimento
+  e56×56; layer2=4×128=512 e28×28; layer3=6×256=1536 e14×14.
+- Escala única e aspecto igual nos eixos; profundidade projetada a45 graus
+  com vetor unitário, não espessura arbitrária. Classificador/vetores também
+  mantêm a escala. Rótulos reposicionados após inspeção visual.
+
+# 2026-11-05 — detalhe residual, foto RGB e abreviação de volumes
+
+- Pedido: destacar volumes1×1, colocar foto aleatória de cachorro na entrada,
+  aproximar blocos e abreviar layer3 com três pontos, mantendo residual explícito.
+- Volumes1×1 têm espessura×18 e FC×18, exceções indicadas na legenda.
+  Layer3 mostra três blocos com três centrais omitidos, mas informa total6
+  e comprimento real1536. Foto local selecionada com semente42 e embutida
+  no SVG. Acrescentado diagrama do BasicBlock com caminho convolucional,
+  atalho identidade/projeção, nó+ e ReLU; arquitetura não foi alterada.
+- SVG/PNG/PDF atualizados e renderização inspecionada.
+
+# 2026-11-05 — correção visual dos atalhos por bloco
+
+- Reduzida ampliação dos volumes1×1 de18× para3×, identificada na legenda.
+- Removido comprimento agregado dos estágios; exibidas apenas dimensões de
+  cada bloco. Layer3 mantém abreviação com indicação do total de6 blocos.
+- Removido painel residual separado e desenhado atalho/soma em cada bloco
+  visível; I indica identidade, P a projeção no primeiro bloco de layer2/3.
+- SVG,PNG,PDF regenerados e inspecionados; nenhuma alteração no modelo/treino.
+
+# 2026-11-05 — fechamento Aug8 e experimento adicional com barras
+
+- Aug8 concluído em30 épocas; melhor validação98.32% na29, última98.22%.
+  Criado FECHAMENTO_AUG8.md com método, parâmetros, métricas, artefatos e origem.
+- Pedido: mais30 épocas com4 versões de barras por original e2 sorteios dos
+  últimos aumentos, excluindo esticadas/original. Implementado res_theo34_barras.
+- Barras1–4,largura20–50,pretas e infinitas até os limites da imagem;
+  direções horizontal/vertical/diagonal45/135; passagem na região central150×150.
+  Amostras anteriores sorteadas com reposição entre ruído,quadrados,ambos.
+- Melhor Aug8 época29 carrega pesos para nova fase, AdamW/scheduler novos.
+  Mantidos LR por grupo,cosseno30,dropout10%,batch64,divisão e validação.
+-119988 amostras virtuais previstas (6 por original),5000 validação. Testes
+  artificiais de transformações, aleatoriedade e origem aprovados (`2 passed`).
+- Serviço res-theo34-barras iniciado,PID178526,RTX A4500; pasta
+  20261105_180813_483750_bs64_ep30_cong0ep_do10_dadosamp_pre.
+
+# 2026-11-05 — amostra visual do treinamento com barras
+
+- Gerada prancha com original de referência,4 versões de barras e2 sorteios
+  anteriores para gato/cachorro, usando o Dataset real. Original exibida somente
+  como referência; não adicionada às seis variantes do treino.
+- Script docs/amostrar_barras.py; imagem em resultados_residuals_networks/
+  res_theo34_barras/amostras_barras.png. Prancha inspecionada visualmente.
+
+# 2026-11-05 — Aug12 com blur10,faixa e CrossEntropy
+
+- Pedido confirmado: blur médio10×10,faixa horizontal aleatória de0–50px,
+  cabeça com2 saídas; encerrar barras e treinar30 épocas parecidas com Aug8.
+- Encerrado res-theo34-barras.service após conferir PID178526. Resultados intactos.
+- Criado res_theo34_aug12,partindo do melhor Aug8 época29 (98.32%). Cabeça
+  convertida de1 para2 logits [0,z],preservando probabilidades na inicialização;
+  CrossEntropyLoss com classes inteiras e cabeça totalmente treinável.
+- Base12×:8 antigas + uma sorteada com faixa + blur10 da original,ruído e
+  quadrados. Rótulos Cat0/Dog1 e validação determinística preservados.
+- Mantidos AdamW/decay0.01,LRs1e-5/5e-5/1e-4,cosseno30 até1e-7,batch64,
+  dropout10% antes de fc,30 épocas. Acrescentados CE,F1 e acurácia por época.
+- Três testes aprovados para dados/labels,conversão de probabilidades e CE;
+  pesos completos carregados estritamente; CUDA RTX A4500 confirmada.
+- Iniciado serviço res-theo34-aug12; pasta
+  20261105_184834_720499_bs64_ep30_cong0ep_do10_dadosamp_pre.
+- Verificação final: suíte integrada `69 passed`; primeiro batch e progresso
+  confirmados em CUDA,época1/30,3750 batches por época (239976 amostras).
+
+# 2026-11-05 — cancelamento Aug12 e levantamento para dataset misto
+
+- Pedido: cancelar Aug12 e reunir todas as ampliações,inclusive arquivadas.
+- PID184335 conferido; serviço res-theo34-aug12 encerrado. Último checkpoint
+  completo:época4. Resultados/checkpoints preservados.
+- Criado CATALOGO_AMPLIACOES.md com as famílias existentes e distinção entre
+  transformações de treino e prévias de blur5/20 que não foram treinadas.
+- A composição quantitativa do dataset misto aguarda definição do participante;
+  nenhum novo treinamento iniciado.
+
+# 2026-11-05 — mistura intensificada, sem rotações
+
+- Pedido: aumentar quadrados e variância em25%, blur12×12, preservar barras;
+  manter uma original e uma esticada em direção aleatória, sem rotações extras.
+- Implementado dataset_misto.py:16 variantes virtuais por original de treino;
+  8 quadrados passam a10 (arredondamento para cima), variância0.08 passa a0.10;
+  blur médio12×12. Barras/faixas mantêm parâmetros anteriores. Retângulos
+  históricos continuam4; esticamento2× horizontal ou vertical sorteado por leitura.
+- Mistura inclui cinza, ruído, pixels brancos, oclusões pretas/coloridas,
+  combinações, barras, faixa e blurs. Orientação usual preservada exceto
+  esticamento; não adicionadas variantes de rotação ou espelhamento.
+- Preparador exporta manifestos virtuais e parâmetros em
+  dataset_ampliado/misto_intensificado; divisão histórica preservada antes
+  das ampliações e validação histórica sem perturbações adicionais.
+- Verificado:2 testes artificiais aprovados, incluindo todas as16 saídas,
+  parâmetros efetivos e avaliação determinística. Nenhum treino iniciado;
+  modelos existentes não foram reconfigurados para esta mistura.
+
+# 2026-11-05 — treino da mistura intensificada
+
+- Pedido: treinar a mistura por30 épocas, batch aumentado50%:64→96.
+- Criado res_theo34_misto separado, partindo do melhor Aug8 época29.
+  Mantidos BCEWithLogitsLoss, layer4 removida, dropout fixo10% antes de fc,
+  AdamW decay0.01, grupos LR1e-5/5e-5/1e-4 e cosseno30 até1e-7;
+  toda a rede liberada. Validação histórica preservada, sem teste final.
+- Verificado:3 testes aprovados; torch2.11.0+cu128, torchvision0.26.0+cu128,
+  CUDA disponível em NVIDIA RTX A4500,19.1GB livres na conferência inicial.
+- Iniciado serviço do usuário res-theo34-misto; PID atual em treinamento.pid; execução
+  20261105_191439_421574_bs96_ep30_cong0ep_do10_dadosamp_pre.
+  Fontes, parâmetros, histórico, log e checkpoints separados dos anteriores.
+- Primeiro batch confirmado em CUDA. Corrigido contador acumulado herdado
+  para29+época; serviço reiniciado antes de completar a primeira época,
+  com fontes da execução sincronizados e parâmetros preservados.
+
+# 2026-11-05 — atualização local a partir da main e pytest
+
+- Buscado origin/main explicitamente (clone antes buscava só cats-and-dogs),
+  commit8c4838ac023927bb3544da4fbf0462a32c4bf4e5.
+- Incorporados arquivos novos do primeiro modelo e apresentações; históricos
+  preservados por concatenação e links acrescentados ao README raiz.
+  Integração de conteúdo local, sem commit de merge, troca de branch ou push.
+- Nenhuma classe unittest.TestCase encontrada. Único uso de unittest.mock no
+  teste do dataset misto substituído por fixture pytest monkeypatch.
+- Executado python -m pytest -q --import-mode=importlib:196 passed in19.89s.
+  Nenhuma falha. Import mode evita colisão entre cópias de nomes de testes.
+- Serviço res-theo34-misto permaneceu ativo; nenhum treino interrompido.
+
+# 2026-11-05 — solicitação de100 épocas sem interrupção
+
+- CONFIG do res_theo34_misto alterada para100 épocas; validar() aprovado,
+  batch96 e demais parâmetros preservados (incluindo scheduler T_max30).
+- Processo atual conferido ativo na época22/30. Não interrompido.
+  O range do loop já foi criado em memória com30 épocas e não oferece
+  atualização dinâmica. Portanto esta edição NÃO estende a execução ativa.
+  Não alterados os parâmetros históricos nem os fontes salvos dessa execução.
+
+# 2026-11-05 — continuação automática até100 e congelamento final
+
+- Solicitado: últimas30 épocas congelar entrada/layer1, últimas20 também
+  layer2, últimas10 também layer3. Implementado71–80,81–90,91–100;
+  somente fc treinável no último intervalo. BatchNorm dos módulos congelados
+  fica em eval para preservar também suas estatísticas.
+- continuar_misto_100.py aguarda res-theo34-misto concluir30 épocas;
+  exige checkpoint da época30 e CUDA, retoma na31 até100 em nova pasta,
+  preservando pesos, momentos, scaler, histórico e estado do scheduler.
+  Melhor checkpoint anterior copiado para preservar seleção histórica.
+- Corrigida retomada herdada que substituía LRs por valor único e ignorava
+  scheduler salvo. Mantido cosseno T_max30 conforme configuração existente;
+  após o mínimo da30 sua fórmula volta a aumentar as taxas, sem reinício.
+- Verificado:3 testes aprovados (agenda de congelamento e dataset misto).
+- Programado serviço res-theo34-misto-continuacao; treino atual não interrompido.
+
+# 2026-11-06 — nova etapa exclusivamente Aug8
+
+- Pedido: deixar o misto de lado e continuar fine-tuning do Aug8 por30 épocas.
+- Criado res_theo34_aug8_continuacao, pesos do melhor Aug8 época29 (98.32%).
+  Mantidos batch64, BCEWithLogitsLoss,8 ampliações, divisão e validação
+  históricas, dropout10% flatten, AdamW decay0.01, LRs1e-5/5e-5/1e-4,
+  novo cosseno T_max30/eta_min1e-7 e toda rede treinável, layer4 removida.
+  Nova fase inicializa otimizador/scheduler como Aug8; nenhum congelamento
+  progressivo do experimento misto importado. Resultados anteriores preservados.
+- Teste artificial Aug8 aprovado; CONFIG.validar() aprovado. Confirmados CUDA,
+  torch2.11.0+cu128, torchvision0.26.0+cu128, RTX A4500 com19.0GB livres.
+- Iniciado serviço res-theo34-aug8-continuacao, pasta
+  20261106_095455_826476_bs64_ep30_cong0ep_do10_dadosamp_pre.
+  Mantém melhor e último checkpoint, log, histórico e gráficos por época;
+  teste final não solicitado nem executado.
+
+# 2026-11-06 — encerramento e arquivamento após Aug8
+
+- Pedido: cancelar a nova continuação e manter toda a base até Aug8;
+  arquivar o restante. PID222308 conferido, serviço da continuação encerrado.
+- Código e resultados de barras, Aug12, misto e Aug8_continuacao movidos
+  para arquivados/ nas respectivas árvores; checkpoints e dados preservados.
+  Iniciadores movidos para arquivados/iniciadores; ferramentas posteriores
+  para arquivados/ferramentas_pos_aug8. Fontes históricos e caminhos nos
+  metadados dos resultados preservados; configurações de código arquivado
+  ajustadas apenas no nível do diretório raiz.
+- Mantidos res_theo34, repeticao, primeiro finetuning, Aug8, documentação
+  da linhagem, gráficos, datasets e checkpoints usados até Aug8.
+- Nenhum treinamento novo programado; continuação cancelada não será retomada.
+
+# 2026-11-06 — limpeza visual da raiz por arquivamento
+
+- Pedido: arquivar itens confusos/inúteis na raiz. Movidos primeiro modelo
+  e SVD para arquivados/modelos_antigos; catálogo posterior para documentos;
+  iniciadores antigos, esperas e atualização automática de trajetória para
+  scripts_historicos. Diretório de execução dos scripts ajustado à raiz.
+- Mantidos iniciador Aug8, regras, README, registro, fechamento/linhagem,
+  módulos compartilhados, preparação dos dados, testes, datasets e todos os
+  resultados/antecedentes usados até Aug8. Nada foi apagado.
+- Índice arquivados/README.md e guia principal atualizados.
+
+# 2026-11-06 — pasta consolidada modelo principal
+
+- Pedido: reunir informações, SVG, registro, método e plot geral do Aug8.
+- Criada modelo principal/ com README, registro consolidado específico,
+  arquitetura SVG/PNG/PDF (residual e estilo livro), trajetória geral
+  SVG/PNG/PDF, amostras, métodos, linhagem e fechamento.
+- Copiados parâmetros, histórico, identificação, log e fontes da execução
+  Aug8; também os metadados/históricos/gráficos das etapas antecedentes.
+  Checkpoints e datasets continuam nos caminhos originais, ligados no índice.
+- Verificados links do índice, XML dos SVGs,30 épocas e melhor98.32% na29.
+  Nenhum novo treinamento ou teste final executado.
+
+# 2026-11-06 — retirada da antiga parte3 da apresentação principal
+
+- A pedido, retirada a continuação37–50 da repetição da linhagem apresentada,
+  registro consolidado e plots gerais. Partes4/5 renumeradas para3/4.
+- Gráficos SVG/PNG/PDF e resumo regenerados com4 etapas e sincronizados
+  na pasta modelo principal. Cópia documental da etapa retirada arquivada;
+  resultados/checkpoints originais e registro cronológico preservados.
+
+# 2026-11-06 — organização geral da competição
+
+- Criada pasta irmã Competicao-Cats and dogs/ no repositório, com Theo,
+  Lisandra, Dulce e Bandeira, separando fontes originais da consolidação.
+- Theo: cópia documental do principal Aug8; projeto original intacto.
+  Dulce/Bandeira: clones e pull --ff-only nas branches main, já atualizadas;
+  commits registrados em FONTES.json. Lisandra: notebook original copiado
+  de Downloads e conferido por SHA256, sem execução.
+- Gerados métodos, parâmetros, registros e SVGs a partir das fontes;
+  gráficos da Dulce derivados do JSON original; Bandeira, das figuras salvas;
+  Lisandra, somente resumos parciais, com pendência da regra de rótulo.
+- Links de todos os índices conferidos e SVGs válidos. Nenhum treinamento,
+  teste final, commit ou push; nada alterado nos códigos dos participantes.
+
+# 2026-11-06 — preparação da atualização GitHub
+
+- Pedido explícito de publicar o estado atual na branch cats-and-dogs.
+- Incluídos código, organização/arquivamento, registros, diagramas e pasta
+  da competição; excluídos datasets, ambientes, checkpoints e artefatos de
+  resultados, inclusive cópias nas pastas consolidadas. Clones dos amigos
+  continuam independentes, sem repositórios embutidos ou pesos republicados.
+- Verificação:197 testes pytest aprovados em19.22s. Sem treinamento ou teste
+  final. Publicação sem force; artefatos locais não foram apagados.
+
+# Histórico recebido da main (8c4838a)
+
+# Registro de trabalho — Cats and Dogs I e II
+
+Este arquivo acompanha as tentativas e os avanços do projeto. Os resultados abaixo descrevem o que foi implementado ou verificado; não equivalem a uma avaliação final do classificador.
+
+## 28/10/2026 — Reconstrução do projeto
+
+- **Objetivo:** recuperar o trabalho feito na conversa anterior e deixá-lo executável em notebooks.
+- **Motivo expresso:** a conversa compartilhada não fornecia o código diretamente; o texto colado pelo usuário serviria para reconstruí-lo.
+- **Mudanças:** foram criados `modelo.ipynb`, `testes_k_svd.ipynb` e instruções da competição.
+- **Resultado observado:** o histórico do Git registra a adição dos notebooks e das instruções no commit `511d12b`. O desempenho do modelo não foi medido nesse marco.
+
+## 29/10/2026 — Padronização de imagens e representação SVD
+
+- **Objetivo:** tornar as imagens comparáveis para a SVD e escolher entre escala de cinza e RGB.
+- **Motivo expresso:** o usuário queria preservar a proporção ao recortar o centro, redimensionar para 300 × 300 e, no modo RGB, fatorar separadamente os três canais. Ele também queria ajustar `k` no início do código.
+- **Mudanças:** os notebooks passaram a recortar e redimensionar as imagens antes da SVD; o modo RGB produz fatores para cada canal. A rede usa as dimensões derivadas de `k`, camadas ocultas com largura reduzida a `floor(2/3)` da anterior, saída sigmoide e MSE.
+- **Resultado observado:** as mudanças foram publicadas no commit `2b44996`. Esse registro não contém métricas de classificação.
+
+## 29/10/2026 — Cache, amostragem e tempo de execução
+
+- **Objetivo:** evitar refazer a SVD e tornar os experimentos controláveis.
+- **Motivo expresso:** o pré-cálculo era demorado, ocorreu um erro `ArpackError`, e o usuário queria selecionar `N` imagens com metade de cada classe e acompanhar o tempo restante do treino.
+- **Mudanças:** foi acrescentada uma alternativa de SVD densa quando o ARPACK falha; os vetores foram separados por `k` e modo de cor em `datasets_processados/`; o modelo recebeu `usar_todos_dados`, `N` e estimativa de tempo restante por época.
+- **Resultado observado:** 10.667 vetores já calculados para `k=20` em cinza foram preservados no novo local. O cache e as imagens ficam fora do Git. As alterações foram publicadas no commit `42c6422`; o treinamento completo não foi executado pelo assistente.
+
+## 29/10/2026 — Execução em outro computador
+
+- **Objetivo:** permitir que o outro PC obtenha os arquivos e prepare as imagens localmente.
+- **Motivo expresso:** o usuário considerou melhor baixar as imagens no próprio PC de destino e gerar ali os fatores SVD, sem colocar as imagens no GitHub. Depois pediu um único script para configurar, treinar e plotar.
+- **Mudanças:** o notebook ganhou uma célula de download pelo Kaggle; depois foram criados `preparar_dados.py`, `treinar_modelo.py`, `requirements.txt` e um README com instruções de execução.
+- **Resultado observado:** os scripts e o guia foram publicados no commit `4e7a2ee`. A estrutura e o diff foram verificados, mas o download e o treino não foram executados no outro PC pelo assistente.
+
+## 29/10/2026 — Configuração e primeira execução neste Linux
+
+- **Objetivo e motivo expresso:** o usuário pediu clonar `theo-codex`, aplicar suas instruções e skills e executar `treinar_modelo.py` da branch `cats-and-dogs` neste computador.
+- **Passos:** o clone inicial encontrou bloqueio de rede e ausência de credenciais. Como `gh` não estava instalado e `sudo` não estava disponível, foi usado GitHub CLI portátil oficial; o usuário autorizou o login no navegador. Foram clonados os dois repositórios. O instalador original `Apply.ps1` foi executado com PowerShell portátil oficial, após diagnóstico e prévia sem conflitos.
+- **Resultado da configuração:** instruções globais, quatro skills pessoais e conhecimento geral foram aplicados. O diagnóstico confirmou os arquivos instalados. As skills ECC não estavam disponíveis nesta sessão.
+- **Dependências:** criado ambiente `.venv` com Python 3.13; instalado `requirements.txt`; `pip check` passou. PyTorch instalado: `2.15.0+cu132`.
+- **Execução autorizada inicialmente:** baixado o dataset do Kaggle, sem login adicional. Foram encontradas 24.998 imagens válidas, divididas em 22.498 de treino e 2.500 de avaliação. Duas imagens ilegíveis foram ignoradas pelo código. Preparados os vetores SVD para `k=20`, escala de cinza, usando todas as imagens, semente de amostragem 42, fração de treino 0,90, Adam com taxa 0,1, batch 50 e 1.000 épocas configuradas.
+- **Correção do diagnóstico da GPU:** o teste dentro do sandbox não enxergava os dispositivos NVIDIA e levou inicialmente à conclusão incorreta de indisponibilidade da GPU. Fora do sandbox, CUDA foi confirmado na NVIDIA RTX A4500; o próprio treinamento imprimiu `Treinando em cuda | entrada=12000`. A SVD foi calculada em CPU.
+- **Resultado observado:** o log `treinamento.log` registra seis épocas completas; na sexta, MSE treino 0,499556 e avaliação 0,504000. Esses números não demonstram boa classificação e não representam treinamento concluído.
+
+## 29/10/2026 — Interrupção e normalização dos vetores
+
+- **Mudança de direção e motivo expresso:** após perguntar sobre normalização, o usuário pediu parar o treinamento, adicionar a normalização e ensinar a execução manual, sem executar novamente. Também pediu manter este registro com a skill `registro-de-trabalho`.
+- **Interrupção:** enviada interrupção ao processo em execução; a sessão terminou com código 130. Nenhum novo treinamento foi iniciado.
+- **Mudanças:** criado `normalizacao.py`, com cálculo incremental em lotes de média e desvio padrão populacional por entrada, acumulando em float64. `treinar_modelo.py` ajusta as estatísticas somente no treino e usa os mesmos valores na avaliação. O desvio tem piso `1e-6`; os rótulos e o cache SVD original são preservados. A escolha técnica foi do assistente para evitar vazamento e diferenças de escala, não uma hipótese atribuída ao usuário.
+- **Validação:** teste sintético confirmou estatísticas em lotes contra cálculo direto, média zero e desvio unitário em entradas não constantes, tratamento de coluna constante, manutenção dos rótulos, aplicação das estatísticas de treino na avaliação e rejeição de treino vazio. A sintaxe dos dois arquivos foi verificada sem executar o script de treinamento.
+- **Documentação:** README atualizado com comando Linux, interrupção por `Ctrl + C`, uso automático de CUDA e descrição da padronização. O modelo e as estatísticas ainda não são persistidos pelo script; essa limitação está documentada. Nenhum commit ou push foi feito.
+
+## Próximos passos
+
+- Avaliar manualmente a penalização configurável abaixo; nenhum treinamento com esse termo foi feito pelo assistente.
+
+- O usuário executará manualmente `treinar_modelo.py` seguindo o comando Linux do `README.md`; o assistente não deve iniciar outro treinamento sem nova solicitação explícita.
+- Medir o efeito da padronização em uma nova execução; ainda não há resultados do modelo com os dados normalizados.
+- Confirmar que o gráfico aparece ao fim do treino; o primeiro treinamento foi interrompido antes dessa etapa.
+- Registrar as configurações usadas e as métricas observadas antes de comparar experimentos.
+
+## 29/10/2026 — Relato de estagnação e penalização perto de 0,5
+
+- **Contexto e motivo expresso:** o usuário relatou que o MSE de treino não diminuiu em 50 épocas e pediu adicionar `alpha / |0.5 - valor|`, com `alpha` configurável, para penalizar o travamento em 0,5. O relato não veio acompanhado das previsões nem de um log dessas 50 épocas; a causa da estagnação não foi confirmada.
+- **Discussão anterior:** foram levantadas hipóteses de saturação das sigmoides e taxa de aprendizado elevada; sugeridos experimentos separados com taxa 0,001 e batch maior para comparar tempo por época. Essas hipóteses não foram tratadas como diagnóstico comprovado.
+- **Configurações encontradas antes da edição:** `k_modelo=10`, RGB, `usar_todos_dados=False`, `N=1000`, taxa 0,001, batch 256 e 1.000 épocas. Essas edições já estavam no arquivo e foram preservadas.
+- **Implementação:** interpretado `valor` como previsão individual da rede. Adicionado `alpha=0.001` configurável e `epsilon_penalizacao=1e-6`; perda de otimização `MSE + mean(alpha / (abs(previsao - 0.5) + epsilon_penalizacao))`. O epsilon é uma adaptação numérica explícita da fórmula singular solicitada. `alpha=0` desativa o termo. Validação impede alpha negativo ou não finito e epsilon não positivo ou não finito.
+- **Métricas:** MSE de treino e avaliação continuam sem penalização para permitir comparação; o terminal mostra também a penalização média e a perda total de treino. O gráfico permanece de MSE.
+- **Validação observada:** teste isolado da função, extraída por AST sem executar ou importar o programa de treinamento, confirmou fórmula e média, direção dos gradientes em ambos os lados de 0,5, finitude em 0,5 e desativação com alpha zero. Sintaxe verificada. Nenhum treinamento foi iniciado.
+- **Limitações:** o termo favorece confiança mesmo em previsões erradas; exatamente em 0,5, o gradiente de `abs` usado pelo PyTorch é zero. Perto desse valor, o gradiente pode ser grande. O valor inicial de alpha e qualquer melhora no aprendizado não foram validados em experimento. A instrução de não iniciar treinamento continua vigente.
+- **Próximo passo:** o usuário configura alpha e executa manualmente, comparando MSE e previsões com a execução sem penalização. Sem commit ou push.
+
+## 29/10/2026 — Intervalos das previsões no terminal
+
+- **Objetivo e motivo expresso:** o usuário pediu identificar os dois intervalos de largura 0,1 em que as respostas se concentram. Esclareceu que queria essa informação no log do terminal, não em um gráfico.
+- **Mudanças:** a avaliação de cada época acumula as previsões em dez intervalos fixos entre 0 e 1, reutilizando a mesma passagem que calcula o MSE. O log mostra os dois intervalos ocupados mais frequentes, com quantidade e porcentagem sobre toda a avaliação. A escolha de usar a avaliação foi explicitada pelo assistente. Empates priorizam o menor limite inferior; um único intervalo ocupado produz uma única entrada. 1,0 pertence ao último intervalo.
+- **Validação:** teste sintético isolado, sem importar nem executar o programa de treinamento, verificou limites, inclusão de 1,0, ordenação, porcentagens, empates, faixa única e preservação do MSE. Nenhum gráfico novo foi adicionado e nenhum treinamento foi iniciado.
+- **Resultado e limite:** o código produzirá o resumo nas próximas execuções iniciadas pelo usuário; ainda não foram medidas as concentrações do modelo real após essa alteração. Esses intervalos descrevem previsões e não acurácia. Uma execução já em andamento não incorpora a edição.
+- **Próximo passo:** o usuário executa manualmente e observa o campo `intervalos avaliação` por época. Sem commit ou push.
+
+## 29/10/2026 — MSE de avaliação com saídas arredondadas
+
+- **Motivo expresso:** após relatar concentração das respostas perto de zero ou do meio, o usuário esclareceu que deseja observar o MSE de validação com as previsões arredondadas. Não pediu arredondar a saída usada para retropropagação.
+- **Mudanças:** adicionado ao log por época `MSE avaliação arredondado`, calculado com classe 0 quando previsão < 0,5 e classe 1 quando previsão >= 0,5. Mantidos o MSE contínuo, os intervalos e a perda diferenciável de treinamento. A nova métrica também é guardada no histórico em memória; o gráfico existente permanece inalterado.
+- **Validação:** avaliação isolada em cinco exemplos artificiais, com lotes desiguais, confirmou dois erros e MSE arredondado de 0,4; também foram conferidos o limiar exato 0,5 e a preservação do MSE contínuo. Nenhum treinamento foi executado.
+- **Interpretação:** para os rótulos 0 e 1 deste projeto, MSE arredondado é a taxa de erro, igual a 1 menos a acurácia. Ainda não há medição dessa métrica no modelo real após a alteração.
+- **Próximo passo:** o usuário reinicia manualmente o script para incorporar a mudança e compara as duas métricas. Sem commit ou push.
+
+## 29/10/2026 — Histograma final das previsões
+
+- **Motivo expresso:** o usuário pediu também plotar a frequência dos resultados ao final.
+- **Mudanças:** adicionada `plotar_frequencias`, que avalia o modelo ao término do treino e conta as previsões contínuas em dez intervalos de largura 0,1, incluindo 1 no último. O gráfico mostra quantidades por barra e é aberto junto com o gráfico de MSE. Uma cópia é salva em `frequencia_resultados.png`, sobrescrita a cada execução concluída. Os dados usados são os de avaliação, coerentes com os intervalos do log.
+- **Validação:** função testada isoladamente com modelo identidade e cinco previsões artificiais, sem treinamento. Confirmadas contagens, limites 0/0,1/0,5/1, processamento em lotes e geração de PNG em `/tmp`. A sintaxe foi verificada.
+- **Limites e próximo passo:** ainda não foi gerado histograma de um modelo real com essa versão. O usuário precisa iniciar uma nova execução e concluí-la. Configurações existentes foram preservadas; nenhum treinamento, commit ou push foi executado pelo assistente.
+
+## 29/10/2026 — Penalização centrada na média da época anterior
+
+- **Motivo expresso:** o usuário observa concentração das respostas em uma média e quer substituir o centro fixo 0,5 da penalização pela média do resultado anterior, buscando concentração nos dois extremos.
+- **Interpretação aplicada:** resultado anterior significa a época anterior. O centro é 0,5 na primeira época e depois recebe a média de todas as previsões observadas nos lotes de treino da época anterior, ponderada pelo número de imagens, não uma média simples das médias dos lotes. São previsões coletadas ao longo da atualização dos pesos; não uma nova passagem com o modelo final da época.
+- **Mudanças:** função `penalizacao_media_anterior(previsoes, centro)` calcula `mean(alpha / (abs(previsoes - centro) + epsilon_penalizacao))`. O centro permanece fixo durante a época, sem gradiente e sem uso de avaliação. A soma usa previsões destacadas do grafo e float64, sem armazenar todos os resultados. O log mostra o centro utilizado e a média atual. As configurações editadas pelo usuário foram preservadas.
+- **Validação:** testes sintéticos isolados verificaram fórmula com centros diferentes, gradientes nos dois lados, finitude no centro, alpha zero e média ponderada em lotes de tamanhos diferentes. A sintaxe e o diff foram verificados; nenhum treinamento foi executado.
+- **Limites:** afastar da média anterior não garante acertar as classes nem ocupar os dois extremos simultaneamente; pode causar oscilação entre extremos. O gradiente do valor absoluto segue zero exatamente no centro e pode ser grande perto dele. Não há resultado experimental dessa versão.
+- **Próximo passo:** o usuário reinicia manualmente, compara métricas e histograma. Sem commit ou push.
+
+## 29/10/2026 — Equilíbrio da média com alpha2 e configuração experimental
+
+- **Pedidos e mudança de direção:** o usuário pediu somar `alpha2 * (0.5 - media_anterior)^2`, escolher parâmetros e, depois, fazer alpha2 afetar o gradiente. A versão inicialmente adicionada com média anterior foi testada e mostrou gradiente inalterado, por ser constante. Essa versão foi substituída antes de qualquer treinamento pelo assistente.
+- **Implementação final:** `penalizacao_equilibrio(previsoes)` calcula `alpha2 * (0.5 - previsoes.mean())^2`, usando a média do lote atual com grafo de autograd preservado. A primeira penalização continua centrada na média da época anterior, calculada exclusivamente no treino. O log separa MSE, repulsão e penalização de equilíbrio; a perda total inclui os dois termos.
+- **Parâmetros escolhidos pelo assistente:** taxa de aprendizado 0,001, batch 64, alpha 0,00001, alpha2 0,001 e epsilon 0,001. Mantidos k=20, cinza, N=1000, fração 0,90 e 100 épocas. São pontos de partida experimentais, não valores ideais medidos. Lote foi reduzido considerando o erro de memória relatado anteriormente; alpha foi reduzido e epsilon aumentado para moderar a singularidade.
+- **Validação observada:** teste sintético isolado confirmou gradientes de alpha2 contra a expressão analítica `2*alpha2*(media-0.5)/n`, com direção correta acima e abaixo de 0,5, perda e gradiente zero em média 0,5 e desativação com alpha2 zero. Sintaxe e diff verificados. Nenhum treinamento foi iniciado.
+- **Limitações:** média 0,5 não implica distribuição em dois extremos e também é atingida com todas as previsões em 0,5. O equilíbrio é imposto por lote e pode conflitar com lotes desbalanceados. Ainda não há métricas reais com a configuração final.
+- **Próximo passo:** execução manual pelo usuário, comparando MSE contínuo, MSE arredondado e histograma. Sem commit ou push.
+
+
+## 29/10/2026 — Aplicação do terceiro colocado da busca
+
+- **Pedido:** aplicar em `treinar_modelo.py` a configuração marcada como convergida no top 3 e fornecer comando de execução manual.
+- **Fonte:** terceiro registro de `resultados_busca_k_cor_v5/ranking.csv`; k=20, cinza, N=1000, fração de treino 0,90, semente 42, lr=0,0003, batch=256, alpha=0,001, alpha2=0,01, epsilon=0,001, oito camadas ocultas e fator 0,5. Mantido limite de 100 épocas da busca.
+- **Mudanças:** ajustados lr, batch, alpha, alpha2 e fator; demais valores já coincidiam. Preservadas as ativações ReLU internas e sigmoide final do arquivo atual.
+- **Evidência da busca:** melhor época 18, MSE de validação 0,2401744843; parada na época 23 por MSE estabilizado. O script manual não foi alterado para reproduzir essa parada automática.
+- **Validação:** sintaxe conferida e valores comparados ao ranking. Nenhum treinamento iniciado, commit ou push realizado. Configurar os mesmos hiperparâmetros não garante resultados idênticos.
+- **Próximo passo:** execução manual pelo usuário.
+
+
+## 29/10/2026 — Restauração do ponto de entrada
+
+- **Relato:** comando do treinamento retornava imediatamente ao terminal, sem saída.
+- **Diagnóstico:** arquivo local terminava em `previsoes = mod`, dentro da função do histograma, sem `main()` e sem chamada de entrada. O trecho restante era sintaticamente válido, mas apenas definia funções. A origem do truncamento não foi determinada.
+- **Correção:** restaurados histograma e salvamento PNG, preparação dos dados, divisão treino/avaliação, padronização, construção da rede e chamada de treinamento dentro de `main()`, com guarda `if __name__ == "__main__"`. Incluída mensagem imediata de início. Preservadas configurações atuais, incluindo todos os dados, k=20 e batch=128.
+- **Validação:** análise AST confirmou sintaxe, definição de main e chamada protegida no ponto de entrada; diff conferido. Nenhum treinamento executado.
+- **Limitação observada:** disco com apenas cerca de 122 MB livres no diagnóstico; não foi apagado nenhum arquivo. Isso pode impedir novas gravações de cache.
+- **Próximo passo:** usuário executa manualmente o comando. Sem commit ou push.
+
+
+## 29/10/2026 — Explicação matemática em Delta
+
+- **Pedido:** usar a skill theo-delta para uma página HTML comum com rolagem, sem slides, explicando matematicamente o projeto.
+- **Produção:** criada `docs/explicacao-matematica.dlt` como artigo em português, cobrindo SVD, dimensão dos fatores, padronização exclusiva do treino, arquitetura ReLU/sigmoide, MSE, ambas as penalizações e gradientes, interpretação das métricas, batches e limites experimentais. A configuração descrita foi lida do código atual.
+- **Ferramentas:** preparado Delta 0.4.0 e dependências em diretórios temporários; não foi feita instalação global. Compilado `docs/explicacao-matematica.html`, com matemática pré-renderizada e recursos incorporados.
+- **Validação:** lint e build do Delta; inspeção do HTML sem erros KaTeX e com oito seções de artigo; captura de tela local pelo Chrome confirmou formato com rolagem. Corrigidas numeração duplicada e uma advertência de acento em modo matemático. Nenhum treinamento foi executado.
+- **Limites:** documento explica implementação e hipóteses; não declara eficácia das penalizações nem verificação humana de prova. Sem publicação, commit ou push.
+
+
+## 29/10/2026 — Preparação para commit e envio solicitado
+
+- **Pedido:** usuário autorizou commit de todas as alterações e upload ao GitHub; confirmou que imagens e dados processados não precisam ser enviados.
+- **Escopo:** código, README, registro, fonte Delta e HTML, gráfico final, log e resultados legíveis da busca (rankings, configurações, históricos e gráficos). Dataset, fatores processados, ambiente virtual, checkpoints `.pt` e temporários da busca ficam fora do Git e são preservados localmente. Checkpoints somam aproximadamente 356 GiB.
+- **Espaço:** a partição do projeto estava cheia. Ferramentas temporárias criadas pelo assistente foram removidas de /tmp; como estavam em outra partição, foi necessário mover o cache de downloads do pip para `/tmp/theo-pip-cache-preservado`, preservando seu conteúdo e liberando aproximadamente 2,9 GiB em /home. Nenhum dataset ou modelo foi removido.
+- **Configuração atual preservada:** o usuário já havia alterado k para 5 e alpha/alpha2 para zero; esses valores serão versionados como estão. O artigo Delta registra a configuração histórica explicitada na sua elaboração.
+- **Validação:** sintaxe dos scripts Python e diff conferidos, busca por padrões comuns de credenciais sem correspondências. Sem execução de treinamento. Commit e envio serão confirmados após a operação.

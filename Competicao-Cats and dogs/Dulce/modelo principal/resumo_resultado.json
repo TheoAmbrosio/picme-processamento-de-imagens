@@ -1,0 +1,11 @@
+{
+  "epocas_registradas": 120,
+  "melhor_validacao": {
+    "epoch": 112,
+    "train_acc": 0.9783457249070632,
+    "val_acc": 0.9690363349131121,
+    "train_loss": 0.054893436144473076,
+    "val_loss": 0.09399268467797299
+  },
+  "fonte": "historico_treino_224_v2.json"
+}

@@ -1,0 +1,11 @@
+# Clones têm histórico próprio e podem conter pesos publicados pelos autores.
+/Dulce/projeto/
+/Bandeira/projeto/
+/Lisandra/projeto/
+# Cópias de resultados do Theo permanecem locais, conforme solicitado.
+/Theo/modelo principal/treinamento_aug8/
+/Theo/modelo principal/historico_das_etapas/
+**/__pycache__/
+*.pt
+*.pth
+*.ckpt

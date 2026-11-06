@@ -44,19 +44,28 @@ def registrar_execucao(config, modelo, extras=None):
                      arquitetura={'backbone': ({
                                                 'res_theo18': 'ResNet-18',
                                                 'res_theo34': 'ResNet-34',
+                                                'res_theo34_repeticao': 'ResNet-34 ImageNet V1 até layer3, fc Normal(0,1), repetição histórica 115733',
+                                                'res_theo34_finetuning': 'ResNet-34 até layer3, fine-tuning do melhor checkpoint época33, dropout antes de fc',
+                                                'res_theo34_aug8': 'ResNet-34 até layer3, checkpoint época33, ampliação8x, dropout10% antes de fc',
+                                                'res_theo34_barras': 'ResNet-34 até layer3, melhor Aug8 época29, 4 versões barras e2 corrupções antigas, dropout10%',
+                                                'res_theo34_aug12': 'ResNet-34 até layer3, melhor Aug8 época29, Aug12, cabeça2 logits e CrossEntropyLoss',
                                                 'res_theo_especial': 'ResNet-18 estreita principal até layer3 (32/32/64/128)',
                                                 'theo_ajuste': 'ResNet-18 estreita até layer3 (32/32/64/128), fine-tuning do checkpoint 155432',
                                                 'theo_curto': 'BasicBlocks [2,2], canais 32/32/64, layer3 e layer4 removidas',
                                                 'theo_48_88': 'BasicBlocks [2,2,2], canais 32/32/48/88, layer4 removida',
                                                 'theo_28_42_64': 'BasicBlocks [2,2,2], canais 28/28/42/64, layer4 removida',
+                                                'theo_sem_res_28_42_64': 'CNN sem resíduos, conv7x7=28, uma conv3x3 por estágio 28/42/64',
+                                                'theo_sem_res_28_42_64_88': 'CNN sem resíduos, conv7x7=28, uma conv3x3 por estágio 28/42/64/88',
                                                 'res_theo_especial34': 'ResNet-34 estreita completa (64/32/64/128/256)',
                                                 'res_theo_especial50': 'ResNet-50 Bottleneck 1/4 completa (64/16/32/64/128)',
                                                 'alex_theo': 'AlexNet ImageNet com saída binária',
                                                }.get(modelo, modelo)),
-                                  'layer4_removida': (None if modelo == 'alex_theo' else
+                                  'layer4_removida': (None if modelo == 'alex_theo' or modelo.startswith('theo_sem_res_') else
                                                       True if modelo in ('res_theo_especial', 'theo_ajuste')
                                                       else not modelo.startswith('res_theo_especial')),
-                                  'classificador': ('Linear(64, 1)' if modelo in ('theo_curto', 'theo_28_42_64')
+                                  'classificador': ('Linear(256, 2)' if modelo == 'res_theo34_aug12'
+                                                    else 'Linear(64, 1)' if modelo in ('theo_curto', 'theo_28_42_64', 'theo_sem_res_28_42_64')
+                                                    else 'Linear(88, 1)' if modelo == 'theo_sem_res_28_42_64_88'
                                                     else 'Linear(88, 1)' if modelo == 'theo_48_88'
                                                     else 'Linear(512, 1)' if modelo == 'res_theo_especial50'
                                                     else 'Linear(4096, 1)' if modelo == 'alex_theo'
@@ -68,16 +77,19 @@ def registrar_execucao(config, modelo, extras=None):
                      rotulos={'Cat': 0, 'Dog': 1}, resolucao=[224, 224], estado=anterior.get('estado', 'iniciado'))
     # Snapshot dos fontes para preservar a implementação associada aos pesos.
     pacote = RAIZ / 'residuals networks' / modelo
+    if not pacote.is_dir():
+        pacote = RAIZ / 'residuals networks/arquivados' / modelo
     fontes = pasta / 'codigo'
     fontes.mkdir(exist_ok=True)
-    for fonte in (*pacote.glob('*.py'), pacote / 'requirements.txt', Path(__file__), RAIZ / 'criar_dataset_ampliado.py', RAIZ / 'checkpoint_validacao.py'):
+    for fonte in (*pacote.glob('*.py'), pacote / 'requirements.txt', Path(__file__), RAIZ / 'criar_dataset_ampliado.py', RAIZ / 'checkpoint_validacao.py', *((RAIZ / 'dataset_misto.py', RAIZ / 'residuals networks/res_theo34_barras/ampliacao_barras.py') if modelo == 'res_theo34_misto' else ())):
         alvo = fontes / fonte.name
         if fonte.exists() and not alvo.exists():
             alvo.write_bytes(fonte.read_bytes())
-    if modelo in ('theo_curto', 'theo_48_88', 'theo_28_42_64'):
+    if modelo in ('theo_curto', 'theo_48_88', 'theo_28_42_64', 'theo_sem_res_28_42_64', 'theo_sem_res_28_42_64_88'):
         dependencias = fontes / 'dependencias'
         dependencias.mkdir(exist_ok=True)
         for fonte in (RAIZ / 'residuals networks/agenda_duas_fases.py',
+                      RAIZ / 'residuals networks/modelo_sem_res.py',
                       *(RAIZ / 'residuals networks/theo_ajuste').glob('*.py'),
                       *(RAIZ / 'residuals networks/res_theo_especial').glob('*.py')):
             subpasta = dependencias / fonte.parent.name

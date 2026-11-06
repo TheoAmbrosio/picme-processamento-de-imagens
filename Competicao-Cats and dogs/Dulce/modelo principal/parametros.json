@@ -1,0 +1,43 @@
+{
+  "arquitetura": "CNN224 v2",
+  "filtros": [
+    32,
+    64,
+    64,
+    128,
+    128
+  ],
+  "kernel": 5,
+  "padding": 1,
+  "dropout": 0.2,
+  "cabeca": [
+    3200,
+    1024,
+    32,
+    2
+  ],
+  "otimizador": "Adam",
+  "learning_rate": 0.0003,
+  "batch_size": 32,
+  "epocas": 120,
+  "semente": 18,
+  "perda": "nll_loss(log_softmax(logits)): entropia cruzada",
+  "entrada": [
+    3,
+    224,
+    224
+  ],
+  "escala_pixels": "[0,1]",
+  "divisao": "15% teste;15% do restante validação; grupos inteiros;17934/3165/3723 originais",
+  "fonte": "projeto/Cats vs Dogs/cats_and_dogs_224_v2.ipynb, células27,29,31,33",
+  "quantidades_originais": {
+    "treino": 17934,
+    "validacao": 3165,
+    "teste": 3723
+  },
+  "quantidades_com_copias_fixas": {
+    "treino": 21520,
+    "validacao": 3165,
+    "teste": 3723
+  }
+}

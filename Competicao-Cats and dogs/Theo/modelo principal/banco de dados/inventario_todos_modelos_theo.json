@@ -1,0 +1,603 @@
+{
+  "alex_theo": [
+    {
+      "execucao": "20261104_170850_661558_bs16_ep60_cong0ep_do10_docresc20a40_dadosorig_pre_conv1pre5ep",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/alex_theo/20261104_170850_661558_bs16_ep60_cong0ep_do10_docresc20a40_dadosorig_pre_conv1pre5ep/parametros.json",
+      "estado": "iniciado",
+      "dados": {
+        "usar_dados_ampliados": false,
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv"
+      },
+      "dataset_misto": null
+    }
+  ],
+  "res_theo18": [
+    {
+      "execucao": "com_back,dropout",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/res_theo18/com_back,dropout/parametros.json",
+      "estado": "concluido",
+      "dados": {
+        "usar_dados_ampliados": false,
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv"
+      },
+      "dataset_misto": null
+    },
+    {
+      "execucao": "sem_back,dropout",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/res_theo18/sem_back,dropout/parametros.json",
+      "estado": "concluido",
+      "dados": {
+        "usar_dados_ampliados": false,
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv"
+      },
+      "dataset_misto": null
+    }
+  ],
+  "res_theo34": [
+    {
+      "execucao": "20261104_153250_202622_bs16_ep50_cong0ep_do10_dadosorig_zero",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/res_theo34/20261104_153250_202622_bs16_ep50_cong0ep_do10_dadosorig_zero/parametros.json",
+      "estado": "concluido",
+      "dados": {
+        "usar_dados_ampliados": false,
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv"
+      },
+      "dataset_misto": null
+    },
+    {
+      "execucao": "com_back.dropout",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/res_theo34/com_back.dropout/parametros.json",
+      "estado": "concluido",
+      "dados": {
+        "usar_dados_ampliados": false,
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv"
+      },
+      "dataset_misto": null
+    },
+    {
+      "execucao": "complementados,dropout,com_back",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/res_theo34/complementados,dropout,com_back/parametros.json",
+      "estado": null,
+      "dados": {
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv"
+      },
+      "dataset_misto": null
+    }
+  ],
+  "res_theo34_aug12": [
+    {
+      "execucao": "20261105_184834_720499_bs64_ep30_cong0ep_do10_dadosamp_pre",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/res_theo34_aug12/20261105_184834_720499_bs64_ep30_cong0ep_do10_dadosamp_pre/parametros.json",
+      "estado": "iniciado",
+      "dados": {
+        "usar_dados_ampliados": true,
+        "ampliacao_esquema": "aug12_faixa_e_blur10",
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv",
+        "ruido_variancia": 0.08,
+        "pixels_brancos_fracao": 0.02,
+        "quadrados_quantidade": 8,
+        "quadrado_min": 20,
+        "quadrado_max": 40,
+        "regiao_centros": [
+          150,
+          150
+        ],
+        "fator_esticamento": 2.0
+      },
+      "dataset_misto": null
+    }
+  ],
+  "res_theo34_aug8_continuacao": [
+    {
+      "execucao": "20261106_095455_826476_bs64_ep30_cong0ep_do10_dadosamp_pre",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/res_theo34_aug8_continuacao/20261106_095455_826476_bs64_ep30_cong0ep_do10_dadosamp_pre/parametros.json",
+      "estado": "iniciado",
+      "dados": {
+        "usar_dados_ampliados": true,
+        "ampliacao_esquema": "8_variantes_ruido_quadrados_esticar_centro",
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv",
+        "ruido_variancia": 0.08,
+        "pixels_brancos_fracao": 0.02,
+        "quadrados_quantidade": 8,
+        "quadrado_min": 20,
+        "quadrado_max": 40,
+        "regiao_centros": [
+          150,
+          150
+        ],
+        "fator_esticamento": 2.0
+      },
+      "dataset_misto": null
+    }
+  ],
+  "res_theo34_barras": [
+    {
+      "execucao": "20261105_180813_483750_bs64_ep30_cong0ep_do10_dadosamp_pre",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/res_theo34_barras/20261105_180813_483750_bs64_ep30_cong0ep_do10_dadosamp_pre/parametros.json",
+      "estado": "iniciado",
+      "dados": {
+        "usar_dados_ampliados": true,
+        "ampliacao_esquema": "4_barras_e_2_sorteios_ruido_quadrados",
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv",
+        "ruido_variancia": 0.08,
+        "pixels_brancos_fracao": 0.02,
+        "quadrados_quantidade": 8,
+        "quadrado_min": 20,
+        "quadrado_max": 40,
+        "regiao_centros": [
+          150,
+          150
+        ],
+        "fator_esticamento": 2.0
+      },
+      "dataset_misto": null
+    }
+  ],
+  "res_theo34_misto": [
+    {
+      "execucao": "20261105_191439_421574_bs96_ep30_cong0ep_do10_dadosamp_pre",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/res_theo34_misto/20261105_191439_421574_bs96_ep30_cong0ep_do10_dadosamp_pre/parametros.json",
+      "estado": "concluido",
+      "dados": {
+        "usar_dados_ampliados": true,
+        "ampliacao_esquema": "misto_intensificado_16",
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv",
+        "ruido_variancia": 0.1,
+        "pixels_brancos_fracao": 0.02,
+        "quadrados_quantidade": 10,
+        "quadrado_min": 20,
+        "quadrado_max": 40,
+        "regiao_centros": [
+          150,
+          150
+        ],
+        "fator_esticamento": 2.0
+      },
+      "dataset_misto": {
+        "variantes": [
+          "original",
+          "esticada_aleatoria",
+          "cinza",
+          "ruido",
+          "pixels_brancos",
+          "ruido_sal",
+          "retangulos_pretos",
+          "quadrados_pretos_livres",
+          "quadrados_pretos_centrais",
+          "quadrados_coloridos",
+          "ruido_quadrados",
+          "barras",
+          "faixa_horizontal",
+          "blur_original",
+          "blur_ruido",
+          "blur_quadrados"
+        ],
+        "quadrados_antes": 8,
+        "quadrados_aumento": 0.25,
+        "variancia_antes": 0.08,
+        "variancia_aumento": 0.25,
+        "blur_kernel": 12,
+        "pixels_brancos_fracao": 0.02,
+        "lado_min": 20,
+        "lado_max": 40,
+        "retangulos_quantidade": 4,
+        "regiao_central": 150,
+        "barras_min": 1,
+        "barras_max": 4,
+        "barra_largura_min": 20,
+        "barra_largura_max": 50,
+        "faixa_min": 0,
+        "faixa_max": 50,
+        "esticamento_fator": 2,
+        "quadrados_quantidade": 10,
+        "ruido_variancia": 0.1
+      }
+    },
+    {
+      "execucao": "20261105_212247_907975_bs96_ep100_cong0ep_do10_dadosamp_pre",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/res_theo34_misto/20261105_212247_907975_bs96_ep100_cong0ep_do10_dadosamp_pre/parametros.json",
+      "estado": "concluido",
+      "dados": {
+        "usar_dados_ampliados": true,
+        "ampliacao_esquema": "misto_intensificado_16",
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv",
+        "ruido_variancia": 0.1,
+        "pixels_brancos_fracao": 0.02,
+        "quadrados_quantidade": 10,
+        "quadrado_min": 20,
+        "quadrado_max": 40,
+        "regiao_centros": [
+          150,
+          150
+        ],
+        "fator_esticamento": 2.0
+      },
+      "dataset_misto": {
+        "variantes": [
+          "original",
+          "esticada_aleatoria",
+          "cinza",
+          "ruido",
+          "pixels_brancos",
+          "ruido_sal",
+          "retangulos_pretos",
+          "quadrados_pretos_livres",
+          "quadrados_pretos_centrais",
+          "quadrados_coloridos",
+          "ruido_quadrados",
+          "barras",
+          "faixa_horizontal",
+          "blur_original",
+          "blur_ruido",
+          "blur_quadrados"
+        ],
+        "quadrados_antes": 8,
+        "quadrados_aumento": 0.25,
+        "variancia_antes": 0.08,
+        "variancia_aumento": 0.25,
+        "blur_kernel": 12,
+        "pixels_brancos_fracao": 0.02,
+        "lado_min": 20,
+        "lado_max": 40,
+        "retangulos_quantidade": 4,
+        "regiao_central": 150,
+        "barras_min": 1,
+        "barras_max": 4,
+        "barra_largura_min": 20,
+        "barra_largura_max": 50,
+        "faixa_min": 0,
+        "faixa_max": 50,
+        "esticamento_fator": 2,
+        "quadrados_quantidade": 10,
+        "ruido_variancia": 0.1
+      }
+    }
+  ],
+  "res_theo_especial": [
+    {
+      "execucao": "20261104_155432_513036_bs16_ep50_cong0ep_do10_docresc20a40_dadosorig_zero",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/res_theo_especial/20261104_155432_513036_bs16_ep50_cong0ep_do10_docresc20a40_dadosorig_zero/parametros.json",
+      "estado": "concluido",
+      "dados": {
+        "usar_dados_ampliados": false,
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv"
+      },
+      "dataset_misto": null
+    },
+    {
+      "execucao": "20261104_174634_311397_bs16_ep110_cong0ep_do20_docresc20a50_dadosamp_zero",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/res_theo_especial/20261104_174634_311397_bs16_ep110_cong0ep_do20_docresc20a50_dadosamp_zero/parametros.json",
+      "estado": "concluido",
+      "dados": {
+        "usar_dados_ampliados": true,
+        "esquema_ampliacao": "especial_5_variantes",
+        "epocas_iniciais_sem_ampliacao": 20,
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv",
+        "ruido_gaussiano_variancia": 0.1,
+        "pixels_brancos_fracao": 0.02,
+        "cutout_retangulos": 8,
+        "cutout_lado_minimo": 20,
+        "cutout_lado_maximo": 40
+      },
+      "dataset_misto": null
+    },
+    {
+      "execucao": "20261104_160934_406711_bs16_ep60_cong0ep_do10_docresc20a40_dadosorig_zero_conv1pre5ep",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/res_theo_especial_com_layer4/20261104_160934_406711_bs16_ep60_cong0ep_do10_docresc20a40_dadosorig_zero_conv1pre5ep/parametros.json",
+      "estado": "concluido",
+      "dados": {
+        "usar_dados_ampliados": false,
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv"
+      },
+      "dataset_misto": null
+    }
+  ],
+  "res_theo_especial50": [
+    {
+      "execucao": "20261104_162531_720112_bs16_ep60_cong0ep_do10_docresc20a40_dadosorig_zero_conv1pre5ep",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/res_theo_especial50/20261104_162531_720112_bs16_ep60_cong0ep_do10_docresc20a40_dadosorig_zero_conv1pre5ep/parametros.json",
+      "estado": "concluido",
+      "dados": {
+        "usar_dados_ampliados": false,
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv"
+      },
+      "dataset_misto": null
+    }
+  ],
+  "theo_28_42_64": [
+    {
+      "execucao": "20261105_085922_698399_bs16_ep80_cong0ep_do20_docresc1a25_dadosamp_zero",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/theo_28_42_64/20261105_085922_698399_bs16_ep80_cong0ep_do20_docresc1a25_dadosamp_zero/parametros.json",
+      "estado": "concluido",
+      "dados": {
+        "usar_dados_ampliados": true,
+        "esquema_ampliacao": "especial_5_variantes",
+        "epocas_iniciais_sem_ampliacao": 50,
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv",
+        "ruido_gaussiano_variancia": 0.08,
+        "pixels_brancos_fracao": 0.02,
+        "cutout_retangulos": 8,
+        "cutout_lado_minimo": 20,
+        "cutout_lado_maximo": 40
+      },
+      "dataset_misto": null
+    }
+  ],
+  "theo_48_88": [
+    {
+      "execucao": "20261104_194610_780798_bs16_ep80_cong0ep_do20_docresc1a25_dadosamp_zero",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/theo_48_88/20261104_194610_780798_bs16_ep80_cong0ep_do20_docresc1a25_dadosamp_zero/parametros.json",
+      "estado": "concluido",
+      "dados": {
+        "usar_dados_ampliados": true,
+        "esquema_ampliacao": "especial_5_variantes",
+        "epocas_iniciais_sem_ampliacao": 50,
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv",
+        "ruido_gaussiano_variancia": 0.08,
+        "pixels_brancos_fracao": 0.02,
+        "cutout_retangulos": 8,
+        "cutout_lado_minimo": 20,
+        "cutout_lado_maximo": 40
+      },
+      "dataset_misto": null
+    }
+  ],
+  "theo_ajuste": [
+    {
+      "execucao": "20261104_190840_040791_bs16_ep40_cong0ep_do15_docresc1a15_dadosamp_zero",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/theo_ajuste/20261104_190840_040791_bs16_ep40_cong0ep_do15_docresc1a15_dadosamp_zero/parametros.json",
+      "estado": "concluido",
+      "dados": {
+        "usar_dados_ampliados": true,
+        "esquema_ampliacao": "especial_5_variantes",
+        "epocas_iniciais_sem_ampliacao": 0,
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv",
+        "ruido_gaussiano_variancia": 0.08,
+        "pixels_brancos_fracao": 0.02,
+        "cutout_retangulos": 8,
+        "cutout_lado_minimo": 20,
+        "cutout_lado_maximo": 40
+      },
+      "dataset_misto": null
+    }
+  ],
+  "theo_curto": [
+    {
+      "execucao": "20261104_202632_788663_bs16_ep80_cong0ep_do20_docresc1a25_dadosamp_zero",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/theo_curto/20261104_202632_788663_bs16_ep80_cong0ep_do20_docresc1a25_dadosamp_zero/parametros.json",
+      "estado": "concluido",
+      "dados": {
+        "usar_dados_ampliados": true,
+        "esquema_ampliacao": "especial_5_variantes",
+        "epocas_iniciais_sem_ampliacao": 50,
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv",
+        "ruido_gaussiano_variancia": 0.08,
+        "pixels_brancos_fracao": 0.02,
+        "cutout_retangulos": 8,
+        "cutout_lado_minimo": 20,
+        "cutout_lado_maximo": 40
+      },
+      "dataset_misto": null
+    }
+  ],
+  "theo_sem_res_28_42_64": [
+    {
+      "execucao": "20261105_093350_636748_bs16_ep80_cong0ep_do20_docresc1a25_dadosamp_zero",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/theo_sem_res_28_42_64/20261105_093350_636748_bs16_ep80_cong0ep_do20_docresc1a25_dadosamp_zero/parametros.json",
+      "estado": "concluido",
+      "dados": {
+        "usar_dados_ampliados": true,
+        "esquema_ampliacao": "especial_5_variantes",
+        "epocas_iniciais_sem_ampliacao": 50,
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv",
+        "ruido_gaussiano_variancia": 0.08,
+        "pixels_brancos_fracao": 0.02,
+        "cutout_retangulos": 8,
+        "cutout_lado_minimo": 20,
+        "cutout_lado_maximo": 40
+      },
+      "dataset_misto": null
+    }
+  ],
+  "theo_sem_res_28_42_64_88": [
+    {
+      "execucao": "20261105_102715_631843_bs16_ep80_cong0ep_do20_docresc1a25_dadosamp_zero",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/arquivados/theo_sem_res_28_42_64_88/20261105_102715_631843_bs16_ep80_cong0ep_do20_docresc1a25_dadosamp_zero/parametros.json",
+      "estado": "concluido",
+      "dados": {
+        "usar_dados_ampliados": true,
+        "esquema_ampliacao": "especial_5_variantes",
+        "epocas_iniciais_sem_ampliacao": 50,
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv",
+        "ruido_gaussiano_variancia": 0.08,
+        "pixels_brancos_fracao": 0.02,
+        "cutout_retangulos": 8,
+        "cutout_lado_minimo": 20,
+        "cutout_lado_maximo": 40
+      },
+      "dataset_misto": null
+    }
+  ],
+  "res_theo34_aug8": [
+    {
+      "execucao": "20261105_163938_589179_bs64_ep30_cong0ep_do10_dadosamp_pre",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/res_theo34_aug8/20261105_163938_589179_bs64_ep30_cong0ep_do10_dadosamp_pre/parametros.json",
+      "estado": "concluido",
+      "dados": {
+        "usar_dados_ampliados": true,
+        "ampliacao_esquema": "8_variantes_ruido_quadrados_esticar_centro",
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv",
+        "ruido_variancia": 0.08,
+        "pixels_brancos_fracao": 0.02,
+        "quadrados_quantidade": 8,
+        "quadrado_min": 20,
+        "quadrado_max": 40,
+        "regiao_centros": [
+          150,
+          150
+        ],
+        "fator_esticamento": 2.0
+      },
+      "dataset_misto": null
+    }
+  ],
+  "res_theo34_finetuning": [
+    {
+      "execucao": "20261105_152655_704173_bs64_ep30_cong0ep_do7_dadosamp_pre",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/res_theo34_finetuning/20261105_152655_704173_bs64_ep30_cong0ep_do7_dadosamp_pre/parametros.json",
+      "estado": "iniciado",
+      "dados": {
+        "usar_dados_ampliados": true,
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv"
+      },
+      "dataset_misto": null
+    }
+  ],
+  "res_theo34_repeticao": [
+    {
+      "execucao": "20261105_105951_490569_bs64_ep50_cong5ep_do0_dadosamp_pre",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/res_theo34_repeticao/20261105_105951_490569_bs64_ep50_cong5ep_do0_dadosamp_pre/parametros.json",
+      "estado": "iniciado",
+      "dados": {
+        "usar_dados_ampliados": true,
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv"
+      },
+      "dataset_misto": null
+    },
+    {
+      "execucao": "20261105_132625_348115_bs64_ep50_cong5ep_do7_dadosamp_pre",
+      "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/resultados_residuals_networks/res_theo34_repeticao/20261105_132625_348115_bs64_ep50_cong5ep_do7_dadosamp_pre/parametros.json",
+      "estado": "concluido",
+      "dados": {
+        "usar_dados_ampliados": true,
+        "frac_validacao": 0.2,
+        "frac_teste": 0.0,
+        "divisao": "aleatoria_balanceada",
+        "aceitar_rotulos_duplicados": true,
+        "semente": 42,
+        "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv"
+      },
+      "dataset_misto": null
+    }
+  ]
+}

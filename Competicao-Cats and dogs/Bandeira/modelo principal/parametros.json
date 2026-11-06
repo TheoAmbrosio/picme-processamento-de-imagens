@@ -1,0 +1,47 @@
+{
+  "versao": "V4, código vigente",
+  "entrada": [
+    3,
+    384,
+    384
+  ],
+  "canais": [
+    32,
+    64,
+    128,
+    256,
+    512
+  ],
+  "bloco": "Conv3x3 padding1, BatchNorm, ReLU, MaxPool2",
+  "cabeca": "GAP, Flatten, Dropout0.5, Linear512→1",
+  "otimizador": "AdamW",
+  "learning_rate": 0.001,
+  "weight_decay": 0.0001,
+  "batch_size": 64,
+  "epocas_maximas": 30,
+  "early_stopping_patience": 7,
+  "criterio_checkpoint": "menor perda de validação",
+  "scheduler": "CosineAnnealingLR",
+  "T_max": 30,
+  "eta_min": 1e-06,
+  "perda": "BCEWithLogitsLoss",
+  "semente": 42,
+  "divisao": "80/20 estratificada",
+  "normalizacao": {
+    "mean": [
+      0.49077198670497957,
+      0.4552293391116236,
+      0.41697363465291526
+    ],
+    "std": [
+      0.26066300534221093,
+      0.25364597795899685,
+      0.25537651824850094
+    ]
+  },
+  "fonte": "projeto/src/model.py, train.py, dataset.py",
+  "commit": "c02a77502bdfe5de55660bf0985d0e7789cd0899",
+  "checkpoint": "projeto/data/best_model_4.0.pth",
+  "melhor_epoca_por_val_loss": 30,
+  "historico": "projeto/data/training_history_4.0.csv"
+}

@@ -11,4 +11,8 @@ Os resultados e checkpoints arquivados ficam em
 `resultados_residuals_networks/arquivados/`, e seus snapshots em `codigo/`
 continuam sendo a referência de cada execução.
 Os scripts em `iniciadores/` são preservados como histórico e não fazem parte do
-fluxo ativo. O modelo especial principal é `../res_theo_especial/`.
+fluxo ativo. O modelo principal agora é `../res_theo34_aug8/`.
+
+As demais variantes Theo, ResTheo18 e Especial18 também foram arquivadas aqui.
+A linhagem do principal está documentada em LINHAGEM_MODELO_PRINCIPAL.md,
+na raiz do projeto. Resultados e checkpoints dos arquivos não foram apagados.

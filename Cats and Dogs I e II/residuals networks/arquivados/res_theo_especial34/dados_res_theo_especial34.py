@@ -21,7 +21,7 @@ PREPARAR_ORIGINAL = transforms.Compose([
                       antialias=True),
     NORMALIZAR,
 ])
-RAIZ_PROJETO = Path(__file__).resolve().parents[2]
+RAIZ_PROJETO = Path(__file__).resolve().parents[3]
 
 
 def normalizar_imagem(imagem: Image.Image) -> torch.Tensor:

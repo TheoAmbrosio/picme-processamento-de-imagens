@@ -1,0 +1,25 @@
+{
+  "config_dataset": {
+    "schema": 2,
+    "rotulos": {
+      "Cat": 0,
+      "Dog": 1
+    },
+    "lado": 224,
+    "frac_validacao": 0.2,
+    "frac_teste": 0.0,
+    "semente": 42,
+    "normalizacao_salva": false,
+    "avaliacao": "Resize(256, bilinear) + CenterCrop(224)",
+    "divisao": "aleatoria_balanceada",
+    "aceitar_rotulos_duplicados": true
+  },
+  "contagens_validas": {
+    "Cat/treino": 9999,
+    "Cat/validacao": 2500,
+    "Dog/treino": 9999,
+    "Dog/validacao": 2500
+  },
+  "fonte": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_originais.csv",
+  "tipo": "contagem de entradas status=ok do manifesto preservado"
+}

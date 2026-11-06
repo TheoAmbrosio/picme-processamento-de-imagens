@@ -1,0 +1,38 @@
+[
+  {
+    "celula": 4,
+    "codigo": "import kagglehub\n\ncaminho = kagglehub.dataset_download(\"bhavikjikadara/dog-and-cat-classification-dataset\")\nprint(caminho)",
+    "saidas": [
+      "/home/al.dulce.costa/.cache/kagglehub/datasets/bhavikjikadara/dog-and-cat-classification-dataset/versions/1\n"
+    ]
+  },
+  {
+    "celula": 12,
+    "codigo": "# Mesmo filtro do notebook original: imagens com algum lado menor que 94 px são descartadas.\nLADO_MINIMO = 94\nimagens = [d for d in imagens if min(d[\"largura\"], d[\"altura\"]) >= LADO_MINIMO]\nprint(\"Imagens com pelo menos\", LADO_MINIMO, \"px em cada lado:\", len(imagens))\n\nLARGURA, ALTURA = 224, 224\nampliadas = sum(1 for d in imagens if min(d[\"largura\"], d[\"altura\"]) < 224)\nprint(\"Tamanho-alvo:\", LARGURA, \"x\", ALTURA, \"(largura x altura)\")\nprint(\"Imagens que vão ser ampliadas (lado menor < 224 px):\", ampliadas)",
+    "saidas": [
+      "Imagens com pelo menos 94 px em cada lado: 24822\nTamanho-alvo: 224 x 224 (largura x altura)\nImagens que vão ser ampliadas (lado menor < 224 px): 2785\n"
+    ]
+  },
+  {
+    "celula": 13,
+    "codigo": "def redimensionar(img):\n    # O lado menor da imagem vira 224 e o lado maior é cortado no centro. A proporção se mantém.\n    # Interpolação bilinear do PIL: ao reduzir, ela faz a média da área coberta por cada pixel novo\n    # (evita o serrilhado de simplesmente pegar um pixel vizinho).\n    h, w = img.shape[:2]\n    escala = max(ALTURA / h, LARGURA / w)\n    corte_h, corte_w = min(h, ALTURA / escala), min(w, LARGURA / escala)\n    esquerda, topo = (w - corte_w) / 2, (h - corte_h) / 2\n    pil = Image.fromarray(np.clip(np.rint(img), 0, 255).astype(np.uint8))\n    nova = pil.resize((LARGURA, ALTURA), Image.BILINEAR,\n                      box=(esquerda, topo, esquerda + corte_w, topo + corte_h))\n    return np.asarray(nova, dtype=np.float32)",
+    "saidas": []
+  },
+  {
+    "celula": 15,
+    "codigo": "grupo = np.array([d[\"origem\"] for d in imagens])\n\ndef separar_por_grupo(indices, fracao):\n    # Sorteia grupos inteiros até juntar a fração pedida das imagens.\n    contagem = Counter(grupo[indices].tolist())\n    alvo = round(fracao * len(indices))\n    escolhidos, total = [], 0\n    for g in rng.permutation(sorted(contagem)):\n        if total >= alvo:\n            break\n        escolhidos.append(g)\n        total += contagem[g]\n    separado = np.isin(grupo[indices], escolhidos)\n    return indices[~separado], indices[separado]\n\n# Posições na lista `imagens` (ainda sem nenhuma imagem aumentada)\ntreino_original, teste = separar_por_grupo(np.arange(len(imagens)), 0.15)\ntreino_original, validacao = separar_por_grupo(treino_original, 0.15)\n\nprint(\"Treino:\", len(treino_original), \"| validação:\", len(validacao), \"| teste:\", len(teste))",
+    "saidas": [
+      "Treino: 17934 | validação: 3165 | teste: 3723\n"
+    ]
+  },
+  {
+    "celula": 20,
+    "codigo": "import math\n\ndef aumentar(x):\n    # x: float (lote, 3, altura, largura), de 0 a 1. Cada imagem do lote recebe sorteios próprios.\n    B = x.shape[0]\n    sorteio = lambda a, b: torch.empty(B, device=x.device).uniform_(a, b)\n\n    zoom = sorteio(0.7, 1.0)                                  # fração da imagem que fica visível\n    angulo = sorteio(-15, 15) * math.pi / 180\n    espelho = torch.where(torch.rand(B, device=x.device) < 0.5, -1.0, 1.0)\n    tx = sorteio(-1, 1) * (1 - zoom)                          # deslocamento, sem sair da imagem\n    ty = sorteio(-1, 1) * (1 - zoom)\n    cos, sen = torch.cos(angulo), torch.sin(angulo)\n\n    # Matriz 2 x 3 de cada imagem: espelha, dá zoom, gira e desloca de uma vez só\n    teta = torch.stack([\n        torch.stack([zoom * cos * espelho, -zoom * sen, tx], dim=1),\n        torch.stack([zoom * sen * espelho, zoom * cos, ty], dim=1),\n    ], dim=1)\n    grade = F.affine_grid(teta, x.shape, align_corners=False)\n    x = F.grid_sample(x, grade, mode=\"bilinear\", padding_mode=\"reflection\", align_corners=False)\n\n    # Brilho e contraste\n    media = x.mean(dim=(1, 2, 3), keepdim=True)\n    brilho = sorteio(0.8, 1.2).view(B, 1, 1, 1)\n    contraste = sorteio(0.8, 1.2).view(B, 1, 1, 1)\n    return ((x - media) * contraste + media * brilho).clamp(0, 1)",
+    "saidas": []
+  },
+  {
+    "celula": 23,
+    "codigo": "MEDIA = (0.485, 0.456, 0.406)    # estatísticas da ImageNet\nDESVIO = (0.229, 0.224, 0.225)\n\nclass ResNetGatosCachorros(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.rede = torchvision.models.resnet18(weights=torchvision.models.ResNet18_Weights.IMAGENET1K_V1)\n        self.rede.fc = nn.Linear(self.rede.fc.in_features, 2)\n        self.register_buffer(\"media\", torch.tensor(MEDIA).view(1, 3, 1, 1))\n        self.register_buffer(\"desvio\", torch.tensor(DESVIO).view(1, 3, 1, 1))\n\n    def antes_da_softmax(self, x):\n        # x: imagens de 0 a 1\n        return self.rede((x - self.media) / self.desvio)\n\n    def forward(self, x):\n        return torch.softmax(self.antes_da_softmax(x), dim=1)",
+    "saidas": []
+  }
+]

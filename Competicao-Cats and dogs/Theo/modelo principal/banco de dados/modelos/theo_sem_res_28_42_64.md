@@ -1,0 +1,26 @@
+# Theo — dados de theo_sem_res_28_42_64
+
+Inventário documental, incluindo execuções arquivadas. Não promove esses modelos a principais. Valores ausentes não foram preenchidos com a configuração atual.
+
+## 20261105_093350_636748_bs16_ep80_cong0ep_do20_docresc1a25_dadosamp_zero
+
+[Metadados originais](<../../../../../Cats and Dogs I e II/resultados_residuals_networks/arquivados/theo_sem_res_28_42_64/20261105_093350_636748_bs16_ep80_cong0ep_do20_docresc1a25_dadosamp_zero/parametros.json>)
+
+```json
+{
+  "usar_dados_ampliados": true,
+  "esquema_ampliacao": "especial_5_variantes",
+  "epocas_iniciais_sem_ampliacao": 50,
+  "frac_validacao": 0.2,
+  "frac_teste": 0.0,
+  "divisao": "aleatoria_balanceada",
+  "aceitar_rotulos_duplicados": true,
+  "semente": 42,
+  "manifesto": "/home/al.theo.ambrosio/Documentos/picme-processamento-de-imagens/Cats and Dogs I e II/dataset_ampliado/224x224/divisao_balanceada/manifesto_variantes.csv",
+  "ruido_gaussiano_variancia": 0.08,
+  "pixels_brancos_fracao": 0.02,
+  "cutout_retangulos": 8,
+  "cutout_lado_minimo": 20,
+  "cutout_lado_maximo": 40
+}
+```
